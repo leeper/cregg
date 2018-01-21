@@ -1,5 +1,5 @@
-#' @aliases plot.mm plot.amce
-#' @title Plot AMCE estimates and MM descriptives
+#' @aliases plot.mm plot.amce plot.freq
+#' @title Plot AMCE estimates, MM descriptives, and frequency plots
 #' @description ggplot2-based plotting of conjoint AMCEs estimates and MMs
 #' @param x A data frame returned from \code{\link{cj}} or \code{\link{mm}}.
 #' @param group Optionally a character string specifying a grouping factor. This is useful when, for example, subgroup analyses or comparing AMCEs for different outcomes. An alternative is to use \code{\link[ggplot2]{facet_wrap}} for faceted graphics.
@@ -167,6 +167,50 @@ function(x,
              ggplot2::scale_x_continuous(limits = xlim, oob = scales::rescale_none) +
              ggplot2::xlab(xlab) + 
              ggplot2::ylab(ylab)
+    p <- p + theme + 
+      ggplot2::theme(
+        legend.position="bottom",
+        panel.grid.major = ggplot2::element_blank(),
+        panel.grid.minor = ggplot2::element_blank()
+      ) + 
+      ggplot2::guides(colour = ggplot2::guide_legend(title = legend_title))
+    return(p)
+}
+
+#' @export
+plot.freq <- 
+function(x, 
+         group = NULL,
+         feature_headers = TRUE,
+         header_fmt = "(%s)",
+         xlab = "",
+         ylab = "Frequency",
+         legend_title = "Feature",
+         theme = ggplot2::theme_bw(),
+         ...
+) {
+    
+    # check for dependencies
+    requireNamespace("ggplot2")
+    requireNamespace("scales")
+    
+    # optionally, add gaps between features
+    if (isTRUE(feature_headers)) {
+        x$level <- make_feature_headers(x)
+        x <- merge(x, data.frame(feature = unique(x$feature), level = sprintf(header_fmt, unique(x$feature))), all = TRUE)
+    }
+    
+    if (is.null(group)) {
+        p <- ggplot2::ggplot(data = x, ggplot2::aes_string(y = "estimate", x = "level", fill = "feature"))
+    } else {
+        p <- ggplot2::ggplot(data = x, ggplot2::aes_string(y = "estimate", x = "level", fill = "feature", group = group))
+    }
+    
+    p <- p + ggplot2::geom_col() +
+             ggplot2::coord_flip() + 
+             ggplot2::xlab(xlab) + 
+             ggplot2::ylab(ylab)
+    
     p <- p + theme + 
       ggplot2::theme(
         legend.position="bottom",

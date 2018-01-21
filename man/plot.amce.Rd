@@ -3,7 +3,8 @@
 \name{plot.amce}
 \alias{plot.amce}
 \alias{plot.mm}
-\title{Plot AMCE estimates and MM descriptives}
+\alias{plot.freq}
+\title{Plot AMCE estimates, MM descriptives, and frequency plots}
 \usage{
 \method{plot}{amce}(x, group = NULL, feature_headers = TRUE,
   header_fmt = "(\%s)", size = 1, xlab = "Estimated AMCE", ylab = "",

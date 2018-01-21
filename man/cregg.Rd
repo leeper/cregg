@@ -7,8 +7,8 @@
 \alias{cj}
 \title{Simple Conjoint Analyses and Visualization}
 \usage{
-cj(data, formula, id = NULL, weights = NULL, estimate = c("amce", "mm"),
-  feature_labels = NULL, level = 0.95, ...)
+cj(data, formula, id = NULL, weights = NULL, estimate = c("amce", "freq",
+  "mm"), feature_labels = NULL, level = 0.95, ...)
 }
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be zero.}
@@ -19,7 +19,7 @@ cj(data, formula, id = NULL, weights = NULL, estimate = c("amce", "mm"),
 
 \item{weights}{An (optional) RHS formula specifying a variable holding survey weights.}
 
-\item{estimate}{A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, \dQuote{amce}, estimated via \code{\link{amce}}) or marginal means (or AMMs, \dQuote{mm}, estimated via \code{\link{mm}}). Additional options may be made available in the future.}
+\item{estimate}{A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, \dQuote{amce}, estimated via \code{\link{amce}}), display frequencies (\dQuote{freq}, estimated via \code{\link{freq}}), or marginal means (or AMMs, \dQuote{mm}, estimated via \code{\link{mm}}). Additional options may be made available in the future.}
 
 \item{feature_labels}{A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables in \code{formula} and character string values; arguments passed here override variable attributes.}
 
