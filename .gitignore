@@ -1,0 +1,6 @@
+.Renviron
+.Rproj.user
+.Rhistory
+.RData
+*.Rproj
+/figure/*
