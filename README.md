@@ -31,9 +31,7 @@ f <- ChosenImmigrant ~ Gender + Education + LanguageSkills + CountryOfOrigin + J
 plot(mm(hainmueller, f, id = ~CaseID))
 ```
 
-```
-Error in mm(hainmueller, f, id = ~CaseID): could not find function "mm"
-```
+![plot of chunk mmplot](figure/mmplot-1.png)
 
 A more common analytic approach is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses `glm()` and `svyglm()` to perform estimation and [margins](https://cran.r-project.org/package=margins) to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. (No functionality is provided at the moment for explict estimation of feature interaction effects.) Just like for `amm()`, the output of `cj()` (or its alias, `amce()`) is a tidy data frame:
 

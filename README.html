@@ -3,39 +3,38 @@
 <ul>
 <li>Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs, via <code>cjglm()</code></li>
 <li>Munging of AMCE estimates into tidy data frames, via <code>cj()</code></li>
-<li>ggplot2-based visualizations of AMCEs and average marginal means (AMMs), via <code>amceplot()</code> and <code>ammplot()</code> respectively</li>
+<li>ggplot2-based visualizations of AMCEs and marginal means (MMs), via <code>amceplot()</code> and <code>ammplot()</code> respectively</li>
 </ul>
 <p>The package takes its name from the surname of a famous White House Press Secretary.</p>
 <h2 id="code-examples">Code Examples</h2>
 <p>The package includes an example conjoint dataset (borrowed from the <a href="https://cran.r-project.org/package=cjoint">cjoint</a> package), which is used here and and in examples:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;cregg&quot;</span>)
 <span class="kw">data</span>(<span class="st">&quot;hainmueller&quot;</span>)</code></pre></div>
-<p>The package provides straightforward calculation and visualization of descriptive average marginal means (AMMs). These represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs, AMMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, AMMs can take any value in the full range of the outcome. Calculation of AMMs entail no modelling assumptions are simply descriptive quantities of interest:</p>
+<p>The package provides straightforward calculation and visualization of descriptive marginal means (MMs). These represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, AMMs can take any value in the full range of the outcome. Calculation of MMs entail no modelling assumptions are simply descriptive quantities of interest:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># descriptive plotting</span>
-f &lt;-<span class="st"> </span>ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills <span class="op">+</span><span class="st"> </span>
-<span class="st">       </span>CountryOfOrigin <span class="op">+</span><span class="st"> </span>Job <span class="op">+</span><span class="st"> </span>JobExperience <span class="op">+</span><span class="st"> </span>JobPlans <span class="op">+</span><span class="st"> </span>
-<span class="st">       </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>PriorEntry
-<span class="kw">plot</span>(<span class="kw">amm</span>(hainmueller, f, <span class="dt">id =</span> <span class="op">~</span><span class="st"> </span>CaseID, <span class="dt">weights =</span> <span class="op">~</span><span class="st"> </span>weights))</code></pre></div>
+f &lt;-<span class="st"> </span>ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills <span class="op">+</span><span class="st"> </span>CountryOfOrigin <span class="op">+</span><span class="st"> </span>Job <span class="op">+</span><span class="st"> </span>JobExperience <span class="op">+</span><span class="st"> </span>JobPlans <span class="op">+</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>
+<span class="st">    </span>PriorEntry
+<span class="kw">plot</span>(<span class="kw">mm</span>(hainmueller, f, <span class="dt">id =</span> <span class="op">~</span>CaseID))</code></pre></div>
 <div class="figure">
-<img src="figure/ammplot-1.png" alt="plot of chunk ammplot" />
-<p class="caption">plot of chunk ammplot</p>
+<img src="figure/mmplot-1.png" alt="plot of chunk mmplot" />
+<p class="caption">plot of chunk mmplot</p>
 </div>
 <p>A more common analytic approach is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses <code>glm()</code> and <code>svyglm()</code> to perform estimation and <a href="https://cran.r-project.org/package=margins">margins</a> to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. (No functionality is provided at the moment for explict estimation of feature interaction effects.) Just like for <code>amm()</code>, the output of <code>cj()</code> (or its alias, <code>amce()</code>) is a tidy data frame:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># estimation</span>
 f &lt;-<span class="st"> </span>ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills <span class="op">+</span><span class="st"> </span>CountryOfOrigin
-amces &lt;-<span class="st"> </span><span class="kw">cj</span>(hainmueller, f, <span class="dt">id =</span> <span class="op">~</span><span class="st"> </span>CaseID, <span class="dt">weights =</span> <span class="op">~</span>weights)
+amces &lt;-<span class="st"> </span><span class="kw">cj</span>(hainmueller, f, <span class="dt">id =</span> <span class="op">~</span>CaseID)
 <span class="kw">str</span>(amces)</code></pre></div>
 <pre><code>Classes &#39;amce&#39; and &#39;data.frame&#39;:    23 obs. of  9 variables:
  $ outcome  : chr  &quot;ChosenImmigrant&quot; &quot;ChosenImmigrant&quot; &quot;ChosenImmigrant&quot; &quot;ChosenImmigrant&quot; ...
  $ feature  : Factor w/ 4 levels &quot;Country of Origin&quot;,..: 3 3 2 2 2 2 2 2 2 4 ...
  $ level    : Factor w/ 23 levels &quot;Female&quot;,&quot;Male&quot;,..: 1 2 3 4 5 6 7 8 9 10 ...
- $ estimate : num  0 -0.02 0 0.0235 0.0619 ...
- $ std.error: Named num  NA 0.00301 NA 0.00549 0.00557 ...
+ $ estimate : num  0 -0.0273 0 0.0323 0.0591 ...
+ $ std.error: Named num  NA 0.00831 NA 0.01534 0.0154 ...
   ..- attr(*, &quot;names&quot;)= chr  NA &quot;Var_dydx_GenderMale&quot; NA &quot;Var_dydx_Education4th Grade&quot; ...
- $ z        : num  NA -6.65 NA 4.27 11.11 ...
- $ p        : num  NA 3.00e-11 NA 1.91e-05 1.09e-28 ...
- $ lower    : num  NA -0.0259 NA 0.0127 0.051 ...
- $ upper    : num  NA -0.0141 NA 0.0342 0.0728 ...</code></pre>
+ $ z        : num  NA -3.28 NA 2.11 3.84 ...
+ $ p        : num  NA 0.001036 NA 0.035009 0.000125 ...
+ $ lower    : num  NA -0.04355 NA 0.00227 0.02891 ...
+ $ upper    : num  NA -0.011 NA 0.0624 0.0893 ...</code></pre>
 <p>This makes it very easy to modify, combine, print, etc. the resulting output. It also makes it easy to visualize using ggplot2. A convenience visualization function is provided:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># plotting of AMCEs</span>
 <span class="kw">plot</span>(amces)</code></pre></div>
@@ -43,7 +42,7 @@ amces &lt;-<span class="st"> </span><span class="kw">cj</span>(hainmueller, f, <
 <img src="figure/plot_amce-1.png" alt="plot of chunk plot_amce" />
 <p class="caption">plot of chunk plot_amce</p>
 </div>
-<p>The main selling point of cregg is simplicity of implementation and - unlike the <a href="https://cran.r-project.org/package=cjoint">cjoint</a> package - cregg tries to follow tidy data principles throughout. Thus the response from both <code>amm()</code> and <code>cj()</code> consists of tidy data frames that can easily be stacked with others (e.g., for computing AMCEs for subsets of respondents and then producing a facetted or grouped visualization). It also tries to take better advantage of data preprocessing steps by:</p>
+<p>The main selling point of cregg is simplicity of implementation and - unlike the <a href="https://cran.r-project.org/package=cjoint">cjoint</a> package - cregg tries to follow tidy data principles throughout. Thus the response from both <code>mm()</code> and <code>cj()</code> consists of tidy data frames that can easily be stacked with others (e.g., for computing AMCEs for subsets of respondents and then producing a facetted or grouped visualization). It also tries to take better advantage of data preprocessing steps by:</p>
 <ul>
 <li>Using factor base levels rather than trying to set baseline levels atomically</li>
 <li>Using &quot;label&quot; attributes on variables to provide pretty printing</li>
