@@ -1,12 +1,6 @@
 language: r
 sudo: false
 cache: packages
-matrix:
-  include:
-    - os: linux
-      dist: trusty
-      sudo: required
-      env: R_CODECOV=true
 r_github_packages:
 - leeper/prediction
 - leeper/margins
