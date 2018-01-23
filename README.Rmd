@@ -1,22 +1,32 @@
 # Simple Conjoint Analyses and Visualization
 
-**cregg** is a package for analyzing and visualizing the results of conjoint (factorial) experiments. It provides three main sets of functionality:
+**cregg** is a package for analyzing and visualizing the results of conjoint ("cj") factorial experiments. It provides functionality that is useful for analyzing and otherwise examining conjoint experimental data:
 
- - Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs, via `cjglm()`
- - Munging of AMCE estimates into tidy data frames, via `cj()`
- - ggplot2-based visualizations of AMCEs and marginal means (MMs), via `amceplot()` and `ammplot()` respectively
+ - Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs and munging of AMCE estimates into tidy data frames, via `amce()`
+ - Calculation of marginal means (MMs) for conjoint designs and munging them into tidy data frames via `mm()`
+ - Tabulation of display frequencies of feature attributes via `freqs()`
+ - **ggplot2**-based visualizations of AMCEs and MMs, via `plot()` methods for all of the above
 
 The package takes its name from the surname of a famous White House Press Secretary.
+
+The main selling point of cregg is simplicity of implementation and - unlike the [cjoint](https://cran.r-project.org/package=cjoint) package - cregg tries to follow tidy data principles throughout. Thus the response from both `mm()` and `cj()` consists of tidy data frames that can easily be stacked with others (e.g., for computing AMCEs for subsets of respondents and then producing a facetted or grouped visualization). It also tries to take better advantage of data preprocessing steps by:
+
+ - Using factor base levels rather than trying to set baseline levels atomically
+ - Using "label" attributes on variables to provide pretty printing
+
+Additionally all functions have arguments in data-formula order, making it simple to pipe into them via `%>%`.
+
+Contributions and feedback are welcome on [GitHub](https://github.com/leeper/cregg/issues).
 
 ## Code Examples
 
 
 ```{r opts, echo=FALSE}
 options(width = 120)
-knitr::opts_chunk$set(comment = "", warning = FALSE, message = FALSE, echo = TRUE, tidy = TRUE, size="small")
+knitr::opts_chunk$set(comment = "", warning = FALSE, message = FALSE, echo = TRUE, tidy = TRUE, size="small", fig.width = 10, fig.height = 10)
 ```
 
-The package includes an example conjoint dataset (borrowed from the [cjoint](https://cran.r-project.org/package=cjoint) package), which is used here and and in examples:
+The package includes an example conjoint dataset (borrowed and lightly modified from the [cjoint](https://cran.r-project.org/package=cjoint) package), which is used here and and in examples:
 
 ```{r load}
 library("cregg")
@@ -27,18 +37,20 @@ The package provides straightforward calculation and visualization of descriptiv
 
 ```{r mmplot}
 # descriptive plotting
-f <- ChosenImmigrant ~ Gender + Education + LanguageSkills + 
+f1 <- ChosenImmigrant ~ Gender + Education + LanguageSkills + 
        CountryOfOrigin + Job + JobExperience + JobPlans + 
        ReasonForApplication + PriorEntry
-plot(mm(hainmueller, f, id = ~ CaseID))
+plot(mm(hainmueller, f1, id = ~ CaseID), vline = 0.5)
 ```
 
-A more common analytic approach is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses `glm()` and `svyglm()` to perform estimation and [margins](https://cran.r-project.org/package=margins) to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. (No functionality is provided at the moment for explict estimation of feature interaction effects.) Just like for `amm()`, the output of `cj()` (or its alias, `amce()`) is a tidy data frame:
+cregg functions uses `attributes(feature)$label` to provide pretty printing of feature labels, so that varible names can be arbitrary. These can be overwritten using the `feature_labels` argument to override these settings. Feature levels are always deduced from the `levels()` of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in `feature_order`.
+
+A more common analytic approach for conjoints is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses `glm()` and `svyglm()` to perform estimation and [margins](https://cran.r-project.org/package=margins) to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. (No functionality is provided at the moment for explict estimation of feature interaction effects.) Just like for `amm()`, the output of `cj()` (or its alias, `amce()`) is a tidy data frame:
 
 ```{r amce}
 # estimation
-f <- ChosenImmigrant ~ Gender + Education + LanguageSkills + CountryOfOrigin
-amces <- cj(hainmueller, f, id = ~ CaseID)
+f2 <- ChosenImmigrant ~ Gender + Education + LanguageSkills + CountryOfOrigin
+amces <- cj(hainmueller, f2, id = ~ CaseID)
 str(amces)
 ```
 
@@ -49,12 +61,19 @@ This makes it very easy to modify, combine, print, etc. the resulting output. It
 plot(amces)
 ```
 
-The main selling point of cregg is simplicity of implementation and - unlike the [cjoint](https://cran.r-project.org/package=cjoint) package - cregg tries to follow tidy data principles throughout. Thus the response from both `mm()` and `cj()` consists of tidy data frames that can easily be stacked with others (e.g., for computing AMCEs for subsets of respondents and then producing a facetted or grouped visualization). It also tries to take better advantage of data preprocessing steps by:
+The package also provide a useful function for checking display frequencies of conjoint features (to ensure equal - or unequal - display frequency):
 
- - Using factor base levels rather than trying to set baseline levels atomically
- - Using "label" attributes on variables to provide pretty printing
+```{r plot_freqs}
+# plotting of display frequencies
+plot(freqs(hainmueller, f1, id = ~ CaseID))
+```
 
-Contributions and feedback are welcome on [GitHub](https://github.com/leeper/cregg/issues).
+As can be clear in the above, constraints were imposed in the original study on the allowed combinations of `Job` and `Education` and also on combinations of `CountryOfOrigin` and `ReasonForApplication`:
+
+```{r table_freqs}
+table(hainmueller$Job, hainmueller$Education)
+table(hainmueller$CountryOfOrigin, hainmueller$ReasonForApplication)
+```
 
 ## Installation
 

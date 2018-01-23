@@ -4,6 +4,7 @@
 #' @param formula A formula specifying an AMCE model to be estimated. All variables should be factors.
 #' @param id An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.
 #' @param weights An (optional) RHS formula specifying a variable holding survey weights.
+#' @param feature_order An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.
 #' @param feature_labels A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables in \code{formula} and character string values; arguments passed here override variable attributes.
 #' @param level A numeric value indicating the significance level at which to calculate confidence intervals for the AMCEs (by default 0.95, meaning 95-percent CIs are returned).
 #' @param \dots Additional arguments to \code{\link[stats]{glm}} or \code{\link[survey]{svyglm}}, the latter being used if \code{weights} is non-NULL.
@@ -13,9 +14,9 @@
 #' data(hainmueller)
 #' set.seed(12345)
 #' cj(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, 
-#'    id = ~ CaseID)
+#'    id = ~ CaseID, feature_order = c("LanguageSkills", "Gender", "Education"))
 #'  
-#' @seealso \code{\link{plot.amce}}
+#' @seealso \code{\link{plot.cj_amce}}
 #' @import stats
 #' @importFrom sandwich vcovCL
 #' @export
@@ -24,6 +25,7 @@ function(data,
          formula,
          id = NULL,
          weights = NULL,
+         feature_order = NULL,
          feature_labels = NULL,
          level = 0.95,
          ...
@@ -38,8 +40,19 @@ function(data,
     # function to produce "fancy" feature labels
     feature_labels <- clean_feature_labels(data = data, RHS = RHS, feature_labels = feature_labels)
     
+    # process feature_order argument
+    if (!is.null(feature_order)) {
+        if (length(RHS) > length(feature_order)) {
+            warning("'feature_order' appears to be missing values")
+        } else if (length(RHS) < length(feature_order)) {
+            warning("'feature_order' appears to have excess values")
+        }
+    } else {
+        feature_order <- RHS
+    }
+    
     # convert feature labels and levels to data frame
-    term_labels_df <- make_term_labels_df(data, RHS)
+    term_labels_df <- make_term_labels_df(data, feature_order)
     
     # estimate model
     if (inherits(data, "data.frame") && is.null(weights)) {
@@ -85,7 +98,9 @@ function(data,
     coef_dat$estimate[is.na(coef_dat$estimate)] <- 0
     
     # label features and levels
-    coef_dat$feature <- factor(unlist(unname(feature_labels[match(coef_dat$feature, names(feature_labels))])))
+    coef_dat$feature <- factor(coef_dat$feature,
+                               levels = feature_order,
+                               labels = feature_labels[feature_order])
     coef_dat$level <- factor(coef_dat$level, levels = term_labels_df$level)
     coef_dat$outcome <- outcome
     
@@ -93,5 +108,5 @@ function(data,
     out <- coef_dat[c("outcome", "feature", "level", "estimate", "std.error", "z", "p", "lower", "upper")]
     out <- out[order(out$level),]
     rownames(out) <- seq_len(nrow(out))
-    return(structure(out, class = c("amce", "data.frame")))
+    return(structure(out, class = c("cj_amce", "data.frame")))
 }

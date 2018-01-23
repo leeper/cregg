@@ -7,7 +7,7 @@
 \alias{cj}
 \title{Simple Conjoint Analyses and Visualization}
 \usage{
-cj(data, formula, id = NULL, weights = NULL, estimate = c("amce", "freq",
+cj(data, formula, id = NULL, weights = NULL, estimate = c("amce", "freqs",
   "mm"), feature_labels = NULL, level = 0.95, ...)
 }
 \arguments{
@@ -73,7 +73,7 @@ plot(d2)
 }
 }
 \seealso{
-\code{\link{amce}} \code{\link{mm}} \code{\link{plot.amce}}
+\code{\link{amce}} \code{\link{mm}} \code{\link{plot.cj_amce}}
 }
 \author{
 Thomas J. Leeper <thosjleeper@gmail.com>

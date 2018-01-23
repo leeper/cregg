@@ -42,16 +42,16 @@ clean_term_names <- function(x, RHS) {
     return(out)
 }
 
-# function used in cj to produce a data frame of features and levels
-make_term_labels_df <- function(data, RHS) {
+# function used to produce a data frame of features and levels
+make_term_labels_df <- function(data, feature_names) {
     if (inherits(data, "data.frame")) {
-        term_levels_list <- lapply(data[RHS], levels)
+        term_levels_list <- lapply(data[feature_names], levels)
     } else if (inherits(data, "survey.design")) {
-        term_levels_list <- lapply(data[["variables"]][RHS], levels)
+        term_levels_list <- lapply(data[["variables"]][feature_names], levels)
     } else {
         stop("'data' is not a 'data.frame' or 'survey.design' object")
     }
     term_levels <- rev(unlist(term_levels_list))
-    term_labels <- stats::setNames(rep(RHS, lengths(term_levels_list)), rev(term_levels))
+    term_labels <- stats::setNames(rep(feature_names, lengths(term_levels_list)), rev(term_levels))
     data.frame(feature = unlist(term_labels), level = unlist(names(term_labels)), stringsAsFactors = FALSE)
 }

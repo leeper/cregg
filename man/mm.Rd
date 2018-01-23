@@ -4,8 +4,8 @@
 \alias{mm}
 \title{Marginal Means}
 \usage{
-mm(data, formula, id, weights = NULL, feature_labels = NULL, level = 0.95,
-  ...)
+mm(data, formula, id, weights = NULL, feature_order = NULL,
+  feature_labels = NULL, level = 0.95, ...)
 }
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and its reported marginal mean will be zero (for printing).}
@@ -15,6 +15,8 @@ mm(data, formula, id, weights = NULL, feature_labels = NULL, level = 0.95,
 \item{id}{An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.}
 
 \item{weights}{An (optional) RHS formula specifying a variable holding survey weights.}
+
+\item{feature_order}{An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.}
 
 \item{feature_labels}{A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables in \code{formula} and character string values; arguments passed here override variable attributes.}
 
@@ -26,7 +28,7 @@ mm(data, formula, id, weights = NULL, feature_labels = NULL, level = 0.95,
 Calculate (descriptive) marginal means (MMs) from a conjoint design
 }
 \details{
-\code{mm} provides descriptive representations of conjoint data as marginal means (MMs), which represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, AMMs can take any value in the full range of the outcome. Plotting functionality is provided in \code{\link{plot.mm}}.
+\code{mm} provides descriptive representations of conjoint data as marginal means (MMs), which represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, AMMs can take any value in the full range of the outcome. Plotting functionality is provided in \code{\link{plot.cj_mm}}.
 }
 \examples{
 data(hainmueller)
@@ -35,5 +37,5 @@ hainmueller$weights <- runif(nrow(hainmueller))
 mm(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, id = ~ CaseID, weights = ~ weights)
 }
 \seealso{
-\code{\link{plot.mm}}
+\code{\link{plot.cj_mm}}
 }

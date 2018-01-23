@@ -1,4 +1,4 @@
-#' @aliases plot.mm plot.amce plot.freq
+#' @aliases plot.cj_mm plot.cj_amce plot.cj_freqs
 #' @title Plot AMCE estimates, MM descriptives, and frequency plots
 #' @description ggplot2-based plotting of conjoint AMCEs estimates and MMs
 #' @param x A data frame returned from \code{\link{cj}} or \code{\link{mm}}.
@@ -9,6 +9,7 @@
 #' @param xlab A label for the x-axis
 #' @param ylab A label for the y-axis
 #' @param legend_title A character string specifying a label for the legend.
+#' @param legend_title An argument forwarded to the \code{legend.position} argument in \code{\link[ggplot2]{theme}}.
 #' @param xlim A two-element number vector specifying limits for the x-axis. If \code{NULL}, a default value is calculated from the data.
 #' @param vline Optionally, a numeric value specifying an x-intercept for a vertical line. This can be useful in distinguishing the midpoint of the estimates (e.g., a zero line for AMCEs).
 #' @param vline_color A character string specifying a color for the \code{vline}.
@@ -56,7 +57,7 @@
 #' }
 #' @seealso \code{\link{amce}}, \code{\link{mm}}
 #' @export
-plot.amce <- 
+plot.cj_amce <- 
 function(x, 
          group = NULL,
          feature_headers = TRUE,
@@ -65,6 +66,7 @@ function(x,
          xlab = "Estimated AMCE",
          ylab = "",
          legend_title = "Feature",
+         legend_pos = "bottom",
          xlim = NULL,
          vline = 0,
          vline_color = "gray",
@@ -79,7 +81,7 @@ function(x,
     
     # optionally, add gaps between features
     if (isTRUE(feature_headers)) {
-        x$level <- make_feature_headers(x)
+        x$level <- make_feature_headers(x, fmt = header_fmt)
         x <- merge(x, data.frame(feature = unique(x$feature), level = sprintf(header_fmt, unique(x$feature))), all = TRUE)
     }
     
@@ -102,13 +104,14 @@ function(x,
     p <- p + ggplot2::geom_point(position = ggstance::position_dodgev(height = 0.75), size = size) +
              ggplot2::geom_errorbarh(ggplot2::aes_string(xmin = "lower", xmax = "upper"),  
                                      size = 0.2, height = 0,
-                                     position = ggstance::position_dodgev(height = 0.75)) +
+                                     position = ggstance::position_dodgev(height = 0.75)) + 
+             ggplot2::scale_colour_discrete(guide = ggplot2::guide_legend(title = legend_title)) +
              ggplot2::scale_x_continuous(limits = xlim, oob = scales::rescale_none) +
              ggplot2::xlab(xlab) + 
              ggplot2::ylab(ylab)
     p <- p + theme + 
       ggplot2::theme(
-        legend.position="bottom",
+        legend.position = legend_pos,
         panel.grid.major = ggplot2::element_blank(),
         panel.grid.minor = ggplot2::element_blank()
       ) + 
@@ -117,7 +120,7 @@ function(x,
 }
 
 #' @export
-plot.mm <- 
+plot.cj_mm <- 
 function(x, 
          group = NULL,
          feature_headers = TRUE,
@@ -126,6 +129,7 @@ function(x,
          xlab = "Marginal Mean",
          ylab = "",
          legend_title = "Feature",
+         legend_pos = "bottom",
          xlim = NULL,
          vline = 0,
          vline_color = "gray",
@@ -140,7 +144,7 @@ function(x,
     
     # optionally, add gaps between features
     if (isTRUE(feature_headers)) {
-        x$level <- make_feature_headers(x)
+        x$level <- make_feature_headers(x, fmt = header_fmt)
         x <- merge(x, data.frame(feature = unique(x$feature), level = sprintf(header_fmt, unique(x$feature))), all = TRUE)
     }
     
@@ -163,22 +167,22 @@ function(x,
     p <- p + ggplot2::geom_point(position = ggstance::position_dodgev(height = 0.75), size = size) +
              ggplot2::geom_errorbarh(ggplot2::aes_string(xmin = "lower", xmax = "upper"),  
                                      size = 0.2, height = 0,
-                                     position = ggstance::position_dodgev(height = 0.75)) +
+                                     position = ggstance::position_dodgev(height = 0.75)) + 
+             ggplot2::scale_colour_discrete(guide = ggplot2::guide_legend(title = legend_title)) +
              ggplot2::scale_x_continuous(limits = xlim, oob = scales::rescale_none) +
              ggplot2::xlab(xlab) + 
              ggplot2::ylab(ylab)
     p <- p + theme + 
       ggplot2::theme(
-        legend.position="bottom",
+        legend.position = legend_pos,
         panel.grid.major = ggplot2::element_blank(),
         panel.grid.minor = ggplot2::element_blank()
-      ) + 
-      ggplot2::guides(colour = ggplot2::guide_legend(title = legend_title))
+      )
     return(p)
 }
 
 #' @export
-plot.freq <- 
+plot.cj_freqs <- 
 function(x, 
          group = NULL,
          feature_headers = TRUE,
@@ -186,6 +190,7 @@ function(x,
          xlab = "",
          ylab = "Frequency",
          legend_title = "Feature",
+         legend_pos = "bottom",
          theme = ggplot2::theme_bw(),
          ...
 ) {
@@ -196,7 +201,7 @@ function(x,
     
     # optionally, add gaps between features
     if (isTRUE(feature_headers)) {
-        x$level <- make_feature_headers(x)
+        x$level <- make_feature_headers(x, fmt = header_fmt)
         x <- merge(x, data.frame(feature = unique(x$feature), level = sprintf(header_fmt, unique(x$feature))), all = TRUE)
     }
     
@@ -206,26 +211,26 @@ function(x,
         p <- ggplot2::ggplot(data = x, ggplot2::aes_string(y = "estimate", x = "level", fill = "feature", group = group))
     }
     
-    p <- p + ggplot2::geom_col() +
+    p <- p + ggplot2::geom_col() + 
+             ggplot2::scale_fill_discrete(guide = ggplot2::guide_legend(title = legend_title)) +
              ggplot2::coord_flip() + 
              ggplot2::xlab(xlab) + 
              ggplot2::ylab(ylab)
     
     p <- p + theme + 
       ggplot2::theme(
-        legend.position="bottom",
+        legend.position = legend_pos,
         panel.grid.major = ggplot2::element_blank(),
         panel.grid.minor = ggplot2::element_blank()
-      ) + 
-      ggplot2::guides(colour = ggplot2::guide_legend(title = legend_title))
+      )
     return(p)
 }
 
-make_feature_headers <- function(x) {
+make_feature_headers <- function(x, fmt) {
     feature_levels <- rev(split(x$level, x$feature))
     for (i in seq_along(feature_levels)) {
         feature_levels[[i]] <- levels(x$level)[match(feature_levels[[i]], levels(x$level))]
-        feature_levels[[i]] <- c(feature_levels[[i]], paste0("(", names(feature_levels)[i], ")"))
+        feature_levels[[i]] <- c(feature_levels[[i]], sprintf(fmt, names(feature_levels)[i]))
     }
     factor(as.character(x$level), levels = unname(unlist(feature_levels)))
 }

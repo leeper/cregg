@@ -52,7 +52,7 @@
 #' # plot AMCEs
 #' plot(d2)
 #' }
-#' @seealso \code{\link{amce}} \code{\link{mm}} \code{\link{plot.amce}}
+#' @seealso \code{\link{amce}} \code{\link{mm}} \code{\link{plot.cj_amce}}
 #' @keywords package 
 NULL
 
@@ -63,7 +63,7 @@ function(data,
          formula,
          id = NULL,
          weights = NULL,
-         estimate = c("amce", "freq", "mm"),
+         estimate = c("amce", "freqs", "mm"),
          feature_labels = NULL,
          level = 0.95,
          ...
@@ -71,7 +71,7 @@ function(data,
     estimate <- match.arg(estimate)
     switch(estimate,
            amce = amce(data = data, formula = formula, id = id, weights = weights, feature_labels = feature_labels, level = level, ...),
-           freq = freq(data = data, formula = formula, id = id, weights = weights, feature_labels = feature_labels, ...),
+           freqs = freq(data = data, formula = formula, id = id, weights = weights, feature_labels = feature_labels, ...),
            mm = mm(data = data, formula = formula, id = id, weights = weights, feature_labels = feature_labels, level = level, ...)
            )
 }

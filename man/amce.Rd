@@ -4,8 +4,8 @@
 \alias{amce}
 \title{Tidy estimation of AMCEs}
 \usage{
-amce(data, formula, id = NULL, weights = NULL, feature_labels = NULL,
-  level = 0.95, ...)
+amce(data, formula, id = NULL, weights = NULL, feature_order = NULL,
+  feature_labels = NULL, level = 0.95, ...)
 }
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and its reported AMCE will be zero (for printing).}
@@ -15,6 +15,8 @@ amce(data, formula, id = NULL, weights = NULL, feature_labels = NULL,
 \item{id}{An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.}
 
 \item{weights}{An (optional) RHS formula specifying a variable holding survey weights.}
+
+\item{feature_order}{An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.}
 
 \item{feature_labels}{A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables in \code{formula} and character string values; arguments passed here override variable attributes.}
 
@@ -35,9 +37,9 @@ Users may desire to specify a \code{family} argument via \code{\dots}, which sho
 data(hainmueller)
 set.seed(12345)
 cj(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, 
-   id = ~ CaseID)
+   id = ~ CaseID, feature_order = c("LanguageSkills", "Gender", "Education"))
  
 }
 \seealso{
-\code{\link{plot.amce}}
+\code{\link{plot.cj_amce}}
 }
