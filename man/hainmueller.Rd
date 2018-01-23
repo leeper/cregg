@@ -38,12 +38,10 @@ This is a modified version of the dataset available from the \href{https://cran.
 \examples{
 \dontrun{
 data("hainmueller")
-cj(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills + 
-                CountryOfOrigin + Job + JobExperience + JobPlans + 
-                ReasonForApplication + PriorEntry, id = ~ CaseID)
+cj(hainmueller, ChosenImmigrant ~ Gender + Education, id = ~ CaseID)
 }
 }
 \seealso{
-\code{\link{amce}} \code{\link{mm}}
+\code{\link{amce}} \code{\link{mm}} \code{\link{mm}}
 }
 \keyword{datasets}

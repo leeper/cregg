@@ -9,7 +9,7 @@
 #' @param xlab A label for the x-axis
 #' @param ylab A label for the y-axis
 #' @param legend_title A character string specifying a label for the legend.
-#' @param legend_title An argument forwarded to the \code{legend.position} argument in \code{\link[ggplot2]{theme}}.
+#' @param legend_pos An argument forwarded to the \code{legend.position} argument in \code{\link[ggplot2]{theme}}.
 #' @param xlim A two-element number vector specifying limits for the x-axis. If \code{NULL}, a default value is calculated from the data.
 #' @param vline Optionally, a numeric value specifying an x-intercept for a vertical line. This can be useful in distinguishing the midpoint of the estimates (e.g., a zero line for AMCEs).
 #' @param vline_color A character string specifying a color for the \code{vline}.

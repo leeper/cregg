@@ -28,6 +28,8 @@
 
 \item{legend_title}{A character string specifying a label for the legend.}
 
+\item{legend_pos}{An argument forwarded to the \code{legend.position} argument in \code{\link[ggplot2]{theme}}.}
+
 \item{xlim}{A two-element number vector specifying limits for the x-axis. If \code{NULL}, a default value is calculated from the data.}
 
 \item{vline}{Optionally, a numeric value specifying an x-intercept for a vertical line. This can be useful in distinguishing the midpoint of the estimates (e.g., a zero line for AMCEs).}
@@ -37,8 +39,6 @@
 \item{theme}{A ggplot2 theme object}
 
 \item{\dots}{Ignored.}
-
-\item{legend_title}{An argument forwarded to the \code{legend.position} argument in \code{\link[ggplot2]{theme}}.}
 }
 \value{
 A ggplot2 object
