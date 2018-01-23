@@ -13,7 +13,8 @@
 #' data(hainmueller)
 #' set.seed(12345)
 #' hainmueller$weights <- runif(nrow(hainmueller))
-#' mm(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, id = ~ CaseID, weights = ~ weights)
+#' mm(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills,
+#'    id = ~ CaseID, weights = ~ weights)
 #' @seealso \code{\link{plot.cj_mm}}
 #' @import stats
 #' @importFrom survey svydesign svyby svymean

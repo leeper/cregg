@@ -71,7 +71,7 @@ function(data,
     estimate <- match.arg(estimate)
     switch(estimate,
            amce = amce(data = data, formula = formula, id = id, weights = weights, feature_labels = feature_labels, level = level, ...),
-           freqs = freq(data = data, formula = formula, id = id, weights = weights, feature_labels = feature_labels, ...),
+           freqs = freqs(data = data, formula = formula, id = id, weights = weights, feature_labels = feature_labels, ...),
            mm = mm(data = data, formula = formula, id = id, weights = weights, feature_labels = feature_labels, level = level, ...)
            )
 }
