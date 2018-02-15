@@ -10,13 +10,20 @@
 #' @param alpha A numeric value indicating the significance level at which to calculate confidence intervals for the AMCEs (by default 0.95, meaning 95-percent CIs are returned).
 #' @param \dots Additional arguments to \code{\link[stats]{glm}} or \code{\link[survey]{svyglm}}, the latter being used if \code{weights} is non-NULL.
 #' @return A data frame
-#' @details Users may desire to specify a \code{family} argument via \code{\dots}, which should be a \dQuote{family} object such as \code{\link[stats]{gaussian}}. Sensible alternatives are \code{\link[stats]{binomial}} (for binary outcomes) and \code{\link[stats]{quasibinomial}} (for weighted survey data).
+#' @details This function provides estimates of AMCEs. It can also be used for balance testing by specifying a covariate rather outcome on the left-hand side of \code{formula}. See examples.
+#' 
+#' Users may desire to specify a \code{family} argument via \code{\dots}, which should be a \dQuote{family} object such as \code{\link[stats]{gaussian}}. Sensible alternatives are \code{\link[stats]{binomial}} (for binary outcomes) and \code{\link[stats]{quasibinomial}} (for weighted survey data).
 #' @examples
 #' data(hainmueller)
 #' set.seed(12345)
 #' cj(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, 
 #'    id = ~ CaseID, feature_order = c("LanguageSkills", "Gender", "Education"))
-#'  
+#' 
+#' \dontrun{
+#' # balance testing example
+#'   plot(amce(hainmueller[!is.na(hainmueller$ethnocentrism),
+#'        ethnocentrism ~ Gender + Education + LanguageSkills, id = ~ CaseID))
+#' }
 #' @seealso \code{\link{plot.cj_amce}}
 #' @import stats
 #' @importFrom sandwich vcovCL

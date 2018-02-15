@@ -88,7 +88,7 @@ function(x,
     if (is.null(group)) {
         p <- ggplot2::ggplot(data = x, ggplot2::aes_string(x = "estimate", y = "level", colour = "feature"))
     } else {
-        p <- ggplot2::ggplot(data = x, ggplot2::aes_string(x = "estimate", y = "level", colour = "feature", group = group))
+        p <- ggplot2::ggplot(data = x, ggplot2::aes_string(x = "estimate", y = "level", colour = group, group = group))
     }
     
     if (is.null(xlim)) {
@@ -151,7 +151,7 @@ function(x,
     if (is.null(group)) {
         p <- ggplot2::ggplot(data = x, ggplot2::aes_string(x = "estimate", y = "level", colour = "feature"))
     } else {
-        p <- ggplot2::ggplot(data = x, ggplot2::aes_string(x = "estimate", y = "level", colour = "feature", group = group))
+        p <- ggplot2::ggplot(data = x, ggplot2::aes_string(x = "estimate", y = "level", colour = group, group = group))
     }
     
     if (is.null(xlim)) {
@@ -208,7 +208,7 @@ function(x,
     if (is.null(group)) {
         p <- ggplot2::ggplot(data = x, ggplot2::aes_string(y = "estimate", x = "level", fill = "feature"))
     } else {
-        p <- ggplot2::ggplot(data = x, ggplot2::aes_string(y = "estimate", x = "level", fill = "feature", group = group))
+        p <- ggplot2::ggplot(data = x, ggplot2::aes_string(y = "estimate", x = "level", fill = group, group = group))
     }
     
     p <- p + ggplot2::geom_col() + 
@@ -226,11 +226,11 @@ function(x,
     return(p)
 }
 
-make_feature_headers <- function(x, fmt) {
+make_feature_headers <- function(x, fmt = "(%s)") {
     feature_levels <- rev(split(x$level, x$feature))
     for (i in seq_along(feature_levels)) {
         feature_levels[[i]] <- levels(x$level)[match(feature_levels[[i]], levels(x$level))]
         feature_levels[[i]] <- c(feature_levels[[i]], sprintf(fmt, names(feature_levels)[i]))
     }
-    factor(as.character(x$level), levels = unname(unlist(feature_levels)))
+    factor(as.character(x$level), levels = unique(unname(unlist(feature_levels))))
 }

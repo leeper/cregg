@@ -8,7 +8,7 @@
 \title{Simple Conjoint Analyses and Visualization}
 \usage{
 cj(data, formula, id = NULL, weights = NULL, estimate = c("amce", "freqs",
-  "mm"), ...)
+  "mm"), by = NULL, ...)
 }
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be zero.}
@@ -21,13 +21,17 @@ cj(data, formula, id = NULL, weights = NULL, estimate = c("amce", "freqs",
 
 \item{estimate}{A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, \dQuote{amce}, estimated via \code{\link{amce}}), display frequencies (\dQuote{freq}, estimated via \code{\link{freqs}}), or marginal means (or AMMs, \dQuote{mm}, estimated via \code{\link{mm}}). Additional options may be made available in the future.}
 
+\item{by}{A formula containing only RHS variables, specifying grouping factors over which to perform estimation.}
+
 \item{\dots}{Additional arguments to \code{\link{amce}}, \code{\link{freqs}}, or \code{\link{mm}}.}
 }
 \description{
 Simple analyses of conjoint (factorial) experiments and visualization of results.
 }
 \details{
-The main function \code{cj} is a convenience function wrapper around the underlying estimation functions that provide for average marginal component effects (AMCEs), by default, via the \code{\link{amce}} function and marginal means (MMs) via the \code{\link{mm}} function. Additional estimands may be supported in the future through their own functions and through the \code{cj} interface. Plotting is provided via ggplot2 for both types of estimates.
+The main function \code{cj} is a convenience function wrapper around the underlying estimation functions that provide for average marginal component effects (AMCEs), by default, via the \code{\link{amce}} function, marginal means (MMs) via the \code{\link{mm}} function, and display frequencies via \code{\link{freqs}}. Additional estimands may be supported in the future through their own functions and through the \code{cj} interface. Plotting is provided via ggplot2 for both types of estimates.
+
+The only additional functionality provided by \code{cj} over the underlying functions is the \code{by} argument, which will perform operations on subsets of \code{data}, returning a single data frame. This can be useful, for example, for evaluating profile spillover effects and subgroup results.
 }
 \examples{
 \dontrun{
@@ -66,6 +70,18 @@ d2 <- cj(hainmueller, ChosenImmigrant ~ Gender + Education +
 
 # plot AMCEs
 plot(d2)
+
+# grouped operations
+## examine profile ordering
+x <- cj(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills,
+        id = ~ CaseID, estimate = "mm", by = ~ contest_no)
+plot(x, group = "contest_no", vline = 0.5)
+
+## subgroup analysis
+hainmueller$ethnosplit <- cut(hainmueller$ethnocentrism, 2)
+x <- cj(na.omit(hainmueller), ChosenImmigrant ~ Gender + Education + LanguageSkills,
+        id = ~ CaseID, estimate = "mm", by = ~ ethnosplit)
+plot(x, group = "ethnosplit", vline = 0.5)
 }
 }
 \seealso{

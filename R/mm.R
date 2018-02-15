@@ -86,7 +86,7 @@ function(data,
     }
     
     # calculate AMMs, SEs, etc.
-    coef_dat <- survey::svyby(~ OUTCOME, ~ Level, FUN = survey::svymean, design = svylong)
+    coef_dat <- survey::svyby(~ OUTCOME, ~ Level, FUN = survey::svymean, design = svylong, na.rm = TRUE)
     coef_dat$z <- coef_dat$OUTCOME/coef_dat$se
     coef_dat$p <- 2*stats::pnorm(-coef_dat$z)
     coef_dat$lower <- coef_dat$OUTCOME - stats::qnorm((1-alpha) + (alpha/2)) * coef_dat$se
