@@ -43,7 +43,8 @@ clean_term_names <- function(x, RHS) {
 }
 
 # function used to produce a data frame of features and levels
-make_term_labels_df <- function(data, feature_names) {
+make_term_labels_df <- function(data, feature_names, level_order = c("ascending", "descending")) {
+    # setup data
     if (inherits(data, "data.frame")) {
         term_levels_list <- lapply(data[feature_names], levels)
     } else if (inherits(data, "survey.design")) {
@@ -51,6 +52,14 @@ make_term_labels_df <- function(data, feature_names) {
     } else {
         stop("'data' is not a 'data.frame' or 'survey.design' object")
     }
+    
+    # figure out level order
+    level_order <- match.arg(level_order)
+    if (level_order == "descending") {
+        term_levels_list[] <- lapply(term_levels_list, rev)
+    }
+    
+    # construct data frame
     term_levels <- rev(unlist(term_levels_list))
     term_labels <- stats::setNames(rep(feature_names, lengths(term_levels_list)), rev(term_levels))
     data.frame(feature = unlist(term_labels), level = unlist(names(term_labels)), stringsAsFactors = FALSE)

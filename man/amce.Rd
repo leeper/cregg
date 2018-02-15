@@ -5,7 +5,8 @@
 \title{Tidy estimation of AMCEs}
 \usage{
 amce(data, formula, id = NULL, weights = NULL, feature_order = NULL,
-  feature_labels = NULL, level = 0.95, ...)
+  feature_labels = NULL, level_order = c("ascending", "descending"),
+  alpha = 0.05, ...)
 }
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and its reported AMCE will be zero (for printing).}
@@ -20,7 +21,9 @@ amce(data, formula, id = NULL, weights = NULL, feature_order = NULL,
 
 \item{feature_labels}{A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables in \code{formula} and character string values; arguments passed here override variable attributes.}
 
-\item{level}{A numeric value indicating the significance level at which to calculate confidence intervals for the AMCEs (by default 0.95, meaning 95-percent CIs are returned).}
+\item{level_order}{A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via \code{\link{plot.cj_amce}}, etc.}
+
+\item{alpha}{A numeric value indicating the significance level at which to calculate confidence intervals for the AMCEs (by default 0.95, meaning 95-percent CIs are returned).}
 
 \item{\dots}{Additional arguments to \code{\link[stats]{glm}} or \code{\link[survey]{svyglm}}, the latter being used if \code{weights} is non-NULL.}
 }

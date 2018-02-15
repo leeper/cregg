@@ -6,7 +6,8 @@
 #' @param weights An (optional) RHS formula specifying a variable holding survey weights.
 #' @param feature_order An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.
 #' @param feature_labels A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables in \code{formula} and character string values; arguments passed here override variable attributes.
-#' @param level A numeric value indicating the significance level at which to calculate confidence intervals for the AMCEs (by default 0.95, meaning 95-percent CIs are returned).
+#' @param level_order A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via \code{\link{plot.cj_amce}}, etc.
+#' @param alpha A numeric value indicating the significance level at which to calculate confidence intervals for the AMCEs (by default 0.95, meaning 95-percent CIs are returned).
 #' @param \dots Additional arguments to \code{\link[stats]{glm}} or \code{\link[survey]{svyglm}}, the latter being used if \code{weights} is non-NULL.
 #' @return A data frame
 #' @details Users may desire to specify a \code{family} argument via \code{\dots}, which should be a \dQuote{family} object such as \code{\link[stats]{gaussian}}. Sensible alternatives are \code{\link[stats]{binomial}} (for binary outcomes) and \code{\link[stats]{quasibinomial}} (for weighted survey data).
@@ -27,7 +28,8 @@ function(data,
          weights = NULL,
          feature_order = NULL,
          feature_labels = NULL,
-         level = 0.95,
+         level_order = c("ascending", "descending"),
+         alpha = 0.05,
          ...
 ) {
 
@@ -36,9 +38,6 @@ function(data,
     
     # get RHS variables, variable labels, and factor levels
     RHS <- all.vars(stats::update(formula, 0 ~ . ))
-    
-    # function to produce "fancy" feature labels
-    feature_labels <- clean_feature_labels(data = data, RHS = RHS, feature_labels = feature_labels)
     
     # process feature_order argument
     if (!is.null(feature_order)) {
@@ -51,8 +50,17 @@ function(data,
         feature_order <- RHS
     }
     
+    # get `id` as character string
+    idvar <- all.vars(update(id, 0 ~ . ))
+    
+    # set level_order (within features) to ascending or descending
+    level_order <- match.arg(level_order)
+    
+    # function to produce "fancy" feature labels
+    feature_labels <- clean_feature_labels(data = data, RHS = RHS, feature_labels = feature_labels)
+    
     # convert feature labels and levels to data frame
-    term_labels_df <- make_term_labels_df(data, feature_order)
+    term_labels_df <- make_term_labels_df(data, feature_order, level_order = level_order)
     
     # estimate model
     if (inherits(data, "data.frame") && is.null(weights)) {
@@ -82,9 +90,9 @@ function(data,
     }
     ## marginal effects
     if (is.null(svydesign)) {
-        coef_dat <- summary(margins::margins(mod, data = data, vcov = vc), level = level)
+        coef_dat <- summary(margins::margins(mod, data = data, vcov = vc), level = 1-alpha)
     } else {
-        coef_dat <- summary(margins::margins(mod, data = data, design = svydesign, vcov = vc), level = level)
+        coef_dat <- summary(margins::margins(mod, data = data, design = svydesign, vcov = vc), level = 1-alpha)
     }
     names(coef_dat) <- c("factor", "estimate", "std.error", "z", "p", "lower", "upper")
     

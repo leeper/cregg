@@ -5,7 +5,7 @@
 \title{Conjoint feature frequencies}
 \usage{
 freqs(data, formula, id, weights = NULL, feature_order = NULL,
-  feature_labels = NULL, ...)
+  feature_labels = NULL, level_order = c("ascending", "descending"), ...)
 }
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors.}
@@ -19,6 +19,8 @@ freqs(data, formula, id, weights = NULL, feature_order = NULL,
 \item{feature_order}{An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.}
 
 \item{feature_labels}{A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables in \code{formula} and character string values; arguments passed here override variable attributes.}
+
+\item{level_order}{A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via \code{\link{plot.cj_freqs}}, etc.}
 
 \item{\dots}{Ignored.}
 }

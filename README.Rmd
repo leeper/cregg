@@ -49,9 +49,8 @@ A more common analytic approach for conjoints is to estimate average marginal co
 
 ```{r amce}
 # estimation
-f2 <- ChosenImmigrant ~ Gender + Education + LanguageSkills + CountryOfOrigin
-amces <- cj(hainmueller, f2, id = ~ CaseID)
-str(amces)
+amces <- cj(hainmueller, f1, id = ~ CaseID)
+head(amces[c("feature", "level", "estimate", "std.error")], 20L)
 ```
 
 This makes it very easy to modify, combine, print, etc. the resulting output. It also makes it easy to visualize using ggplot2. A convenience visualization function is provided:

@@ -9,9 +9,7 @@
 #' @param id An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.
 #' @param weights An (optional) RHS formula specifying a variable holding survey weights.
 #' @param estimate A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, \dQuote{amce}, estimated via \code{\link{amce}}), display frequencies (\dQuote{freq}, estimated via \code{\link{freqs}}), or marginal means (or AMMs, \dQuote{mm}, estimated via \code{\link{mm}}). Additional options may be made available in the future.
-#' @param feature_labels A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables in \code{formula} and character string values; arguments passed here override variable attributes.
-#' @param level A numeric value indicating the significance level at which to calculate confidence intervals for the AMCEs (by default 0.95, meaning 95-percent CIs are returned).
-#' @param \dots Additional arguments to \code{\link{amce}} or \code{\link{mm}}.
+#' @param \dots Additional arguments to \code{\link{amce}}, \code{\link{freqs}}, or \code{\link{mm}}.
 #' @author Thomas J. Leeper <thosjleeper@gmail.com>
 #' @details The main function \code{cj} is a convenience function wrapper around the underlying estimation functions that provide for average marginal component effects (AMCEs), by default, via the \code{\link{amce}} function and marginal means (MMs) via the \code{\link{mm}} function. Additional estimands may be supported in the future through their own functions and through the \code{cj} interface. Plotting is provided via ggplot2 for both types of estimates.
 #' @examples
@@ -52,7 +50,7 @@
 #' # plot AMCEs
 #' plot(d2)
 #' }
-#' @seealso \code{\link{amce}} \code{\link{mm}} \code{\link{plot.cj_amce}}
+#' @seealso \code{\link{amce}} \code{\link{mm}} \code{\link{freqs}} \code{\link{plot.cj_amce}}
 #' @keywords package 
 NULL
 
@@ -64,14 +62,12 @@ function(data,
          id = NULL,
          weights = NULL,
          estimate = c("amce", "freqs", "mm"),
-         feature_labels = NULL,
-         level = 0.95,
          ...
 ) {
     estimate <- match.arg(estimate)
     switch(estimate,
-           amce = amce(data = data, formula = formula, id = id, weights = weights, feature_labels = feature_labels, level = level, ...),
-           freqs = freqs(data = data, formula = formula, id = id, weights = weights, feature_labels = feature_labels, ...),
-           mm = mm(data = data, formula = formula, id = id, weights = weights, feature_labels = feature_labels, level = level, ...)
+           amce = amce(data = data, formula = formula, id = id, weights = weights, ...),
+           freqs = freqs(data = data, formula = formula, id = id, weights = weights, ...),
+           mm = mm(data = data, formula = formula, id = id, weights = weights, ...)
            )
 }

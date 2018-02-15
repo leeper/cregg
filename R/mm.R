@@ -6,7 +6,8 @@
 #' @param weights An (optional) RHS formula specifying a variable holding survey weights.
 #' @param feature_order An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.
 #' @param feature_labels A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables in \code{formula} and character string values; arguments passed here override variable attributes.
-#' @param level A numeric value indicating the significance level at which to calculate confidence intervals for the MMs (by default 0.95, meaning 95-percent CIs are returned).
+#' @param level_order A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via \code{\link{plot.cj_mm}}, etc.
+#' @param alpha A numeric value indicating the significance level at which to calculate confidence intervals for the MMs (by default 0.95, meaning 95-percent CIs are returned).
 #' @param \dots Ignored.
 #' @details \code{mm} provides descriptive representations of conjoint data as marginal means (MMs), which represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, AMMs can take any value in the full range of the outcome. Plotting functionality is provided in \code{\link{plot.cj_mm}}.
 #' @examples
@@ -26,7 +27,8 @@ function(data,
          weights = NULL,
          feature_order = NULL,
          feature_labels = NULL,
-         level = 0.95,
+         level_order = c("ascending", "descending"),
+         alpha = 0.05,
          ...
 ) {
     
@@ -35,9 +37,6 @@ function(data,
     
     # get RHS variables, variable labels, and factor levels
     RHS <- all.vars(stats::update(formula, 0 ~ . ))
-    
-    # function to produce "fancy" feature labels
-    feature_labels <- clean_feature_labels(data = data, RHS = RHS, feature_labels = feature_labels)
     
     # process feature_order argument
     if (!is.null(feature_order)) {
@@ -53,18 +52,21 @@ function(data,
     # get `id` as character string
     idvar <- all.vars(update(id, 0 ~ . ))
     
+    # set level_order (within features) to ascending or descending
+    level_order <- match.arg(level_order)
+    
+    # function used in cj and ammplot to produce "fancy" feature labels
+    feature_labels <- clean_feature_labels(data = data, RHS = RHS, feature_labels = feature_labels)
+    
+    # convert feature labels and levels to data frame
+    term_labels_df <- make_term_labels_df(data, feature_order, level_order = level_order)
+    
     # get `weights` as character string
     if (!is.null(weights)) {
         weightsvar <- all.vars(update(weights, 0 ~ . ))
     } else {
         weightsvar <- NULL
     }
-    
-    # function used in cj and ammplot to produce "fancy" feature labels
-    feature_labels <- clean_feature_labels(data = data, RHS = RHS, feature_labels = feature_labels)
-    
-    # convert feature labels and levels to data frame
-    term_labels_df <- make_term_labels_df(data, feature_order)
     
     # reshape data
     long <- stats::reshape(data[c(outcome, RHS, idvar, weightsvar)], 
@@ -87,8 +89,8 @@ function(data,
     coef_dat <- survey::svyby(~ OUTCOME, ~ Level, FUN = survey::svymean, design = svylong)
     coef_dat$z <- coef_dat$OUTCOME/coef_dat$se
     coef_dat$p <- 2*stats::pnorm(-coef_dat$z)
-    coef_dat$lower <- coef_dat$OUTCOME - stats::qnorm(level + ((1-level)/2)) * coef_dat$se
-    coef_dat$upper <- coef_dat$OUTCOME + stats::qnorm(level + ((1-level)/2)) * coef_dat$se
+    coef_dat$lower <- coef_dat$OUTCOME - stats::qnorm((1-alpha) + (alpha/2)) * coef_dat$se
+    coef_dat$upper <- coef_dat$OUTCOME + stats::qnorm((1-alpha) + (alpha/2)) * coef_dat$se
     names(coef_dat) <- c("level", "estimate", "std.error", "z", "p", "lower", "upper")
     
     # attach feature labels
@@ -96,6 +98,7 @@ function(data,
     coef_dat$feature <- factor(coef_dat$feature,
                                levels = feature_order,
                                labels = feature_labels[feature_order])
+    coef_dat$level <- factor(coef_dat$level, levels = term_labels_df$level)
     coef_dat$outcome <- outcome
     
     # return organized data frame
