@@ -1,0 +1,34 @@
+---
+title: "Reproducing Hainmueller et al. ("
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig_caption: false
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{Reproducing Hainmueller et al. (2014)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Coming soon...
+
+
+This document reproduces the core results of the immigrant admission experiment from Hainmueller et al. (2014).
+
+## Figure 3: Effects of immigrant attributes on preference for admission
+
+
+## Figure 4: Effects of immigrant attributes on preference for admission by ethnocentrism
+
+
+## Figure 5: Interaction of immigrant’s job plans and other attributes on preference for admission
+
+
+# References
+
+Hainmueller, J., Hopkins, D., and Yamamoto T. (2014) "Causal Inference in Conjoint Analysis: Understanding Multi-Dimensional Choices via Stated Preference Experiments." *Political Analysis* 22(1):1-30.
