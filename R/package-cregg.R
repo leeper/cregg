@@ -112,5 +112,5 @@ function(data,
                )
     }
     # return value
-    return(out)
+    return(structure(out, by = by_vars))
 }

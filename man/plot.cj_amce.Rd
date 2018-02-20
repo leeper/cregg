@@ -6,10 +6,11 @@
 \alias{plot.cj_freqs}
 \title{Plot AMCE estimates, MM descriptives, and frequency plots}
 \usage{
-\method{plot}{cj_amce}(x, group = NULL, feature_headers = TRUE,
+\method{plot}{cj_amce}(x, group = attr(x, "by"), feature_headers = TRUE,
   header_fmt = "(\%s)", size = 1, xlab = "Estimated AMCE", ylab = "",
-  legend_title = "Feature", legend_pos = "bottom", xlim = NULL,
-  vline = 0, vline_color = "gray", theme = ggplot2::theme_bw(), ...)
+  legend_title = if (is.null(group)) "Feature" else "Group",
+  legend_pos = "bottom", xlim = NULL, vline = 0, vline_color = "gray",
+  theme = ggplot2::theme_bw(), ...)
 }
 \arguments{
 \item{x}{A data frame returned from \code{\link{cj}} or \code{\link{mm}}.}

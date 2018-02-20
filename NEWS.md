@@ -1,5 +1,9 @@
 # CHANGES TO cregg 0.1.3
 
+* Added `amce_by_reference()` function to examine sensitivity of results to choice of reference category.
+
+# CHANGES TO cregg 0.1.3
+
 * Changed the `level` argument to `alpha` to avoid ambiguity with "levels" in the "feature level" sense used in the package (as opposed to the intended alpha or significance level).
 * Added a `level_order` argument to `freqs()`, `mm()`, and `amce()` that specifies whether feature levels are ordered ascending in the output or descending. This is mostly only useful for plotting to specify whether the levels within each feature should be ordered with lower factor levels at the top ("ascending") or at the bottom ("descending") of the plot. (#1)
 * `cj()` gains a `by` argument, which enables subgroup analyses, for example to investigate profile spillover effects or analyses by subsets of respondents. (#3)

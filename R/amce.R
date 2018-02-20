@@ -1,3 +1,4 @@
+#' @rdname amce
 #' @title Tidy estimation of AMCEs
 #' @description Estimate AMCEs for a conjoint analysis and return a tidy data frame of results
 #' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and its reported AMCE will be zero (for printing).
@@ -8,21 +9,27 @@
 #' @param feature_labels A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables in \code{formula} and character string values; arguments passed here override variable attributes.
 #' @param level_order A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via \code{\link{plot.cj_amce}}, etc.
 #' @param alpha A numeric value indicating the significance level at which to calculate confidence intervals for the AMCEs (by default 0.95, meaning 95-percent CIs are returned).
-#' @param \dots Additional arguments to \code{\link[stats]{glm}} or \code{\link[survey]{svyglm}}, the latter being used if \code{weights} is non-NULL.
+#' @param \dots For \code{amce}: additional arguments to \code{\link[stats]{glm}} or \code{\link[survey]{svyglm}}, the latter being used if \code{weights} is non-NULL. For \code{amce_by_reference}: additional arguments passed to \code{amce}.
 #' @return A data frame
 #' @details This function provides estimates of AMCEs. It can also be used for balance testing by specifying a covariate rather outcome on the left-hand side of \code{formula}. See examples.
+#' 
+#' \code{amce_by_reference} provides a tool for quick sensitivity analysis. AMCEs are defined relative to an arbitrary reference category. This function will loop over all feature levels (for a specified feature) to show how interpretation will be affected by choice of reference category.
 #' 
 #' Users may desire to specify a \code{family} argument via \code{\dots}, which should be a \dQuote{family} object such as \code{\link[stats]{gaussian}}. Sensible alternatives are \code{\link[stats]{binomial}} (for binary outcomes) and \code{\link[stats]{quasibinomial}} (for weighted survey data).
 #' @examples
 #' data(hainmueller)
-#' set.seed(12345)
-#' cj(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, 
-#'    id = ~ CaseID, feature_order = c("LanguageSkills", "Gender", "Education"))
+#' # estimating AMCEs
+#' amce(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, 
+#'      id = ~ CaseID, feature_order = c("LanguageSkills", "Gender", "Education"))
 #' 
 #' \dontrun{
 #' # balance testing example
-#'   plot(amce(hainmueller[!is.na(hainmueller$ethnocentrism),
-#'        ethnocentrism ~ Gender + Education + LanguageSkills, id = ~ CaseID))
+#' plot(amce(hainmueller[!is.na(hainmueller$ethnocentrism),
+#'      ethnocentrism ~ Gender + Education + LanguageSkills, id = ~ CaseID))
+#' 
+#' # reference category sensitivity
+#' amce_by_reference(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, 
+#'                   variable = ~ LanguageSkills, id = ~ CaseID)
 #' }
 #' @seealso \code{\link{plot.cj_amce}}
 #' @import stats
@@ -124,4 +131,29 @@ function(data,
     out <- out[order(out$level),]
     rownames(out) <- seq_len(nrow(out))
     return(structure(out, class = c("cj_amce", "data.frame")))
+}
+
+#' @rdname amce
+#' @export
+amce_by_reference <- function(data, formula, variable, ...) {
+    # get outcome variable
+    variable <- all.vars(stats::update(variable, 0 ~ .))[[1L]]
+    
+    # get levels
+    levs <- levels(data[[variable]])
+    
+    # loop over levels
+    out <- list()
+    for (i in seq_along(levs)) {
+        data[[variable]] <- relevel(data[[variable]], levs[i])
+        out[[i]] <- amce(data, formula, ...)
+        out[[i]][[".reference"]] <- levs[i]
+    }
+
+    # return value
+    ## stack
+    out <- do.call("rbind", out)
+    ## add reference category column
+    out[[".reference"]] <- factor(out[[".reference"]], levels = levs)
+    return(structure(out, class = c("cj_amce", "data.frame"), by = ".reference"))
 }
