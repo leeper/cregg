@@ -19,6 +19,7 @@ build: ../$(pkg)*.tar.gz
 check: ../$(pkg)*.tar.gz
 	cd ../ && R CMD check $(pkg)*.tar.gz
 	rm ../$(pkg)*.tar.gz
+	rm ../$(pkg).Rcheck
 
 install: ../$(pkg)*.tar.gz
 	cd ../ && R CMD INSTALL $(pkg)*.tar.gz
