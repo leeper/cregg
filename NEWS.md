@@ -1,6 +1,10 @@
-# CHANGES TO cregg 0.1.3
+# CHANGES TO cregg 0.1.5
 
-* Added `amce_by_reference()` function to examine sensitivity of results to choice of reference category.
+* Added `props()` function to calculate display proportions for features or combinations of features (e.g., for examining constrained designs). Updated documentation accordingly. (#2)
+
+# CHANGES TO cregg 0.1.4
+
+* Added `amce_by_reference()` function to examine sensitivity of results to choice of reference category. (#2)
 
 # CHANGES TO cregg 0.1.3
 

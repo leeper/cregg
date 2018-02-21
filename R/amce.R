@@ -3,6 +3,7 @@
 #' @description Estimate AMCEs for a conjoint analysis and return a tidy data frame of results
 #' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and its reported AMCE will be zero (for printing).
 #' @param formula A formula specifying an AMCE model to be estimated. All variables should be factors.
+#' @param variable An RHS formula containing a single factor variable from \code{formula}. This will be used by \code{amce_by_reference} to estimate AMCEs relative to each possible factor level as a reference category. If more than one RHS variables are specified, the first will be used.
 #' @param id An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.
 #' @param weights An (optional) RHS formula specifying a variable holding survey weights.
 #' @param feature_order An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.
@@ -11,9 +12,9 @@
 #' @param alpha A numeric value indicating the significance level at which to calculate confidence intervals for the AMCEs (by default 0.95, meaning 95-percent CIs are returned).
 #' @param \dots For \code{amce}: additional arguments to \code{\link[stats]{glm}} or \code{\link[survey]{svyglm}}, the latter being used if \code{weights} is non-NULL. For \code{amce_by_reference}: additional arguments passed to \code{amce}.
 #' @return A data frame
-#' @details This function provides estimates of AMCEs. It can also be used for balance testing by specifying a covariate rather outcome on the left-hand side of \code{formula}. See examples.
+#' @details \code{amce} provides estimates of AMCEs (or rather, average marginal effects for each feature level). It does not calculate AMCEs for constrained conjoint designs. The function can also be used for balance testing by specifying a covariate rather outcome on the left-hand side of \code{formula}. See examples.
 #' 
-#' \code{amce_by_reference} provides a tool for quick sensitivity analysis. AMCEs are defined relative to an arbitrary reference category. This function will loop over all feature levels (for a specified feature) to show how interpretation will be affected by choice of reference category.
+#' \code{amce_by_reference} provides a tool for quick sensitivity analysis. AMCEs are defined relative to an arbitrary reference category (i.e., feature level). This function will loop over all feature levels (for a specified feature) to show how interpretation will be affected by choice of reference category. The resulting data frame will be a stacked result from \code{amce}, containing an additional \code{.reference} column specifying which level of \code{variable} was used as the reference category.
 #' 
 #' Users may desire to specify a \code{family} argument via \code{\dots}, which should be a \dQuote{family} object such as \code{\link[stats]{gaussian}}. Sensible alternatives are \code{\link[stats]{binomial}} (for binary outcomes) and \code{\link[stats]{quasibinomial}} (for weighted survey data).
 #' @examples
@@ -28,8 +29,9 @@
 #'      ethnocentrism ~ Gender + Education + LanguageSkills, id = ~ CaseID))
 #' 
 #' # reference category sensitivity
-#' amce_by_reference(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, 
-#'                   variable = ~ LanguageSkills, id = ~ CaseID)
+#' x <- amce_by_reference(hainmueller, ChosenImmigrant ~ LanguageSkills + Education, 
+#'        variable = ~ LanguageSkills, id = ~ CaseID)
+#' plot(x, group = ".reference")
 #' }
 #' @seealso \code{\link{plot.cj_amce}}
 #' @import stats

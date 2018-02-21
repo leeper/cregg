@@ -29,6 +29,8 @@ amce_by_reference(data, formula, variable, ...)
 \item{alpha}{A numeric value indicating the significance level at which to calculate confidence intervals for the AMCEs (by default 0.95, meaning 95-percent CIs are returned).}
 
 \item{\dots}{For \code{amce}: additional arguments to \code{\link[stats]{glm}} or \code{\link[survey]{svyglm}}, the latter being used if \code{weights} is non-NULL. For \code{amce_by_reference}: additional arguments passed to \code{amce}.}
+
+\item{variable}{An RHS formula containing a single factor variable from \code{formula}. This will be used by \code{amce_by_reference} to estimate AMCEs relative to each possible factor level as a reference category. If more than one RHS variables are specified, the first will be used.}
 }
 \value{
 A data frame
@@ -37,9 +39,9 @@ A data frame
 Estimate AMCEs for a conjoint analysis and return a tidy data frame of results
 }
 \details{
-This function provides estimates of AMCEs. It can also be used for balance testing by specifying a covariate rather outcome on the left-hand side of \code{formula}. See examples.
+\code{amce} provides estimates of AMCEs (or rather, average marginal effects for each feature level). It does not calculate AMCEs for constrained conjoint designs. The function can also be used for balance testing by specifying a covariate rather outcome on the left-hand side of \code{formula}. See examples.
 
-\code{amce_by_reference} provides a tool for quick sensitivity analysis. AMCEs are defined relative to an arbitrary reference category. This function will loop over all feature levels (for a specified feature) to show how interpretation will be affected by choice of reference category.
+\code{amce_by_reference} provides a tool for quick sensitivity analysis. AMCEs are defined relative to an arbitrary reference category (i.e., feature level). This function will loop over all feature levels (for a specified feature) to show how interpretation will be affected by choice of reference category. The resulting data frame will be a stacked result from \code{amce}, containing an additional \code{.reference} column specifying which level of \code{variable} was used as the reference category.
 
 Users may desire to specify a \code{family} argument via \code{\dots}, which should be a \dQuote{family} object such as \code{\link[stats]{gaussian}}. Sensible alternatives are \code{\link[stats]{binomial}} (for binary outcomes) and \code{\link[stats]{quasibinomial}} (for weighted survey data).
 }
@@ -55,8 +57,9 @@ plot(amce(hainmueller[!is.na(hainmueller$ethnocentrism),
      ethnocentrism ~ Gender + Education + LanguageSkills, id = ~ CaseID))
 
 # reference category sensitivity
-amce_by_reference(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, 
-                  variable = ~ LanguageSkills, id = ~ CaseID)
+x <- amce_by_reference(hainmueller, ChosenImmigrant ~ LanguageSkills + Education, 
+       variable = ~ LanguageSkills, id = ~ CaseID)
+plot(x, group = ".reference")
 }
 }
 \seealso{

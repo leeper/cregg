@@ -12,7 +12,7 @@
 #' @param by A formula containing only RHS variables, specifying grouping factors over which to perform estimation.
 #' @param \dots Additional arguments to \code{\link{amce}}, \code{\link{freqs}}, or \code{\link{mm}}.
 #' @author Thomas J. Leeper <thosjleeper@gmail.com>
-#' @details The main function \code{cj} is a convenience function wrapper around the underlying estimation functions that provide for average marginal component effects (AMCEs), by default, via the \code{\link{amce}} function, marginal means (MMs) via the \code{\link{mm}} function, and display frequencies via \code{\link{freqs}}. Additional estimands may be supported in the future through their own functions and through the \code{cj} interface. Plotting is provided via ggplot2 for both types of estimates.
+#' @details The main function \code{cj} is a convenience function wrapper around the underlying estimation functions that provide for average marginal component effects (AMCEs), by default, via the \code{\link{amce}} function, marginal means (MMs) via the \code{\link{mm}} function, and display frequencies via \code{\link{freqs}} and \code{\link{props}}. Additional estimands may be supported in the future through their own functions and through the \code{cj} interface. Plotting is provided via ggplot2 for both types of estimates.
 #' 
 #' The only additional functionality provided by \code{cj} over the underlying functions is the \code{by} argument, which will perform operations on subsets of \code{data}, returning a single data frame. This can be useful, for example, for evaluating profile spillover effects and subgroup results.
 #' 
@@ -96,7 +96,7 @@ function(data,
         }
         ## get names of subsets
         by_vals <- stats::setNames(do.call("rbind.data.frame", strsplit(names(split_df), "***", fixed = TRUE)), by_vars)
-        by_vals[["BY"]] <- seq_len(nrow(by_vals))
+        by_vals[["BY"]] <- factor(seq_len(nrow(by_vals)))
         # combine back into data frame
         out <- do.call("rbind", BY)
         out <- structure(
@@ -105,6 +105,7 @@ function(data,
           BY = TRUE
         )
     } else {
+        by_vars <- NULL
         out <- switch(estimate,
                  amce = amce(data = data, formula = formula, id = id, weights = weights, ...),
                  freqs = freqs(data = data, formula = formula, id = id, weights = weights, ...),

@@ -1,3 +1,4 @@
+#' @rdname mm
 #' @title Marginal Means
 #' @description Calculate (descriptive) marginal means (MMs) from a conjoint design
 #' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and its reported marginal mean will be zero (for printing).

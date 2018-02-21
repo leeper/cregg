@@ -2,10 +2,13 @@
 % Please edit documentation in R/freqs.R
 \name{freqs}
 \alias{freqs}
+\alias{props}
 \title{Conjoint feature frequencies}
 \usage{
 freqs(data, formula, id, weights = NULL, feature_order = NULL,
   feature_labels = NULL, level_order = c("ascending", "descending"), ...)
+
+props(data, formula, id, weights = NULL, margin = NULL, ...)
 }
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors.}
@@ -23,16 +26,28 @@ freqs(data, formula, id, weights = NULL, feature_order = NULL,
 \item{level_order}{A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via \code{\link{plot.cj_freqs}}, etc.}
 
 \item{\dots}{Ignored.}
+
+\item{margin}{A numeric value passed to \code{\link[base]{prop.table}}. If \code{NULL} overall proportions are calculated.}
 }
 \description{
-Tabulate and visualize conjoint feature frequencies
+Tabulate and visualize conjoint feature frequencies and proportions
 }
 \details{
-\code{freqs} provides a descriptive check on the presentation of conjoint features (to ensure equal or intentionally unequal appearance of levels). This is mostly useful for plotting functionality provided in \code{\link{plot.cj_freqs}}.
+These two functions provide slightly different functionality. \code{props} provides tidy proportion tables to examine cross-feature restrictions in conjoint designs that are not equally randomized. This enables, for example, tabulation and visualization of complete restrictions (where combinations of two or more features are not permitted), as well as calculation of AMCEs for constrained designs appropriately weighted by the display proportions for particular combinations of features.
+
+\code{freqs} provides \emph{marginal} display frequencies, which are a descriptive check on the presentation of individual conjoint features (for example, to ensure equal or intentionally unequal appearance of levels). This is mostly useful for plotting functionality provided in \code{\link{plot.cj_freqs}}, which provides barcharts for the frequency with which each level of each feature was presented.
 }
 \examples{
 data(hainmueller)
+# display frequencies
 freqs(hainmueller, ~ Gender + Education + LanguageSkills, id = ~ CaseID)
+
+# restrictions
+## check display proportions
+props(hainmueller, ~ Job, id = ~ CaseID)
+## check which combinations were not allowed
+subset(props(hainmueller, ~ Job + Education, id = ~ CaseID), Proportion == 0)
+
 }
 \seealso{
 \code{\link{plot.cj_mm}}

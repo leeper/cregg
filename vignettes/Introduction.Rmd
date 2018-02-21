@@ -19,12 +19,12 @@ This vignette provides an introduction to **cregg** a package for analyzing and 
 
  - Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs and munging of AMCE estimates into tidy data frames, via `amce()`
  - Calculation of marginal means (MMs) for conjoint designs and munging them into tidy data frames via `mm()`
- - Tabulation of display frequencies of feature attributes via `freqs()`
+ - Tabulation of display frequencies of feature attributes via `freqs()` and cross-tabulation of feature restrictions using `props()`
  - **ggplot2**-based visualizations of AMCEs and MMs, via `plot()` methods for all of the above
 
 The package takes its name from the surname of a famous White House Press Secretary.
 
-The main selling point of cregg is simplicity of implementation and - unlike the [cjoint](https://cran.r-project.org/package=cjoint) package - cregg tries to follow tidy data principles throughout. Thus the response from both `mm()` and `cj()` consists of tidy data frames that can easily be stacked with others (e.g., for computing AMCEs for subsets of respondents and then producing a facetted or grouped visualization). It also tries to take better advantage of data preprocessing steps by:
+The main selling point of cregg is simplicity of implementation and - unlike the [cjoint](https://cran.r-project.org/package=cjoint) package - cregg tries to follow tidy data principles throughout and provides a formula-based interface that meshes well with the underlying [**survey**](https://cran.r-project.org/package=survey)-based effect estimation API. Thus the response from any function is a tidy data frame that can easily be stacked with others (e.g., for computing AMCEs for subsets of respondents and then producing a facetted or grouped visualization). It also tries to take better advantage of data preprocessing steps by:
 
  - Using factor base levels rather than trying to set baseline levels atomically
  - Using "label" attributes on variables to provide pretty printing
@@ -82,11 +82,11 @@ The package also provide a useful function for checking display frequencies of c
 plot(freqs(hainmueller, f1, id = ~ CaseID))
 ```
 
-As can be clear in the above, constraints were imposed in the original study on the allowed combinations of `Job` and `Education` and also on combinations of `CountryOfOrigin` and `ReasonForApplication`:
+As can be clear in the above, constraints were imposed in the original study on the allowed combinations of `Job` and `Education` and also on combinations of `CountryOfOrigin` and `ReasonForApplication`. The `props()` function provides tidy proportions tables to quickly 
 
 ```{r table_freqs}
-table(hainmueller$Job, hainmueller$Education)
-table(hainmueller$CountryOfOrigin, hainmueller$ReasonForApplication)
+subset(props(hainmueller, ~ Job + Education, id = ~ CaseID), Proportion == 0)
+subset(props(hainmueller, ~ CountryOfOrigin + ReasonForApplication, id = ~ CaseID), Proportion == 0)
 ```
 
 
