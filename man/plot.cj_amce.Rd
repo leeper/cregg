@@ -8,7 +8,7 @@
 \usage{
 \method{plot}{cj_amce}(x, group = attr(x, "by"), feature_headers = TRUE,
   header_fmt = "(\%s)", size = 1, xlab = "Estimated AMCE", ylab = "",
-  legend_title = if (is.null(group)) "Feature" else "Group",
+  legend_title = if (is.null(group)) "Feature" else group,
   legend_pos = "bottom", xlim = NULL, vline = 0, vline_color = "gray",
   theme = ggplot2::theme_bw(), ...)
 }

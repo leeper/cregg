@@ -48,7 +48,7 @@ library("cregg")
 data("hainmueller")
 ```
 
-The package provides straightforward calculation and visualization of descriptive marginal means (MMs). These represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, AMMs can take any value in the full range of the outcome. Calculation of MMs entail no modelling assumptions are simply descriptive quantities of interest:
+The package provides straightforward calculation and visualization of descriptive marginal means (MMs). These represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all levels of all other features. In forced choice conjoint designs, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, AMMs can take any value in the full range of the outcome. Calculation of MMs entails no modelling assumptions and are therefore simply descriptive quantities of interest:
 
 ```{r mmplot}
 # descriptive plotting
@@ -58,9 +58,9 @@ f1 <- ChosenImmigrant ~ Gender + Education + LanguageSkills +
 plot(mm(hainmueller, f1, id = ~ CaseID), vline = 0.5)
 ```
 
-cregg functions uses `attributes(feature)$label` to provide pretty printing of feature labels, so that varible names can be arbitrary. These can be overwritten using the `feature_labels` argument to override these settings. Feature levels are always deduced from the `levels()` of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in `feature_order`.
+cregg functions use `attributes(feature)$label` to provide pretty printing of feature labels, so that variable names can be arbitrary. These can be overwritten using the `feature_labels` argument to override these settings. Feature levels are always deduced from the `levels()` of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in `feature_order`.
 
-A more common analytic approach for conjoints is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses `glm()` and `svyglm()` to perform estimation and [margins](https://cran.r-project.org/package=margins) to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. (No functionality is provided at the moment for explict estimation of feature interaction effects.) Just like for `amm()`, the output of `cj()` (or its alias, `amce()`) is a tidy data frame:
+A more common analytic approach for conjoints is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses `glm()` and `svyglm()` to perform estimation and [margins](https://cran.r-project.org/package=margins) to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. (No functionality is provided at the moment for explict estimation of feature interaction effects.) Just like for `mm()`, the output of `cj()` (or its alias, `amce()`) is a tidy data frame:
 
 ```{r amce}
 # estimation
@@ -75,7 +75,28 @@ This makes it very easy to modify, combine, print, etc. the resulting output. It
 plot(amces)
 ```
 
-The package also provide a useful function for checking display frequencies of conjoint features (to ensure equal - or unequal - display frequency):
+# Subgroup Analyis
+
+The high-level `cj()` provides some convenience functionality for examining results across subgroups of respondents. This can be useful for splitting results by subgroups or for diagnostics. For example, Hainmueller et al. were interested in result by respondent ethnocentrism. We can create a median split on the ethnocentrism variable and plot marginal means for the two groups:
+
+```{r ethnocentrism_split}
+hainmueller$ethno_cut <-
+  factor(hainmueller$ethnocentrism > median(hainmueller$ethnocentrism, na.rm = TRUE),
+         labels = c("high", "low"))
+plot(cj(hainmueller, ChosenImmigrant ~ CountryOfOrigin + LanguageSkills,
+        id = ~CaseID, by = ~ ethno_cut, estimate = "mm"),
+     group = "ethno_cut", vline = 0.5)
+```
+
+Strikingly the results are quite similar for the two subgroup.
+
+# Diagnostics
+
+The package provides a number of diagnostic fucnctions. 
+
+### Display Frequencies and Proportions
+
+For example, to check display frequencies of conjoint features (to ensure equal - or unequal - display frequency):
 
 ```{r plot_freqs}
 # plotting of display frequencies
@@ -89,5 +110,44 @@ subset(props(hainmueller, ~ Job + Education, id = ~ CaseID), Proportion == 0)
 subset(props(hainmueller, ~ CountryOfOrigin + ReasonForApplication, id = ~ CaseID), Proportion == 0)
 ```
 
+So that it is possible to very the design was implemented as intended or to perform further subgroup analyses.
 
+### Balance Testing
+
+The main `amce()` and `mm()` functions can also be used for balance testing. Rather than comparing outcomes across features levels, we will compare a covariate across feature levels. Both approaches will give a similar result:
+
+```{r balance_testing}
+plot(mm(hainmueller,
+        ethnocentrism ~ Job + Education + CountryOfOrigin + ReasonForApplication,
+        id = ~ CaseID),
+     xlim = range(hainmueller$ethnocentrism, na.rm = TRUE),
+     vline = mean(hainmueller$ethnocentrism, na.rm = TRUE))
+```
+Given that confidence intervals for each feature hover closely around the grand mean, there is little reason to believe that imbalance is a problem. The same analysis could be performed using `amce()`.
+
+### Carryover Testing
+
+The high-level functionality of `cj()` from earlier for performing subgroup analyses can also be used for testing carryover problems.
+
+```{r carryovers}
+plot(cj(hainmueller, f1, id = ~CaseID, by = ~ contest_no, estimate = "mm"),
+     group = "contest_no", vline = 0.5)
+```
+
+Here marginal means are shown separately for each "contest number" (first, second, third, etc.) from the study. As should be quite visually clear, there are no obvious patterns wherein a given feature generates consistently more or less positive rating based upon the order of the rating tasks.
+
+### Left/Right Preferences
+
+The same basic approach can be used to evaluate whether there is, for example, any preference for the lefthand or righthand profile (in a two-profile design):
+
+```{r leftright}
+plot(cj(hainmueller, f1, id = ~CaseID, by = ~ profile, estimate = "mm"),
+     group = "profile", vline = 0.5)
+```
+
+Again, in this example there are no obvious concerns generated form the diagnostic.
+
+### Reference Group Selection
+
+Coming soon...
 
