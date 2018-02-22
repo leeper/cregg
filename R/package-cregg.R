@@ -87,7 +87,7 @@ function(data,
         # get RHS variables, variable labels, and factor levels
         by_vars <- all.vars(stats::update(by, 0 ~ . ))
         # split
-        split_df <- split(data, model.frame(by, data = data), sep = "***")
+        split_df <- split(data, model.frame(by, data = data, na.action = NULL), sep = "***")
         # get results for subsets
         BY <- list()
         for(i in seq_along(split_df)) {
