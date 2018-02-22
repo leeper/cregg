@@ -29,7 +29,12 @@
 #'          JobPlans + ReasonForApplication + PriorEntry, id = ~ CaseID)
 #' 
 #' # plot MMs
+#' ## simple plot
 #' plot(d1)
+#' ## plot with facetting by feature
+#' plot(d1, feature_headers = FALSE) + 
+#'   ggplot2::facet_wrap(~feature, ncol = 1L, 
+#'                       scales = "free_y", strip.position = "right")
 #'
 #' # MMs split by profile number
 #' stacked <- do.call("rbind", lapply(1:3, function(x) {
@@ -39,7 +44,8 @@
 #'     out$contest <- x
 #'     out
 #' }))
-#' stacked$contest <- factor(stacked$contest, levels = 1:3, labels = c("First", "Second", "Third"))
+#' stacked$contest <- factor(stacked$contest, levels = 1:3,
+#'                           labels = c("First", "Second", "Third"))
 #' 
 #' ## plot with grouping
 #' plot(stacked, group = "contest", feature_headers = FALSE)
