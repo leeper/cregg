@@ -135,8 +135,8 @@ Installation
 This package is not yet on CRAN. To install the latest development version you can pull a potentially unstable version directly from GitHub:
 
 ``` r
-if (!require("ghit")) {
-    install.packages("ghit")
+if (!require("remotes")) {
+    install.packages("remotes")
 }
-ghit::install_github("leeper/cregg")
+remotes::install_github("leeper/cregg")
 ```
