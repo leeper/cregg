@@ -84,9 +84,9 @@ function(data,
     
     # convert to survey object
     if (!is.null(weights)) {
-        svylong <- survey::svydesign(ids = id, weights = weights, data = long)
+        svylong <- survey::svydesign(ids = ~ 0, weights = weights, data = long)
     } else {
-        svylong <- survey::svydesign(ids = id, weights = ~0, data = long)
+        svylong <- survey::svydesign(ids = ~ 0, weights = ~0, data = long)
     }
     
     # calculate AMMs, SEs, etc.
@@ -120,9 +120,9 @@ function(data,
     
     # create survey design object
     if (inherits(data, "data.frame") && is.null(weights)) {
-        svydesign <- survey::svydesign(ids = id, weights = ~ 1, data = data)
+        svydesign <- survey::svydesign(ids = ~ 0, weights = ~ 1, data = data)
     } else if (inherits(data, "data.frame")) {
-        svydesign <- survey::svydesign(ids = id, weights = weights, data = data)
+        svydesign <- survey::svydesign(ids = ~ 0, weights = weights, data = data)
     } else if (inherits(data, "survey.design")) {
         svydesign <- data
     } else {

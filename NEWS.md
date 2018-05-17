@@ -1,3 +1,8 @@
+# cregg 0.1.6
+
+* Fixed a bug in the creation of `svydesign()` objects that was generating incorrect variance estimates.
+* Fully imported **ggplot2** and **ggstance**.
+
 # cregg 0.1.5
 
 * Added `props()` function to calculate display proportions for features or combinations of features (e.g., for examining constrained designs). Updated documentation accordingly. (#2)

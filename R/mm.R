@@ -81,9 +81,9 @@ function(data,
     
     # convert to survey object
     if (!is.null(weights)) {
-        svylong <- survey::svydesign(ids = id, weights = weights, data = long)
+        svylong <- survey::svydesign(ids = ~ 0, weights = weights, data = long)
     } else {
-        svylong <- survey::svydesign(ids = id, weights = ~0, data = long)
+        svylong <- survey::svydesign(ids = ~ 0, weights = ~0, data = long)
     }
     
     # calculate AMMs, SEs, etc.

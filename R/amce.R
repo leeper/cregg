@@ -83,7 +83,7 @@ function(data,
         svydesign <- NULL
         mod <- stats::glm(formula, data = data, ...)
     } else if (inherits(data, "data.frame")) {
-        svydesign <- survey::svydesign(ids = id, weights = weights, data = data)
+        svydesign <- survey::svydesign(ids = ~ 0, weights = weights, data = data)
         mod <- survey::svyglm(formula, design = svydesign, ...)
     } else if (inherits(data, "survey.design")) {
         svydesign <- data
