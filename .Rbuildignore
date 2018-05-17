@@ -15,6 +15,7 @@
 ^docs$
 ^docs/.+$
 ^ignore$
+^man-roxygen$
 ^inst/doc/.+\.log$
 ^inst/doc/.+\.Rmd$
 ^vignettes/figure$

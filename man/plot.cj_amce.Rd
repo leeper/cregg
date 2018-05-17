@@ -53,7 +53,6 @@ Two \code{plot} methods are implemented: one for \dQuote{amce} data frames of co
 \examples{
 \dontrun{
 # load data
-requireNamespace("ggplot2")
 data("hainmueller")
 
 # calculate MMs

@@ -20,7 +20,6 @@
 #' @examples
 #' \dontrun{
 #' # load data
-#' requireNamespace("ggplot2")
 #' data("hainmueller")
 #' 
 #' # calculate MMs
@@ -63,7 +62,7 @@
 #' }
 #' @seealso \code{\link{amce}}, \code{\link{mm}}
 #' @import ggplot2
-#' @import ggstance
+#' @importFrom ggstance position_dodgev
 #' @import scales
 #' @export
 plot.cj_amce <- 
