@@ -62,6 +62,9 @@
 #' plot(d2)
 #' }
 #' @seealso \code{\link{amce}}, \code{\link{mm}}
+#' @import ggplot2
+#' @import ggstance
+#' @import scales
 #' @export
 plot.cj_amce <- 
 function(x, 
@@ -79,11 +82,6 @@ function(x,
          theme = ggplot2::theme_bw(),
          ...
 ) {
-    
-    # check for dependencies
-    requireNamespace("ggplot2")
-    requireNamespace("scales")
-    requireNamespace("ggstance")
     
     # optionally, add gaps between features
     if (isTRUE(feature_headers)) {
@@ -143,11 +141,6 @@ function(x,
          ...
 ) {
     
-    # check for dependencies
-    requireNamespace("ggplot2")
-    requireNamespace("scales")
-    requireNamespace("ggstance")
-    
     # optionally, add gaps between features
     if (isTRUE(feature_headers)) {
         x$level <- make_feature_headers(x, fmt = header_fmt)
@@ -200,10 +193,6 @@ function(x,
          theme = ggplot2::theme_bw(),
          ...
 ) {
-    
-    # check for dependencies
-    requireNamespace("ggplot2")
-    requireNamespace("scales")
     
     # optionally, add gaps between features
     if (isTRUE(feature_headers)) {
