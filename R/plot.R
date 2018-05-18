@@ -104,16 +104,22 @@ function(x,
         p <- p + ggplot2::geom_vline(xintercept = vline, colour = vline_color)
     }
     
-    p <- p + ggplot2::geom_point(position = ggstance::position_dodgev(height = 0.75), size = size) +
+    p <- p + ggplot2::geom_point(position = ggstance::position_dodgev(height = 0.75), size = size, na.rm = TRUE) +
              ggplot2::geom_errorbarh(ggplot2::aes_string(xmin = "lower", xmax = "upper"),  
-                                     size = 0.2, height = 0,
-                                     position = ggstance::position_dodgev(height = 0.75)) + 
-             ggplot2::scale_colour_discrete(guide = ggplot2::guide_legend(title = legend_title)) +
-             ggplot2::scale_x_continuous(limits = xlim, oob = scales::rescale_none) +
-             ggplot2::xlab(xlab) + 
-             ggplot2::ylab(ylab)
-    p <- p + theme + 
-      ggplot2::theme(
+                                     size = 0.2, height = 0, na.rm = TRUE,
+                                     position = ggstance::position_dodgev(height = 0.75))
+    if (is.null(group)) {
+        p <- p + ggplot2::scale_colour_discrete(guide = ggplot2::guide_legend(title = legend_title))
+    } else {
+        p <- p + ggplot2::scale_colour_discrete(breaks = levels(x[[group]]),
+                                                labels = levels(x[[group]]),
+                                                guide = ggplot2::guide_legend(title = legend_title))
+    }
+    p <- p +
+      ggplot2::scale_x_continuous(limits = xlim, oob = scales::rescale_none) +
+      ggplot2::xlab(xlab) + 
+      ggplot2::ylab(ylab) + 
+      theme + ggplot2::theme(
         legend.position = legend_pos,
         panel.grid.major = ggplot2::element_blank(),
         panel.grid.minor = ggplot2::element_blank()
@@ -162,16 +168,22 @@ function(x,
         p <- p + ggplot2::geom_vline(xintercept = vline, colour = vline_color)
     }
     
-    p <- p + ggplot2::geom_point(position = ggstance::position_dodgev(height = 0.75), size = size) +
+    p <- p + ggplot2::geom_point(position = ggstance::position_dodgev(height = 0.75), size = size, na.rm = TRUE) +
              ggplot2::geom_errorbarh(ggplot2::aes_string(xmin = "lower", xmax = "upper"),  
-                                     size = 0.2, height = 0,
-                                     position = ggstance::position_dodgev(height = 0.75)) + 
-             ggplot2::scale_colour_discrete(guide = ggplot2::guide_legend(title = legend_title)) +
-             ggplot2::scale_x_continuous(limits = xlim, oob = scales::rescale_none) +
-             ggplot2::xlab(xlab) + 
-             ggplot2::ylab(ylab)
-    p <- p + theme + 
-      ggplot2::theme(
+                                     size = 0.2, height = 0, na.rm = TRUE,
+                                     position = ggstance::position_dodgev(height = 0.75))
+    if (is.null(group)) {
+        p <- p + ggplot2::scale_colour_discrete(guide = ggplot2::guide_legend(title = legend_title))
+    } else {
+        p <- p + ggplot2::scale_colour_discrete(breaks = levels(x[[group]]),
+                                                labels = levels(x[[group]]),
+                                                guide = ggplot2::guide_legend(title = legend_title))
+    }
+    p <- p +
+      ggplot2::scale_x_continuous(limits = xlim, oob = scales::rescale_none) +
+      ggplot2::xlab(xlab) + 
+      ggplot2::ylab(ylab) + 
+      theme + ggplot2::theme(
         legend.position = legend_pos,
         panel.grid.major = ggplot2::element_blank(),
         panel.grid.minor = ggplot2::element_blank()
@@ -205,7 +217,7 @@ function(x,
         p <- ggplot2::ggplot(data = x, ggplot2::aes_string(y = "estimate", x = "level", fill = group, group = group))
     }
     
-    p <- p + ggplot2::geom_col() + 
+    p <- p + ggplot2::geom_col(na.rm = TRUE) + 
              ggplot2::scale_fill_discrete(guide = ggplot2::guide_legend(title = legend_title)) +
              ggplot2::coord_flip() + 
              ggplot2::xlab(xlab) + 

@@ -1,3 +1,7 @@
+# cregg 0.1.7
+
+* Removed some grouping warnings from `plot()` methods. (#8)
+
 # cregg 0.1.6
 
 * Fixed a bug in the creation of `svydesign()` objects that was generating incorrect variance estimates.
