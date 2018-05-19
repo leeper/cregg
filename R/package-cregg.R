@@ -8,9 +8,9 @@
 #' @param formula A formula specifying a model to be estimated. All variables should be factors.
 #' @param id An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.
 #' @param weights An (optional) RHS formula specifying a variable holding survey weights.
-#' @param estimate A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, \dQuote{amce}, estimated via \code{\link{amce}}), display frequencies (\dQuote{freq}, estimated via \code{\link{freqs}}), or marginal means (or AMMs, \dQuote{mm}, estimated via \code{\link{mm}}). Additional options may be made available in the future.
+#' @param estimate A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, \dQuote{amce}, estimated via \code{\link{amce}}), display frequencies (\dQuote{freq}, estimated via \code{\link{freqs}}), marginal means (or AMMs, \dQuote{mm}, estimated via \code{\link{mm}}), or differences in AMCEs (\dQuote{differences}, via \code{\link{amce_diffs}}). Additional options may be made available in the future.
 #' @param by A formula containing only RHS variables, specifying grouping factors over which to perform estimation.
-#' @param \dots Additional arguments to \code{\link{amce}}, \code{\link{freqs}}, or \code{\link{mm}}.
+#' @param \dots Additional arguments to \code{\link{amce}}, \code{\link{freqs}}, \code{\link{mm}}, or \code{\link{amce_diffs}}.
 #' @author Thomas J. Leeper <thosjleeper@gmail.com>
 #' @details The main function \code{cj} is a convenience function wrapper around the underlying estimation functions that provide for average marginal component effects (AMCEs), by default, via the \code{\link{amce}} function, marginal means (MMs) via the \code{\link{mm}} function, and display frequencies via \code{\link{freqs}} and \code{\link{props}}. Additional estimands may be supported in the future through their own functions and through the \code{cj} interface. Plotting is provided via ggplot2 for both types of estimates.
 #' 
@@ -73,19 +73,26 @@ NULL
 #' @rdname cregg
 #' @export
 cj <-
-function(data,
-         formula,
-         id = NULL,
-         weights = NULL,
-         estimate = c("amce", "freqs", "mm"),
-         by = NULL,
-         ...
+function(
+  data,
+  formula,
+  id = NULL,
+  weights = NULL,
+  estimate = c("amce", "freqs", "mm", "differences"),
+  by = NULL,
+  ...
 ) {
     estimate <- match.arg(estimate)
     
     if (!is.null(by)) {
         # get RHS variables, variable labels, and factor levels
         by_vars <- all.vars(stats::update(by, 0 ~ . ))
+        
+        # amce_diffs handles `by` internally
+        if (estimate == "differences") {
+            return(amce_diffs(data = data, formula = formula, by = by, id = id, weights = weights, ...))
+        }
+        
         # split
         split_df <- split(data, model.frame(by, data = data, na.action = NULL), sep = "***")
         # get results for subsets
@@ -104,7 +111,11 @@ function(data,
           class = c(paste0("cj_", estimate), "data.frame"),
           BY = TRUE
         )
+        out$BY <- factor(names(split_df)[out$BY])
     } else {
+        if (estimate == "differences") {
+            stop("Argument 'by' is required when estimate = 'diff'")
+        }
         by_vars <- NULL
         out <- switch(estimate,
                  amce = amce(data = data, formula = formula, id = id, weights = weights, ...),

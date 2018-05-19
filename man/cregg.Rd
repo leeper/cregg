@@ -8,7 +8,7 @@
 \title{Simple Conjoint Analyses and Visualization}
 \usage{
 cj(data, formula, id = NULL, weights = NULL, estimate = c("amce", "freqs",
-  "mm"), by = NULL, ...)
+  "mm", "differences"), by = NULL, ...)
 }
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be zero.}
@@ -19,11 +19,11 @@ cj(data, formula, id = NULL, weights = NULL, estimate = c("amce", "freqs",
 
 \item{weights}{An (optional) RHS formula specifying a variable holding survey weights.}
 
-\item{estimate}{A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, \dQuote{amce}, estimated via \code{\link{amce}}), display frequencies (\dQuote{freq}, estimated via \code{\link{freqs}}), or marginal means (or AMMs, \dQuote{mm}, estimated via \code{\link{mm}}). Additional options may be made available in the future.}
+\item{estimate}{A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, \dQuote{amce}, estimated via \code{\link{amce}}), display frequencies (\dQuote{freq}, estimated via \code{\link{freqs}}), marginal means (or AMMs, \dQuote{mm}, estimated via \code{\link{mm}}), or differences in AMCEs (\dQuote{differences}, via \code{\link{amce_diffs}}). Additional options may be made available in the future.}
 
 \item{by}{A formula containing only RHS variables, specifying grouping factors over which to perform estimation.}
 
-\item{\dots}{Additional arguments to \code{\link{amce}}, \code{\link{freqs}}, or \code{\link{mm}}.}
+\item{\dots}{Additional arguments to \code{\link{amce}}, \code{\link{freqs}}, \code{\link{mm}}, or \code{\link{amce_diffs}}.}
 }
 \description{
 Simple analyses of conjoint (factorial) experiments and visualization of results.

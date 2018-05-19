@@ -1,5 +1,6 @@
 # cregg 0.1.7
 
+* Added `amce_diffs()` and `amce_anova()` functions to assess differences in AMCEs by a grouping variable.
 * Removed some grouping warnings from `plot()` methods. (#8)
 
 # cregg 0.1.6
