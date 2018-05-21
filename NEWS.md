@@ -1,6 +1,7 @@
 # cregg 0.1.8
 
 * `mm()` gains an `h0` argument to specify a null hypothesis values so that z statistics and p-values are meaningful.
+* Added a basic test suite. (#4)
 
 # cregg 0.1.7
 
