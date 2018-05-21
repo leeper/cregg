@@ -36,21 +36,16 @@
 #'                       scales = "free_y", strip.position = "right")
 #'
 #' # MMs split by profile number
-#' stacked <- do.call("rbind", lapply(1:3, function(x) {
-#'     out <- mm(hainmueller[hainmueller$contest_no == x,], ChosenImmigrant ~ Gender + 
+#' stacked <- cj(hainmueller, ChosenImmigrant ~ Gender + 
 #'               Education + LanguageSkills + CountryOfOrigin + Job + JobExperience + 
-#'               JobPlans + ReasonForApplication + PriorEntry, id = ~ CaseID)
-#'     out$contest <- x
-#'     out
-#' }))
-#' stacked$contest <- factor(stacked$contest, levels = 1:3,
-#'                           labels = c("First", "Second", "Third"))
+#'               JobPlans + ReasonForApplication + PriorEntry, id = ~ CaseID,
+#'               estimate = "mm", by = ~ contest_no)
 #' 
 #' ## plot with grouping
-#' plot(stacked, group = "contest", feature_headers = FALSE)
+#' plot(stacked, group = "contest_no", feature_headers = FALSE)
 #' 
 #' ## plot with facetting
-#' plot(stacked) + ggplot2::facet_wrap(~contest, nrow = 1L)
+#' plot(stacked) + ggplot2::facet_wrap(~contest_no, nrow = 1L)
 #' 
 #' # estimate AMCEs
 #' d2 <- cj(hainmueller, ChosenImmigrant ~ Gender + Education + 
@@ -85,7 +80,19 @@ function(x,
     # optionally, add gaps between features
     if (isTRUE(feature_headers)) {
         x$level <- make_feature_headers(x, fmt = header_fmt)
-        x <- merge(x, data.frame(feature = unique(x$feature), level = sprintf(header_fmt, unique(x$feature))), all = TRUE)
+        to_merge <- data.frame(feature = unique(x$feature), level = sprintf(header_fmt, unique(x$feature)))
+        if ("BY" %in% names(x)) {
+            to_merge <- do.call("rbind", lapply(unique(x[["BY"]]), function(lev) {
+                to_merge[["BY"]] <- lev
+                to_merge
+            }))
+        } else if (!is.null(group)) {
+            to_merge <- do.call("rbind", lapply(unique(x[[group]]), function(lev) {
+                to_merge[[group]] <- lev
+                to_merge
+            }))
+        }
+        x <- merge(x, to_merge, all = TRUE)
     }
     
     if (is.null(group)) {
@@ -96,8 +103,16 @@ function(x,
     
     if (is.null(xlim)) {
         xmin <- min(x$lower, na.rm = TRUE)
+        xmin <- if (xmin < 0) 1.04*xmin else .96*xmin
         xmax <- max(x$upper, na.rm = TRUE)
-        xlim <- c(if (xmin < 0) 1.04*xmin else .96*xmin, if (xmax > 0) 1.04*xmax else .96*xmax)
+        xmax <- if (xmax > 0) 1.04*xmax else .96*xmax
+        # make symmetric
+        if (abs(xmin) > abs(xmax)) {
+            xmax <- abs(xmin)
+        } else {
+            xmin <- -xmax
+        }
+        xlim <- c(xmin, xmax)
     }
     
     if (!is.null(vline)) {
@@ -131,7 +146,7 @@ function(x,
 #' @export
 plot.cj_mm <- 
 function(x, 
-         group = NULL,
+         group = attr(x, "by"),
          feature_headers = TRUE,
          header_fmt = "(%s)",
          size = 1.0,
@@ -149,7 +164,19 @@ function(x,
     # optionally, add gaps between features
     if (isTRUE(feature_headers)) {
         x$level <- make_feature_headers(x, fmt = header_fmt)
-        x <- merge(x, data.frame(feature = unique(x$feature), level = sprintf(header_fmt, unique(x$feature))), all = TRUE)
+        to_merge <- data.frame(feature = unique(x$feature), level = sprintf(header_fmt, unique(x$feature)))
+        if ("BY" %in% names(x)) {
+            to_merge <- do.call("rbind", lapply(unique(x[["BY"]]), function(lev) {
+                to_merge[["BY"]] <- lev
+                to_merge
+            }))
+        } else if (!is.null(group)) {
+            to_merge <- do.call("rbind", lapply(unique(x[[group]]), function(lev) {
+                to_merge[[group]] <- lev
+                to_merge
+            }))
+        }
+        x <- merge(x, to_merge, all = TRUE)
     }
     
     if (is.null(group)) {
@@ -160,8 +187,16 @@ function(x,
     
     if (is.null(xlim)) {
         xmin <- min(x$lower, na.rm = TRUE)
+        xmin <- if (xmin < 0) 1.04*xmin else .96*xmin
         xmax <- max(x$upper, na.rm = TRUE)
-        xlim <- c(if (xmin < 0) 1.04*xmin else .96*xmin, if (xmax > 0) 1.04*xmax else .96*xmax)
+        xmax <- if (xmax > 0) 1.04*xmax else .96*xmax
+        # make symmetric
+        if (abs(xmin) > abs(xmax)) {
+            xmax <- abs(xmin)
+        } else {
+            xmin <- -xmax
+        }
+        xlim <- c(xmin, xmax)
     }
     
     if (!is.null(vline)) {
@@ -194,7 +229,7 @@ function(x,
 #' @export
 plot.cj_freqs <- 
 function(x, 
-         group = NULL,
+         group = attr(x, "by"),
          feature_headers = TRUE,
          header_fmt = "(%s)",
          xlab = "",
@@ -208,7 +243,19 @@ function(x,
     # optionally, add gaps between features
     if (isTRUE(feature_headers)) {
         x$level <- make_feature_headers(x, fmt = header_fmt)
-        x <- merge(x, data.frame(feature = unique(x$feature), level = sprintf(header_fmt, unique(x$feature))), all = TRUE)
+        to_merge <- data.frame(feature = unique(x$feature), level = sprintf(header_fmt, unique(x$feature)))
+        if ("BY" %in% names(x)) {
+            to_merge <- do.call("rbind", lapply(unique(x[["BY"]]), function(lev) {
+                to_merge[["BY"]] <- lev
+                to_merge
+            }))
+        } else if (!is.null(group)) {
+            to_merge <- do.call("rbind", lapply(unique(x[[group]]), function(lev) {
+                to_merge[[group]] <- lev
+                to_merge
+            }))
+        }
+        x <- merge(x, to_merge, all = TRUE)
     }
     
     if (is.null(group)) {

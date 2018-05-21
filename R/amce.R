@@ -149,13 +149,13 @@ amce_by_reference <- function(data, formula, variable, ...) {
     for (i in seq_along(levs)) {
         data[[variable]] <- relevel(data[[variable]], levs[i])
         out[[i]] <- amce(data, formula, ...)
-        out[[i]][[".reference"]] <- levs[i]
+        out[[i]][["BY"]] <- levs[i]
     }
 
     # return value
     ## stack
     out <- do.call("rbind", out)
     ## add reference category column
-    out[[".reference"]] <- factor(out[[".reference"]], levels = levs)
-    return(structure(out, class = c("cj_amce", "data.frame"), by = ".reference"))
+    out[["BY"]] <- factor(out[["BY"]], levels = levs)
+    return(structure(out, class = c("cj_amce", "data.frame"), by = "BY"))
 }
