@@ -1,3 +1,7 @@
+# cregg 0.1.9
+
+* Added new function `mm_diffs()` for calculating differences in marginal means.
+
 # cregg 0.1.8
 
 * `mm()` gains an `h0` argument to specify a null hypothesis values so that z statistics and p-values are meaningful.

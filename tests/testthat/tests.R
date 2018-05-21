@@ -31,6 +31,11 @@ test_that("mm() works", {
     expect_true(inherits(plot(x), "ggplot"))
 })
 
+test_that("mm_diffs() works", {
+    expect_true(inherits(x <- mm_diffs(hainmueller, ChosenImmigrant ~ LanguageSkills, by = ~ Gender, id = ~ CaseID), "cj_diffs"))
+    expect_true(inherits(plot(x), "ggplot"))
+})
+
 test_that("freqs() works", {
     expect_true(inherits(x <- freqs(hainmueller, ChosenImmigrant ~ Gender, id = ~ CaseID), "cj_freqs"))
     expect_true(inherits(plot(x), "ggplot"))

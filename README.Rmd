@@ -5,7 +5,7 @@
  - Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs and munging of AMCE estimates into tidy data frames, via `amce()`
  - Calculation of marginal means (MMs) for conjoint designs and munging them into tidy data frames via `mm()`
  - Tabulation of display frequencies of feature attributes via `freqs()` and cross-tabulation of feature restrictions using `props()`
- - Diagnostics to assess preference heterogeneity, including an omnibus statstical test (`cj_anova()`) and tidying of differences in AMCEs across subgroups (`amce_diffs()`)
+ - Diagnostics to assess preference heterogeneity, including an omnibus statstical test (`cj_anova()`) and tidying of differences in MMs (`mm_diffs()`) and AMCEs (`amce_diffs()`) across subgroups
  - Diagnostics to choose feature reference categories, via `amce_by_reference()`
  - **ggplot2**-based visualizations of AMCEs and MMs, via `plot()` methods for all of the above
 

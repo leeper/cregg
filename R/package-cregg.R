@@ -8,7 +8,7 @@
 #' @param formula A formula specifying a model to be estimated. All variables should be factors.
 #' @param id An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.
 #' @param weights An (optional) RHS formula specifying a variable holding survey weights.
-#' @param estimate A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, \dQuote{amce}, estimated via \code{\link{amce}}), display frequencies (\dQuote{freq}, estimated via \code{\link{freqs}}), marginal means (or AMMs, \dQuote{mm}, estimated via \code{\link{mm}}), or differences in AMCEs (\dQuote{differences}, via \code{\link{amce_diffs}}). Additional options may be made available in the future.
+#' @param estimate A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, \dQuote{amce}, estimated via \code{\link{amce}}), display frequencies (\dQuote{freq}, estimated via \code{\link{freqs}}), marginal means (or AMMs, \dQuote{mm}, estimated via \code{\link{mm}}), differences in MMs (\dQuote{mm_differences}, via \code{\link{mm_diffs}}), or differences in AMCEs (\dQuote{amce_differences}, via \code{\link{amce_diffs}}). Additional options may be made available in the future.
 #' @param by A formula containing only RHS variables, specifying grouping factors over which to perform estimation.
 #' @param \dots Additional arguments to \code{\link{amce}}, \code{\link{freqs}}, \code{\link{mm}}, or \code{\link{amce_diffs}}.
 #' @author Thomas J. Leeper <thosjleeper@gmail.com>
@@ -62,7 +62,7 @@
 #'         id = ~ CaseID, estimate = "mm", by = ~ ethnosplit)
 #' plot(x, group = "ethnosplit", vline = 0.5)
 #' }
-#' @seealso \code{\link{amce}} \code{\link{mm}} \code{\link{freqs}} \code{\link{plot.cj_amce}}
+#' @seealso \code{\link{amce}} \code{\link{mm}} \code{\link{freqs}} \code{\link{mm_diffs}} \code{\link{plot.cj_amce}}
 #' @keywords package 
 NULL
 
@@ -74,7 +74,7 @@ function(
   formula,
   id = NULL,
   weights = NULL,
-  estimate = c("amce", "freqs", "mm", "differences"),
+  estimate = c("amce", "freqs", "mm", "amce_differences", "mm_differences"),
   by = NULL,
   ...
 ) {
@@ -85,7 +85,9 @@ function(
         by_vars <- all.vars(stats::update(by, 0 ~ . ))
         
         # amce_diffs handles `by` internally
-        if (estimate == "differences") {
+        if (estimate == "mm_differences") {
+            return(mm_diffs(data = data, formula = formula, by = by, id = id, weights = weights, ...))
+        } else if (estimate == "amce_differences") {
             return(amce_diffs(data = data, formula = formula, by = by, id = id, weights = weights, ...))
         }
         
@@ -109,8 +111,8 @@ function(
         )
         out$BY <- factor(names(split_df)[out$BY])
     } else {
-        if (estimate == "differences") {
-            stop("Argument 'by' is required when estimate = 'diff'")
+        if (estimate %in% c("mm_differences", "amce_differences")) {
+            stop("Argument 'by' is required when estimate %in% c('mm_differences', 'amce_differences')")
         }
         by_vars <- NULL
         out <- switch(estimate,
