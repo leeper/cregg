@@ -1,24 +1,24 @@
 #' @rdname diffs
 #' @title Preference Heterogeneity Diagnostics
 #' @description Tests for preference heterogeneity in conjoint experiments
-#' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be zero.
+#' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be NA.
 #' @param formula A formula specifying a model to be estimated. All variables should be factors.
-#' @param id Ignored. An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.
-#' @param weights An (optional) RHS formula specifying a variable holding survey weights.
-#' @param estimate A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, \dQuote{amce}, estimated via \code{\link{amce}}), display frequencies (\dQuote{freq}, estimated via \code{\link{freqs}}), or marginal means (or AMMs, \dQuote{mm}, estimated via \code{\link{mm}}). Additional options may be made available in the future.
+#' @param id Ignored.
+#' @template weights
 #' @param by A formula containing only RHS variables, specifying grouping factors over which to perform estimation.
 #' @param \dots Additional arguments to \code{\link{amce}}, \code{\link{freqs}}, or \code{\link{mm}}.
 #' @author Thomas J. Leeper <thosjleeper@gmail.com>
 #' @return \code{amce_diffs} returns a data frame similar to the one returned by \code{\link{cj}}, including a \code{BY} column for easy merging with results returned by that function. \code{cj_anova} returns an \code{\link[stats]{anova}} object.
 #' @details \code{cj_anova} takes a model formula (\dQuote{reduced} model) and generates a \dQuote{full} model with full saturated interactions between the variables specified in \code{by} and all RHS variables in \code{formula}, then computes an F-test comparing the two models, providing a test for whether preferences vary across levels of \code{by}. This is, in essence, a test of whether all such interaction coefficients are distinguishable from zero. Because the test depends on overall model fit, not the coefficient variances, clustering is irrelevant.
 #' @examples
+#' data(hainmueller)
 #' # Test for heterogeneity by profile order
 #' cj_anova(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, by = ~ contest_no)
 #' 
 #' # Test for heterogeneity by CountryOfOrigin feature
 #' cj_anova(hainmueller, ChosenImmigrant ~ Gender + Education, by = ~ CountryOfOrigin)
 #' 
-#' # Differences in AMCEs
+#' # Differences in AMCEs by Gender feature (i.e., feature interactions)
 #' amce_diffs(hainmueller, ChosenImmigrant ~ LanguageSkills + Education, ~ Gender, id = ~ CaseID)
 #' 
 #' @seealso \code{\link{amce}} \code{\link{mm}} \code{\link{freqs}} \code{\link{plot.cj_amce}}

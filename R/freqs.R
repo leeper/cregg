@@ -3,12 +3,12 @@
 #' @description Tabulate and visualize conjoint feature frequencies and proportions
 #' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors.
 #' @param formula An RHS formula specifying conjoint features to tabulate. All RHS variables should be factors.
-#' @param id An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.
-#' @param weights An (optional) RHS formula specifying a variable holding survey weights.
+#' @template id
+#' @template weights
 #' @param margin A numeric value passed to \code{\link[base]{prop.table}}. If \code{NULL} overall proportions are calculated.
-#' @param feature_order An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.
-#' @param feature_labels A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables in \code{formula} and character string values; arguments passed here override variable attributes.
-#' @param level_order A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via \code{\link{plot.cj_freqs}}, etc.
+#' @template feature_order
+#' @template feature_labels
+#' @template level_order
 #' @param \dots Ignored.
 #' @details These two functions provide slightly different functionality. \code{props} provides tidy proportion tables to examine cross-feature restrictions in conjoint designs that are not equally randomized. This enables, for example, tabulation and visualization of complete restrictions (where combinations of two or more features are not permitted), as well as calculation of AMCEs for constrained designs appropriately weighted by the display proportions for particular combinations of features.
 #' 
@@ -30,14 +30,15 @@
 #' @importFrom survey svydesign svyby svymean
 #' @export
 freqs <- 
-function(data,
-         formula,
-         id,
-         weights = NULL,
-         feature_order = NULL,
-         feature_labels = NULL,
-         level_order = c("ascending", "descending"),
-         ...
+function(
+  data,
+  formula,
+  id,
+  weights = NULL,
+  feature_order = NULL,
+  feature_labels = NULL,
+  level_order = c("ascending", "descending"),
+  ...
 ) {
     
     # get RHS variables, variable labels, and factor levels
