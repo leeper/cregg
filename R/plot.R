@@ -144,6 +144,9 @@ function(x,
 }
 
 #' @export
+plot.cj_diffs <- plot.cj_amce
+
+#' @export
 plot.cj_mm <- 
 function(x, 
          group = attr(x, "by"),
@@ -190,12 +193,6 @@ function(x,
         xmin <- if (xmin < 0) 1.04*xmin else .96*xmin
         xmax <- max(x$upper, na.rm = TRUE)
         xmax <- if (xmax > 0) 1.04*xmax else .96*xmax
-        # make symmetric
-        if (abs(xmin) > abs(xmax)) {
-            xmax <- abs(xmin)
-        } else {
-            xmin <- -xmax
-        }
         xlim <- c(xmin, xmax)
     }
     

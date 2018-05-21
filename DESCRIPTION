@@ -15,7 +15,7 @@ Imports:
     stats,
     sandwich (>= 2.4-0),
     margins (>= 0.3.10),
-    survey,
+    survey (>= 3.33),
     ggplot2,
     ggstance,
     scales

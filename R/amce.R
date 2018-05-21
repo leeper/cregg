@@ -1,7 +1,7 @@
 #' @rdname amce
 #' @title Tidy estimation of AMCEs
 #' @description Estimate AMCEs for a conjoint analysis and return a tidy data frame of results
-#' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and its reported AMCE will be NA (for printing).
+#' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and its reported AMCE will be NA (for printing). Optionally, this can instead be an object of class \dQuote{survey.design} returned by \code{\link[survey]{svydesign}}.
 #' @param formula A formula specifying an AMCE model to be estimated. All variables should be factors.
 #' @param variable An RHS formula containing a single factor variable from \code{formula}. This will be used by \code{amce_by_reference} to estimate AMCEs relative to each possible factor level as a reference category. If more than one RHS variables are specified, the first will be used.
 #' @template id
@@ -16,7 +16,7 @@
 #' 
 #' \code{amce_by_reference} provides a tool for quick sensitivity analysis. AMCEs are defined relative to an arbitrary reference category (i.e., feature level). This function will loop over all feature levels (for a specified feature) to show how interpretation will be affected by choice of reference category. The resulting data frame will be a stacked result from \code{amce}, containing an additional \code{.reference} column specifying which level of \code{variable} was used as the reference category.
 #' 
-#' Users may desire to specify a \code{family} argument via \code{\dots}, which should be a \dQuote{family} object such as \code{\link[stats]{gaussian}}. Sensible alternatives are \code{\link[stats]{binomial}} (for binary outcomes) and \code{\link[stats]{quasibinomial}} (for weighted survey data).
+#' Users may desire to specify a \code{family} argument via \code{\dots}, which should be a \dQuote{family} object such as \code{gaussian}. Sensible alternatives are \code{binomial} (for binary outcomes) and quasibinomial (for weighted survey data). See \code{\link[stats]{family}} for details.
 #' @examples
 #' data(hainmueller)
 #' # estimating AMCEs
@@ -31,7 +31,7 @@
 #' # reference category sensitivity
 #' x <- amce_by_reference(hainmueller, ChosenImmigrant ~ LanguageSkills + Education, 
 #'        variable = ~ LanguageSkills, id = ~ CaseID)
-#' plot(x, group = ".reference")
+#' plot(x, group = "BY")
 #' }
 #' @seealso \code{\link{plot.cj_amce}}
 #' @import stats

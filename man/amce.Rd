@@ -12,7 +12,7 @@ amce(data, formula, id = NULL, weights = NULL, feature_order = NULL,
 amce_by_reference(data, formula, variable, ...)
 }
 \arguments{
-\item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and its reported AMCE will be NA (for printing).}
+\item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and its reported AMCE will be NA (for printing). Optionally, this can instead be an object of class \dQuote{survey.design} returned by \code{\link[survey]{svydesign}}.}
 
 \item{formula}{A formula specifying an AMCE model to be estimated. All variables should be factors.}
 
@@ -43,7 +43,7 @@ Estimate AMCEs for a conjoint analysis and return a tidy data frame of results
 
 \code{amce_by_reference} provides a tool for quick sensitivity analysis. AMCEs are defined relative to an arbitrary reference category (i.e., feature level). This function will loop over all feature levels (for a specified feature) to show how interpretation will be affected by choice of reference category. The resulting data frame will be a stacked result from \code{amce}, containing an additional \code{.reference} column specifying which level of \code{variable} was used as the reference category.
 
-Users may desire to specify a \code{family} argument via \code{\dots}, which should be a \dQuote{family} object such as \code{\link[stats]{gaussian}}. Sensible alternatives are \code{\link[stats]{binomial}} (for binary outcomes) and \code{\link[stats]{quasibinomial}} (for weighted survey data).
+Users may desire to specify a \code{family} argument via \code{\dots}, which should be a \dQuote{family} object such as \code{gaussian}. Sensible alternatives are \code{binomial} (for binary outcomes) and quasibinomial (for weighted survey data). See \code{\link[stats]{family}} for details.
 }
 \examples{
 data(hainmueller)
@@ -59,7 +59,7 @@ plot(amce(hainmueller[!is.na(hainmueller$ethnocentrism),
 # reference category sensitivity
 x <- amce_by_reference(hainmueller, ChosenImmigrant ~ LanguageSkills + Education, 
        variable = ~ LanguageSkills, id = ~ CaseID)
-plot(x, group = ".reference")
+plot(x, group = "BY")
 }
 }
 \seealso{

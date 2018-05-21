@@ -12,7 +12,7 @@ amce_diffs(data, formula, by, id = NULL, weights = NULL,
 cj_anova(data, formula, id = NULL, weights = NULL, by = NULL, ...)
 }
 \arguments{
-\item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be NA.}
+\item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be NA. Optionally, this can instead be an object of class \dQuote{survey.design} returned by \code{\link[survey]{svydesign}}.}
 
 \item{formula}{A formula specifying a model to be estimated. All variables should be factors.}
 
@@ -21,6 +21,14 @@ cj_anova(data, formula, id = NULL, weights = NULL, by = NULL, ...)
 \item{id}{Ignored.}
 
 \item{weights}{An (optional) RHS formula specifying a variable holding survey weights.}
+
+\item{feature_order}{An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.}
+
+\item{feature_labels}{A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables on the righthand side of \code{formula} and character string values; arguments passed here override variable attributes.}
+
+\item{level_order}{A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via \code{\link{plot.cj_mm}}, etc.}
+
+\item{alpha}{A numeric value indicating the significance level at which to calculate confidence intervals for the MMs (by default 0.95, meaning 95-percent CIs are returned).}
 
 \item{\dots}{Additional arguments to \code{\link{amce}}, \code{\link{freqs}}, or \code{\link{mm}}.}
 }

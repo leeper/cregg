@@ -11,7 +11,7 @@ cj(data, formula, id = NULL, weights = NULL, estimate = c("amce", "freqs",
   "mm", "differences"), by = NULL, ...)
 }
 \arguments{
-\item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be zero.}
+\item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be zero. Optionally, this can instead be an object of class \dQuote{survey.design} returned by \code{\link[survey]{svydesign}}.}
 
 \item{formula}{A formula specifying a model to be estimated. All variables should be factors.}
 
