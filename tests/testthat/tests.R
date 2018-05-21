@@ -2,6 +2,15 @@ context("Correct data structures returned")
 
 data(hainmueller, package = "cregg")
 
+test_that("cj() works", {
+    expect_true(inherits(x <- cj(hainmueller, ChosenImmigrant ~ LanguageSkills, estimate = "mm", id = ~ CaseID), "cj_mm"),
+                label = "cj() works w/o 'by'")
+    expect_true(inherits(x <- cj(hainmueller, ChosenImmigrant ~ LanguageSkills, estimate = "mm", id = ~ CaseID, by = ~ Gender), "cj_mm"),
+                label = "cj() works w/ 'by'")
+    expect_error(inherits(x <- cj(hainmueller, ChosenImmigrant ~ LanguageSkills, estimate = "diff", id = ~ CaseID), "cj_mm"),
+                 label = "cj() fails on estimate = 'diff' w/o 'by'")
+})
+
 test_that("amce() works", {
     expect_true(inherits(x <- amce(hainmueller, ChosenImmigrant ~ Gender, id = ~ CaseID), "cj_amce"))
     expect_true(inherits(plot(x), "ggplot"))
