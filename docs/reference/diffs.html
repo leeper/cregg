@@ -131,7 +131,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>A data frame containing variables specified in <code>formula</code>. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be NA.</p></td>
+      <td><p>A data frame containing variables specified in <code>formula</code>. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be NA. Optionally, this can instead be an object of class &#8220;survey.design&#8221; returned by <code><a href='http://www.rdocumentation.org/packages/survey/topics/svydesign'>svydesign</a></code>.</p></td>
     </tr>
     <tr>
       <th>formula</th>
@@ -148,6 +148,22 @@
     <tr>
       <th>weights</th>
       <td><p>An (optional) RHS formula specifying a variable holding survey weights.</p></td>
+    </tr>
+    <tr>
+      <th>feature_order</th>
+      <td><p>An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.</p></td>
+    </tr>
+    <tr>
+      <th>feature_labels</th>
+      <td><p>A named list of &#8220;fancy&#8221; feature labels to be used in output. By default, the function looks for a &#8220;label&#8221; attribute on each variable in <code>formula</code> and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables on the righthand side of <code>formula</code> and character string values; arguments passed here override variable attributes.</p></td>
+    </tr>
+    <tr>
+      <th>level_order</th>
+      <td><p>A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via <code><a href='plot.cj_amce.html'>plot.cj_mm</a></code>, etc.</p></td>
+    </tr>
+    <tr>
+      <th>alpha</th>
+      <td><p>A numeric value indicating the significance level at which to calculate confidence intervals for the MMs (by default 0.95, meaning 95-percent CIs are returned).</p></td>
     </tr>
     <tr>
       <th>&#8230;</th>

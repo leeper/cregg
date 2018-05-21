@@ -131,7 +131,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>A data frame containing variables specified in <code>formula</code>. All RHS variables should be factors; the base level for each will be used in estimation and its reported AMCE will be NA (for printing).</p></td>
+      <td><p>A data frame containing variables specified in <code>formula</code>. All RHS variables should be factors; the base level for each will be used in estimation and its reported AMCE will be NA (for printing). Optionally, this can instead be an object of class &#8220;survey.design&#8221; returned by <code><a href='http://www.rdocumentation.org/packages/survey/topics/svydesign'>svydesign</a></code>.</p></td>
     </tr>
     <tr>
       <th>formula</th>
@@ -179,7 +179,7 @@
 
     <p><code>amce</code> provides estimates of AMCEs (or rather, average marginal effects for each feature level). It does not calculate AMCEs for constrained conjoint designs. The function can also be used for balance testing by specifying a covariate rather outcome on the left-hand side of <code>formula</code>. See examples.</p>
 <p><code>amce_by_reference</code> provides a tool for quick sensitivity analysis. AMCEs are defined relative to an arbitrary reference category (i.e., feature level). This function will loop over all feature levels (for a specified feature) to show how interpretation will be affected by choice of reference category. The resulting data frame will be a stacked result from <code>amce</code>, containing an additional <code>.reference</code> column specifying which level of <code>variable</code> was used as the reference category.</p>
-<p>Users may desire to specify a <code>family</code> argument via <code>&#8230;</code>, which should be a &#8220;family&#8221; object such as <code><a href='http://www.rdocumentation.org/packages/stats/topics/family'>gaussian</a></code>. Sensible alternatives are <code><a href='http://www.rdocumentation.org/packages/stats/topics/family'>binomial</a></code> (for binary outcomes) and <code><a href='http://www.rdocumentation.org/packages/stats/topics/family'>quasibinomial</a></code> (for weighted survey data).</p>
+<p>Users may desire to specify a <code>family</code> argument via <code>&#8230;</code>, which should be a &#8220;family&#8221; object such as <code>gaussian</code>. Sensible alternatives are <code>binomial</code> (for binary outcomes) and quasibinomial (for weighted survey data). See <code><a href='http://www.rdocumentation.org/packages/stats/topics/family'>family</a></code> for details.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -226,7 +226,7 @@ plot(amce(hainmueller[!is.na(hainmueller$ethnocentrism),
 # reference category sensitivity
 x <- amce_by_reference(hainmueller, ChosenImmigrant ~ LanguageSkills + Education, 
        variable = ~ LanguageSkills, id = ~ CaseID)
-plot(x, group = ".reference")
+plot(x, group = "BY")
 # }
 </pre>
   </div>

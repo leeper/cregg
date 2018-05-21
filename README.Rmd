@@ -18,9 +18,11 @@ The main selling point of cregg is simplicity of implementation and - unlike the
 
 Additionally all functions have arguments in data-formula order, making it simple to pipe into them via `%>%`.
 
+A detailed website showcasing package functionality is available at: https://thomasleeper.com/cregg/
+
 Contributions and feedback are welcome on [GitHub](https://github.com/leeper/cregg/issues).
 
-## Code Examples
+## Basic Code Examples
 
 
 ```{r opts, echo=FALSE}
@@ -62,18 +64,7 @@ This makes it very easy to modify, combine, print, etc. the resulting output. It
 plot(amces)
 ```
 
-Reference categories for AMCEs are often arbitrary and can affect intuitions about results, so the package also provides a diagnostic tool for helping to decide on an appropriate reference category:
-
-```{r amce_diagnostic}
-amce_diagnostic <- amce_by_reference(hainmueller, ChosenImmigrant ~ LanguageSkills, ~LanguageSkills, id = ~ CaseID)
-plot(amce_diagnostic)
-```
-
-### Subgroup Analyses
-
-While the reference category has no meaningful bearing on estimation, it can affect inferences especially when subgroups are compared. For this reason, it can be useful to assess the substantive inferences from difference reference categories alongside any subgroup analysis. To provide simple subgroup analyses, the `cj()` function provides a `by` argument to iterate over subsets of `data` and calculate AMCEs or MMs on each subgroup.
-
-For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:
+To provide simple subgroup analyses, the `cj()` function provides a `by` argument to iterate over subsets of `data` and calculate AMCEs or MMs on each subgroup. For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:
 
 ```{r mm_by}
 mm_by <- cj(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills,
@@ -89,45 +80,7 @@ cj_anova(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, by 
 
 which provides a test of whether any of the interactions between the `by` variable and feature levels differ from zero.
 
-And, finally, while it is increasingly common to present grouped dot-and-whisker charts as comparisons of subgroup AMCEs, that comparison can be misleading of preferences differ substantially in the reference category. When that occurs, similar AMCEs do not necessarily mean similar preferences; this is a subtle distinction that must be respected when engaging in *descriptive* as opposed to *causal* interpretation of conjoint results.
-
-For example, we might want to understand differences in preferences by ethnocentrism, which can most clearly be seen in a subgroup MM plot:
-
-```{r conditional_mms}
-hainmueller$ethnosplit <- cut(hainmueller$ethnocentrism, 2)
-x <- cj(na.omit(hainmueller), f1, id = ~ CaseID, estimate = "mm", by = ~ ethnosplit)
-plot(x, group = "ethnosplit", vline = 0.5)
-```
-
-But if we want to interpret differences in the sizes of AMCEs (rather than descriptive differences in preferences), we might be inclined to design a similar visualization, replacing MMs with AMCEs. But in such cases, we cannot comment on the descriptive similarity in preferences across subgroups only the heterogeneity in causal effects of feature variations. To make (dis)similarity explicit, such visualizations should include an explicit test of differences in effect sizes. Facetting works well:
-
-```{r conditional_amces}
-# calculate conditional AMCEs
-amces <- cj(na.omit(hainmueller), ChosenImmigrant ~ Gender + Education + LanguageSkills,
-            id = ~ CaseID, estimate = "amce", by = ~ ethnosplit)
-diffs <- cj(na.omit(hainmueller), ChosenImmigrant ~ Gender + Education + LanguageSkills,
-            id = ~ CaseID, estimate = "diff", by = ~ ethnosplit)
-stacked <- rbind(amces[!names(amces) %in% c("z", "p")], diffs[!names(diffs) %in% c("t", "p")])
-plot(stacked) + ggplot2::facet_wrap(~BY, ncol = 3L)
-```
-
-But again, this plot showcases differences in conjoint effect sizes (AMCEs) not descriptive differences in underlying preferences.
-
-### Randomization Diagnostics
-
-The package also provide a useful function for checking display frequencies of conjoint features (to ensure equal - or unequal - display frequency):
-
-```{r plot_freqs}
-# plotting of display frequencies
-plot(freqs(hainmueller, f1, id = ~ CaseID))
-```
-
-As can be clear in the above, constraints were imposed in the original study on the allowed combinations of `Job` and `Education` and also on combinations of `CountryOfOrigin` and `ReasonForApplication`. The `props()` function provides tidy proportions tables to quickly assess these frequencies:
-
-```{r table_freqs}
-subset(props(hainmueller, ~ Job + Education, id = ~ CaseID), Proportion == 0)
-subset(props(hainmueller, ~ CountryOfOrigin + ReasonForApplication, id = ~ CaseID), Proportion == 0)
-```
+Again, a detailed website showcasing package functionality is available at: https://thomasleeper.com/cregg/ and the content thereof is installed as a vignette. The package documentation provides further examples.
 
 ## Installation
 

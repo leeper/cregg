@@ -106,10 +106,11 @@
 <li>Using “label” attributes on variables to provide pretty printing</li>
 </ul>
 <p>Additionally all functions have arguments in data-formula order, making it simple to pipe into them via <code>%&gt;%</code>.</p>
+<p>A detailed website showcasing package functionality is available at: <a href="https://thomasleeper.com/cregg/" class="uri">https://thomasleeper.com/cregg/</a></p>
 <p>Contributions and feedback are welcome on <a href="https://github.com/leeper/cregg/issues">GitHub</a>.</p>
-<div id="code-examples" class="section level2">
+<div id="basic-code-examples" class="section level2">
 <h2 class="hasAnchor">
-<a href="#code-examples" class="anchor"></a>Code Examples</h2>
+<a href="#basic-code-examples" class="anchor"></a>Basic Code Examples</h2>
 <p>The package includes an example conjoint dataset (borrowed and lightly modified from the <a href="https://cran.r-project.org/package=cjoint">cjoint</a> package), which is used here and and in examples:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"cregg"</span>)
 <span class="kw">data</span>(<span class="st">"hainmueller"</span>)</code></pre></div>
@@ -149,15 +150,7 @@ amces &lt;-<span class="st"> </span><span class="kw"><a href="reference/cregg.ht
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># plotting of AMCEs</span>
 <span class="kw">plot</span>(amces)</code></pre></div>
 <p><img src="index_files/figure-html/plot_amce-1.png" width="960"></p>
-<p>Reference categories for AMCEs are often arbitrary and can affect intuitions about results, so the package also provides a diagnostic tool for helping to decide on an appropriate reference category:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">amce_diagnostic &lt;-<span class="st"> </span><span class="kw"><a href="reference/amce.html">amce_by_reference</a></span>(hainmueller, ChosenImmigrant <span class="op">~</span><span class="st"> </span>LanguageSkills, <span class="op">~</span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID)
-<span class="kw">plot</span>(amce_diagnostic)</code></pre></div>
-<p><img src="index_files/figure-html/amce_diagnostic-1.png" width="960"></p>
-<div id="subgroup-analyses" class="section level3">
-<h3 class="hasAnchor">
-<a href="#subgroup-analyses" class="anchor"></a>Subgroup Analyses</h3>
-<p>While the reference category has no meaningful bearing on estimation, it can affect inferences especially when subgroups are compared. For this reason, it can be useful to assess the substantive inferences from difference reference categories alongside any subgroup analysis. To provide simple subgroup analyses, the <code><a href="reference/cregg.html">cj()</a></code> function provides a <code>by</code> argument to iterate over subsets of <code>data</code> and calculate AMCEs or MMs on each subgroup.</p>
-<p>For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:</p>
+<p>To provide simple subgroup analyses, the <code><a href="reference/cregg.html">cj()</a></code> function provides a <code>by</code> argument to iterate over subsets of <code>data</code> and calculate AMCEs or MMs on each subgroup. For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mm_by &lt;-<span class="st"> </span><span class="kw"><a href="reference/cregg.html">cj</a></span>(hainmueller, ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>contest_no)
 <span class="kw">plot</span>(mm_by, <span class="dt">group =</span> <span class="st">"contest_no"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
 <p><img src="index_files/figure-html/mm_by-1.png" width="960"></p>
@@ -172,58 +165,7 @@ Model 2: ChosenImmigrant ~ Gender + Education + LanguageSkills + contest_no +
 1     13949     3353.0                          
 2     13938     3349.6 11   3.3873 1.2814 0.2279</code></pre>
 <p>which provides a test of whether any of the interactions between the <code>by</code> variable and feature levels differ from zero.</p>
-<p>And, finally, while it is increasingly common to present grouped dot-and-whisker charts as comparisons of subgroup AMCEs, that comparison can be misleading of preferences differ substantially in the reference category. When that occurs, similar AMCEs do not necessarily mean similar preferences; this is a subtle distinction that must be respected when engaging in <em>descriptive</em> as opposed to <em>causal</em> interpretation of conjoint results.</p>
-<p>For example, we might want to understand differences in preferences by ethnocentrism, which can most clearly be seen in a subgroup MM plot:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hainmueller<span class="op">$</span>ethnosplit &lt;-<span class="st"> </span><span class="kw">cut</span>(hainmueller<span class="op">$</span>ethnocentrism, <span class="dv">2</span>)
-x &lt;-<span class="st"> </span><span class="kw"><a href="reference/cregg.html">cj</a></span>(<span class="kw">na.omit</span>(hainmueller), f1, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>ethnosplit)
-<span class="kw">plot</span>(x, <span class="dt">group =</span> <span class="st">"ethnosplit"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
-<p><img src="index_files/figure-html/conditional_mms-1.png" width="960"></p>
-<p>But if we want to interpret differences in the sizes of AMCEs (rather than descriptive differences in preferences), we might be inclined to design a similar visualization, replacing MMs with AMCEs. But in such cases, we cannot comment on the descriptive similarity in preferences across subgroups only the heterogeneity in causal effects of feature variations. To make (dis)similarity explicit, such visualizations should include an explicit test of differences in effect sizes. Facetting works well:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># calculate conditional AMCEs</span>
-amces &lt;-<span class="st"> </span><span class="kw"><a href="reference/cregg.html">cj</a></span>(<span class="kw">na.omit</span>(hainmueller), ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"amce"</span>, 
-    <span class="dt">by =</span> <span class="op">~</span>ethnosplit)
-diffs &lt;-<span class="st"> </span><span class="kw"><a href="reference/cregg.html">cj</a></span>(<span class="kw">na.omit</span>(hainmueller), ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"diff"</span>, 
-    <span class="dt">by =</span> <span class="op">~</span>ethnosplit)
-stacked &lt;-<span class="st"> </span><span class="kw">rbind</span>(amces[<span class="op">!</span><span class="kw">names</span>(amces) <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">"z"</span>, <span class="st">"p"</span>)], diffs[<span class="op">!</span><span class="kw">names</span>(diffs) <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">"t"</span>, <span class="st">"p"</span>)])
-<span class="kw">plot</span>(stacked) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="op">~</span>BY, <span class="dt">ncol =</span> 3L)</code></pre></div>
-<p><img src="index_files/figure-html/conditional_amces-1.png" width="960"></p>
-<p>But again, this plot showcases differences in conjoint effect sizes (AMCEs) not descriptive differences in underlying preferences.</p>
-</div>
-<div id="randomization-diagnostics" class="section level3">
-<h3 class="hasAnchor">
-<a href="#randomization-diagnostics" class="anchor"></a>Randomization Diagnostics</h3>
-<p>The package also provide a useful function for checking display frequencies of conjoint features (to ensure equal - or unequal - display frequency):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># plotting of display frequencies</span>
-<span class="kw">plot</span>(<span class="kw"><a href="reference/freqs.html">freqs</a></span>(hainmueller, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID))</code></pre></div>
-<p><img src="index_files/figure-html/plot_freqs-1.png" width="960"></p>
-<p>As can be clear in the above, constraints were imposed in the original study on the allowed combinations of <code>Job</code> and <code>Education</code> and also on combinations of <code>CountryOfOrigin</code> and <code>ReasonForApplication</code>. The <code><a href="reference/freqs.html">props()</a></code> function provides tidy proportions tables to quickly assess these frequencies:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">subset</span>(<span class="kw"><a href="reference/freqs.html">props</a></span>(hainmueller, <span class="op">~</span>Job <span class="op">+</span><span class="st"> </span>Education, <span class="dt">id =</span> <span class="op">~</span>CaseID), Proportion <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)</code></pre></div>
-<pre><code>                   Job   Education Proportion
-5    Financial Analyst   No Formal          0
-8  Computer Programmer   No Formal          0
-10  Research Scientist   No Formal          0
-11              Doctor   No Formal          0
-16   Financial Analyst   4th Grade          0
-19 Computer Programmer   4th Grade          0
-21  Research Scientist   4th Grade          0
-22              Doctor   4th Grade          0
-27   Financial Analyst   8th Grade          0
-30 Computer Programmer   8th Grade          0
-32  Research Scientist   8th Grade          0
-33              Doctor   8th Grade          0
-38   Financial Analyst High School          0
-41 Computer Programmer High School          0
-43  Research Scientist High School          0
-44              Doctor High School          0</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">subset</span>(<span class="kw"><a href="reference/freqs.html">props</a></span>(hainmueller, <span class="op">~</span>CountryOfOrigin <span class="op">+</span><span class="st"> </span>ReasonForApplication, <span class="dt">id =</span> <span class="op">~</span>CaseID), Proportion <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)</code></pre></div>
-<pre><code>   CountryOfOrigin ReasonForApplication Proportion
-21           India   Escape Persecution          0
-22         Germany   Escape Persecution          0
-23          France   Escape Persecution          0
-24          Mexico   Escape Persecution          0
-25     Philippines   Escape Persecution          0
-26          Poland   Escape Persecution          0</code></pre>
-</div>
+<p>Again, a detailed website showcasing package functionality is available at: <a href="https://thomasleeper.com/cregg/" class="uri">https://thomasleeper.com/cregg/</a> and the content thereof is installed as a vignette. The package documentation provides further examples.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">

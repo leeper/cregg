@@ -18,9 +18,11 @@ The main selling point of cregg is simplicity of implementation and - unlike the
 
 Additionally all functions have arguments in data-formula order, making it simple to pipe into them via `%>%`.
 
+A detailed website showcasing package functionality is available at: https://thomasleeper.com/cregg/
+
 Contributions and feedback are welcome on [GitHub](https://github.com/leeper/cregg/issues).
 
-## Code Examples
+## Basic Code Examples
 
 
 
@@ -90,21 +92,7 @@ plot(amces)
 
 ![plot of chunk plot_amce](figure/plot_amce-1.png)
 
-Reference categories for AMCEs are often arbitrary and can affect intuitions about results, so the package also provides a diagnostic tool for helping to decide on an appropriate reference category:
-
-
-```r
-amce_diagnostic <- amce_by_reference(hainmueller, ChosenImmigrant ~ LanguageSkills, ~LanguageSkills, id = ~CaseID)
-plot(amce_diagnostic)
-```
-
-![plot of chunk amce_diagnostic](figure/amce_diagnostic-1.png)
-
-### Subgroup Analyses
-
-While the reference category has no meaningful bearing on estimation, it can affect inferences especially when subgroups are compared. For this reason, it can be useful to assess the substantive inferences from difference reference categories alongside any subgroup analysis. To provide simple subgroup analyses, the `cj()` function provides a `by` argument to iterate over subsets of `data` and calculate AMCEs or MMs on each subgroup.
-
-For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:
+To provide simple subgroup analyses, the `cj()` function provides a `by` argument to iterate over subsets of `data` and calculate AMCEs or MMs on each subgroup. For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:
 
 
 ```r
@@ -134,88 +122,7 @@ Model 2: ChosenImmigrant ~ Gender + Education + LanguageSkills + contest_no +
 
 which provides a test of whether any of the interactions between the `by` variable and feature levels differ from zero.
 
-And, finally, while it is increasingly common to present grouped dot-and-whisker charts as comparisons of subgroup AMCEs, that comparison can be misleading of preferences differ substantially in the reference category. When that occurs, similar AMCEs do not necessarily mean similar preferences; this is a subtle distinction that must be respected when engaging in *descriptive* as opposed to *causal* interpretation of conjoint results.
-
-For example, we might want to understand differences in preferences by ethnocentrism, which can most clearly be seen in a subgroup MM plot:
-
-
-```r
-hainmueller$ethnosplit <- cut(hainmueller$ethnocentrism, 2)
-x <- cj(na.omit(hainmueller), f1, id = ~CaseID, estimate = "mm", by = ~ethnosplit)
-plot(x, group = "ethnosplit", vline = 0.5)
-```
-
-![plot of chunk conditioanl_mms](figure/conditioanl_mms-1.png)
-
-But if we want to interpret differences in the sizes of AMCEs (rather than descriptive differences in preferences), we might be inclined to design a similar visualization, replacing MMs with AMCEs. But in such cases, we cannot comment on the descriptive similarity in preferences across subgroups only the heterogeneity in causal effects of feature variations. To make (dis)similarity explicit, such visualizations should include an explicit test of differences in effect sizes. Facetting works well:
-
-
-```r
-# calculate conditional AMCEs
-amces <- cj(na.omit(hainmueller), ChosenImmigrant ~ Gender + Education + LanguageSkills, id = ~CaseID, estimate = "amce", 
-    by = ~ethnosplit)
-diffs <- cj(na.omit(hainmueller), ChosenImmigrant ~ Gender + Education + LanguageSkills, id = ~CaseID, estimate = "diff", 
-    by = ~ethnosplit)
-stacked <- rbind(amces[!names(amces) %in% c("z", "p")], diffs[!names(diffs) %in% c("t", "p")])
-plot(stacked) + ggplot2::facet_wrap(~BY, ncol = 3L)
-```
-
-![plot of chunk conditional_amces](figure/conditional_amces-1.png)
-
-But again, this plot showcases differences in conjoint effect sizes (AMCEs) not descriptive differences in underlying preferences.
-
-### Randomization Diagnostics
-
-The package also provide a useful function for checking display frequencies of conjoint features (to ensure equal - or unequal - display frequency):
-
-
-```r
-# plotting of display frequencies
-plot(freqs(hainmueller, f1, id = ~CaseID))
-```
-
-![plot of chunk plot_freqs](figure/plot_freqs-1.png)
-
-As can be clear in the above, constraints were imposed in the original study on the allowed combinations of `Job` and `Education` and also on combinations of `CountryOfOrigin` and `ReasonForApplication`. The `props()` function provides tidy proportions tables to quickly assess these frequencies:
-
-
-```r
-subset(props(hainmueller, ~Job + Education, id = ~CaseID), Proportion == 0)
-```
-
-```
-                   Job   Education Proportion
-5    Financial Analyst   No Formal          0
-8  Computer Programmer   No Formal          0
-10  Research Scientist   No Formal          0
-11              Doctor   No Formal          0
-16   Financial Analyst   4th Grade          0
-19 Computer Programmer   4th Grade          0
-21  Research Scientist   4th Grade          0
-22              Doctor   4th Grade          0
-27   Financial Analyst   8th Grade          0
-30 Computer Programmer   8th Grade          0
-32  Research Scientist   8th Grade          0
-33              Doctor   8th Grade          0
-38   Financial Analyst High School          0
-41 Computer Programmer High School          0
-43  Research Scientist High School          0
-44              Doctor High School          0
-```
-
-```r
-subset(props(hainmueller, ~CountryOfOrigin + ReasonForApplication, id = ~CaseID), Proportion == 0)
-```
-
-```
-   CountryOfOrigin ReasonForApplication Proportion
-21           India   Escape Persecution          0
-22         Germany   Escape Persecution          0
-23          France   Escape Persecution          0
-24          Mexico   Escape Persecution          0
-25     Philippines   Escape Persecution          0
-26          Poland   Escape Persecution          0
-```
+Again, a detailed website showcasing package functionality is available at: https://thomasleeper.com/cregg/ and the content thereof is installed as a vignette. The package documentation provides further examples.
 
 ## Installation
 
