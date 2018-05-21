@@ -129,7 +129,6 @@ Again, a detailed website showcasing package functionality is available at: http
 [![CRAN](https://www.r-pkg.org/badges/version/cregg)](https://cran.r-project.org/package=cregg)
 ![Downloads](https://cranlogs.r-pkg.org/badges/cregg)
 [![Travis Build Status](https://travis-ci.org/leeper/cregg.png?branch=master)](https://travis-ci.org/leeper/cregg)
-[![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/PROJECTNUMBER?svg=true)](https://ci.appveyor.com/project/leeper/cregg)
 [![codecov.io](https://codecov.io/github/leeper/cregg/coverage.svg?branch=master)](https://codecov.io/github/leeper/cregg?branch=master)
 
 This package is not yet on CRAN. To install the latest development version you can pull a potentially unstable version directly from GitHub:
