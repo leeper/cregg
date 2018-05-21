@@ -71,12 +71,14 @@ function(
     den_1 <- (mm_split[[1L]][["std.error"]]^4)/((n_2^2) * (n_2 -1L))
     den_2 <- (mm_split[[2L]][["std.error"]]^4)/((n_1^2) * (n_1 -1L))
     degrees_of_freedom <- (variance^2) / (den_1 + den_2)
-    out[["p"]] <- 2*stats::pt(-out[["t"]], degrees_of_freedom)
-    
-    out[["BY"]] <- "Difference"
-    out[[by_var]] <- paste0(mm_split[[2L]][[by_var]][1L], " - ", mm_split[[1L]][[by_var]][1L])
+    out[["p"]] <- 2L*(1L-stats::pt(-out[["t"]], degrees_of_freedom))
+    ## CIs
     out[["lower"]] <- out[["estimate"]] - stats::qt((1-alpha) + (alpha/2), degrees_of_freedom) * out[["std.error"]]
     out[["upper"]] <- out[["estimate"]] + stats::qt((1-alpha) + (alpha/2), degrees_of_freedom) * out[["std.error"]]
+    
+    # format output
+    out[["BY"]] <- "Difference"
+    out[[by_var]] <- paste0(mm_split[[2L]][[by_var]][1L], " - ", mm_split[[1L]][[by_var]][1L])
     class(out) <- c("cj_diffs", "data.frame")
     return(out)
 }

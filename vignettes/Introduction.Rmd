@@ -116,17 +116,36 @@ plot(x, group = "ethnosplit", vline = 0.5)
 
 But if we want to interpret differences in the sizes of AMCEs (rather than descriptive differences in preferences), we might be inclined to design a similar visualization, replacing MMs with AMCEs. But in such cases, we cannot comment on the descriptive similarity in preferences across subgroups only the heterogeneity in causal effects of feature variations. To make (dis)similarity explicit, such visualizations should include an explicit test of differences in effect sizes. Facetting works well:
 
-```{r conditional_amces, fig.height = 6}
+```{r conditional_amces, fig.height = 4}
 # calculate conditional AMCEs
-amces <- cj(na.omit(hainmueller), ChosenImmigrant ~ Gender + Education + LanguageSkills,
+hainmueller$ethnosplit <- cut(hainmueller$ethnocentrism, 2)
+amces <- cj(na.omit(hainmueller), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
             id = ~ CaseID, estimate = "amce", by = ~ ethnosplit)
-diffs <- cj(na.omit(hainmueller), ChosenImmigrant ~ Gender + Education + LanguageSkills,
-            id = ~ CaseID, estimate = "diff", by = ~ ethnosplit)
-stacked <- rbind(amces[!names(amces) %in% c("z", "p")], diffs[!names(diffs) %in% c("t", "p")])
-plot(stacked) + ggplot2::facet_wrap(~BY, ncol = 3L)
+diff_amces <- cj(na.omit(hainmueller), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
+                 id = ~ CaseID, estimate = "amce_diff", by = ~ ethnosplit)
+amce_stacked <- rbind(amces[!names(amces) %in% c("z", "p")], diff_amces[!names(diff_amces) %in% c("t", "p")])
+plot(amce_stacked) + ggplot2::facet_wrap(~BY, ncol = 3L)
 ```
 
-But again, this plot showcases differences in conjoint effect sizes (AMCEs) not descriptive differences in underlying preferences.
+But again, this plot showcases differences in conjoint effect sizes (AMCEs) not descriptive differences in underlying preferences. A plot of the differences in MMs might be clearer:
+
+```{r conditional_mms, fig.height = 4}
+# calculate conditional AMCEs
+hainmueller$ethnosplit <- cut(hainmueller$ethnocentrism, 2)
+mms <- cj(na.omit(hainmueller), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
+          id = ~ CaseID, estimate = "mm", by = ~ ethnosplit)
+diff_mms <- cj(na.omit(hainmueller), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
+               id = ~ CaseID, estimate = "mm_diff", by = ~ ethnosplit)
+mm_stacked <- rbind(mms[!names(mms) %in% c("z", "p")], diff_mms[!names(diff_mms) %in% c("t", "p")])
+plot(mm_stacked) + ggplot2::facet_wrap(~BY, ncol = 3L)
+```
+
+```{r amce_vs_mm, fig.height = 4}
+diff_amces$Estimate <- "AMCE Difference"
+diff_mms$Estimate <- "MM Difference"
+plot(rbind(diff_amces, diff_mms), feature_headers = FALSE) +
+  ggplot2::facet_wrap(~Estimate, ncol = 2L)
+```
 
 
 ## Diagnostics

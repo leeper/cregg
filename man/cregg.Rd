@@ -49,12 +49,13 @@ d1 <- cj(hainmueller, ChosenImmigrant ~ Gender + Education +
 plot(d1)
 
 # MMs split by profile number
-stacked <- mm(hainmueller[hainmueller$contest_no == x,], ChosenImmigrant ~ Gender + 
-              Education + LanguageSkills + CountryOfOrigin + Job + JobExperience + 
-              JobPlans + ReasonForApplication + PriorEntry, id = ~ CaseID, by = ~ contest_no)
+stacked <- cj(hainmueller, ChosenImmigrant ~ Gender + Education + 
+              LanguageSkills + CountryOfOrigin + Job + JobExperience + 
+              JobPlans + ReasonForApplication + PriorEntry, id = ~ CaseID,
+              estimate = "mm", by = ~ contest_no)
 
 ## plot with grouping
-plot(stacked, group = "contest_no", feature_headers = FALSE)
+plot(stacked, group = "contest_no", vline = 0.5, feature_headers = FALSE)
 
 ## plot with facetting
 plot(stacked) + ggplot2::facet_wrap(~contest_no, nrow = 1L)
@@ -66,12 +67,6 @@ d2 <- cj(hainmueller, ChosenImmigrant ~ Gender + Education +
 
 # plot AMCEs
 plot(d2)
-
-# grouped operations
-## examine profile ordering
-x <- cj(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills,
-        id = ~ CaseID, estimate = "mm", by = ~ contest_no)
-plot(x, group = "contest_no", vline = 0.5)
 
 ## subgroup analysis
 hainmueller$ethnosplit <- cut(hainmueller$ethnocentrism, 2)
