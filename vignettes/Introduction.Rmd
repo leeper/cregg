@@ -129,7 +129,7 @@ plot(amce_stacked) + ggplot2::facet_wrap(~BY, ncol = 3L)
 
 But again, this plot showcases differences in conjoint effect sizes (AMCEs) not descriptive differences in underlying preferences. A plot of the differences in MMs might be clearer:
 
-```{r conditional_mms, fig.height = 4}
+```{r conditional_differences, fig.height = 4}
 # calculate conditional AMCEs
 hainmueller$ethnosplit <- cut(hainmueller$ethnocentrism, 2)
 mms <- cj(na.omit(hainmueller), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
