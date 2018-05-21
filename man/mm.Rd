@@ -6,10 +6,10 @@
 \usage{
 mm(data, formula, id, weights = NULL, feature_order = NULL,
   feature_labels = NULL, level_order = c("ascending", "descending"),
-  alpha = 0.05, ...)
+  h0 = 0, alpha = 0.05, ...)
 }
 \arguments{
-\item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and its reported marginal mean will be zero (for printing).}
+\item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors.}
 
 \item{formula}{A formula specifying an outcome (LHS) and conjoint features (RHS) to describe. All RHS variables should be factors.}
 
@@ -19,9 +19,11 @@ mm(data, formula, id, weights = NULL, feature_order = NULL,
 
 \item{feature_order}{An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.}
 
-\item{feature_labels}{A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables in \code{formula} and character string values; arguments passed here override variable attributes.}
+\item{feature_labels}{A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables on the righthand side of \code{formula} and character string values; arguments passed here override variable attributes.}
 
 \item{level_order}{A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via \code{\link{plot.cj_mm}}, etc.}
+
+\item{h0}{A numeric value specifying a null hypothesis value to use when generating z-statistics and p-values.}
 
 \item{alpha}{A numeric value indicating the significance level at which to calculate confidence intervals for the MMs (by default 0.95, meaning 95-percent CIs are returned).}
 
@@ -31,14 +33,16 @@ mm(data, formula, id, weights = NULL, feature_order = NULL,
 Calculate (descriptive) marginal means (MMs) from a conjoint design
 }
 \details{
-\code{mm} provides descriptive representations of conjoint data as marginal means (MMs), which represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, AMMs can take any value in the full range of the outcome. Plotting functionality is provided in \code{\link{plot.cj_mm}}.
+\code{mm} provides descriptive representations of conjoint data as marginal means (MMs), which represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, MMs can take any value in the full range of the outcome.
+
+But note that if feature levels can co-occur, such that both alternatives share a feature level, then the MMs on forced choice outcomes are bounded by the probability of co-occurrence (as a lower bound) and 1 minus that probability as an upper bound.
+
+Plotting functionality is provided in \code{\link{plot.cj_mm}}.
 }
 \examples{
 data(hainmueller)
-set.seed(12345)
-hainmueller$weights <- runif(nrow(hainmueller))
 mm(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills,
-   id = ~ CaseID, weights = ~ weights)
+   id = ~ CaseID, h0 = 0.5)
 }
 \seealso{
 \code{\link{plot.cj_mm}}

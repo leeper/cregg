@@ -1,3 +1,7 @@
+# cregg 0.1.8
+
+* `mm()` gains an `h0` argument to specify a null hypothesis values so that z statistics and p-values are meaningful.
+
 # cregg 0.1.7
 
 * Added `amce_diffs()` and `amce_anova()` functions to assess differences in AMCEs by a grouping variable.

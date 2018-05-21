@@ -1,36 +1,42 @@
 #' @rdname mm
 #' @title Marginal Means
 #' @description Calculate (descriptive) marginal means (MMs) from a conjoint design
-#' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and its reported marginal mean will be zero (for printing).
+#' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors.
 #' @param formula A formula specifying an outcome (LHS) and conjoint features (RHS) to describe. All RHS variables should be factors.
-#' @param id An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.
-#' @param weights An (optional) RHS formula specifying a variable holding survey weights.
-#' @param feature_order An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.
-#' @param feature_labels A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables in \code{formula} and character string values; arguments passed here override variable attributes.
-#' @param level_order A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via \code{\link{plot.cj_mm}}, etc.
-#' @param alpha A numeric value indicating the significance level at which to calculate confidence intervals for the MMs (by default 0.95, meaning 95-percent CIs are returned).
+#' @template id
+#' @template weights
+#' @template feature_order
+#' @template feature_labels
+#' @template level_order
+#' @param h0 A numeric value specifying a null hypothesis value to use when generating z-statistics and p-values.
+#' @template alpha
 #' @param \dots Ignored.
-#' @details \code{mm} provides descriptive representations of conjoint data as marginal means (MMs), which represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, AMMs can take any value in the full range of the outcome. Plotting functionality is provided in \code{\link{plot.cj_mm}}.
+#' @details \code{mm} provides descriptive representations of conjoint data as marginal means (MMs), which represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, MMs can take any value in the full range of the outcome.
+#' 
+#' But note that if feature levels can co-occur, such that both alternatives share a feature level, then the MMs on forced choice outcomes are bounded by the probability of co-occurrence (as a lower bound) and 1 minus that probability as an upper bound.
+#' 
+#' Plotting functionality is provided in \code{\link{plot.cj_mm}}.
+#' 
 #' @examples
 #' data(hainmueller)
-#' set.seed(12345)
-#' hainmueller$weights <- runif(nrow(hainmueller))
 #' mm(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills,
-#'    id = ~ CaseID, weights = ~ weights)
+#'    id = ~ CaseID, h0 = 0.5)
 #' @seealso \code{\link{plot.cj_mm}}
 #' @import stats
 #' @importFrom survey svydesign svyby svymean
 #' @export
 mm <- 
-function(data,
-         formula,
-         id,
-         weights = NULL,
-         feature_order = NULL,
-         feature_labels = NULL,
-         level_order = c("ascending", "descending"),
-         alpha = 0.05,
-         ...
+function(
+  data,
+  formula,
+  id,
+  weights = NULL,
+  feature_order = NULL,
+  feature_labels = NULL,
+  level_order = c("ascending", "descending"),
+  h0 = 0,
+  alpha = 0.05,
+  ...
 ) {
     
     # get outcome variable
@@ -86,9 +92,9 @@ function(data,
         svylong <- survey::svydesign(ids = ~ 0, weights = ~0, data = long)
     }
     
-    # calculate AMMs, SEs, etc.
+    # calculate MMs, SEs, etc.
     coef_dat <- survey::svyby(~ OUTCOME, ~ Level, FUN = survey::svymean, design = svylong, na.rm = TRUE)
-    coef_dat$z <- coef_dat$OUTCOME/coef_dat$se
+    coef_dat$z <- (coef_dat$OUTCOME - h0)/coef_dat$se
     coef_dat$p <- 2*stats::pnorm(-coef_dat$z)
     coef_dat$lower <- coef_dat$OUTCOME - stats::qnorm((1-alpha) + (alpha/2)) * coef_dat$se
     coef_dat$upper <- coef_dat$OUTCOME + stats::qnorm((1-alpha) + (alpha/2)) * coef_dat$se
