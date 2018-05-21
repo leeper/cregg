@@ -33,7 +33,7 @@
 #'        variable = ~ LanguageSkills, id = ~ CaseID)
 #' plot(x, group = "BY")
 #' }
-#' @seealso \code{\link{plot.cj_amce}}
+#' @seealso \code{\link{amce_diffs}} \code{\link{mm}} \code{\link{plot.cj_amce}}
 #' @import stats
 #' @importFrom sandwich vcovCL
 #' @export

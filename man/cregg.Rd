@@ -8,7 +8,7 @@
 \title{Simple Conjoint Analyses and Visualization}
 \usage{
 cj(data, formula, id = NULL, weights = NULL, estimate = c("amce", "freqs",
-  "mm", "differences"), by = NULL, ...)
+  "mm", "amce_differences", "mm_differences"), by = NULL, ...)
 }
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be zero. Optionally, this can instead be an object of class \dQuote{survey.design} returned by \code{\link[survey]{svydesign}}.}
@@ -19,7 +19,7 @@ cj(data, formula, id = NULL, weights = NULL, estimate = c("amce", "freqs",
 
 \item{weights}{An (optional) RHS formula specifying a variable holding survey weights.}
 
-\item{estimate}{A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, \dQuote{amce}, estimated via \code{\link{amce}}), display frequencies (\dQuote{freq}, estimated via \code{\link{freqs}}), marginal means (or AMMs, \dQuote{mm}, estimated via \code{\link{mm}}), or differences in AMCEs (\dQuote{differences}, via \code{\link{amce_diffs}}). Additional options may be made available in the future.}
+\item{estimate}{A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, \dQuote{amce}, estimated via \code{\link{amce}}), display frequencies (\dQuote{freq}, estimated via \code{\link{freqs}}), marginal means (or AMMs, \dQuote{mm}, estimated via \code{\link{mm}}), differences in MMs (\dQuote{mm_differences}, via \code{\link{mm_diffs}}), or differences in AMCEs (\dQuote{amce_differences}, via \code{\link{amce_diffs}}). Additional options may be made available in the future.}
 
 \item{by}{A formula containing only RHS variables, specifying grouping factors over which to perform estimation.}
 
@@ -81,7 +81,7 @@ plot(x, group = "ethnosplit", vline = 0.5)
 }
 }
 \seealso{
-\code{\link{amce}} \code{\link{mm}} \code{\link{freqs}} \code{\link{plot.cj_amce}}
+\code{\link{amce}} \code{\link{mm}} \code{\link{freqs}} \code{\link{mm_diffs}} \code{\link{plot.cj_amce}}
 }
 \author{
 Thomas J. Leeper <thosjleeper@gmail.com>

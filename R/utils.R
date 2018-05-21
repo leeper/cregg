@@ -64,3 +64,13 @@ make_term_labels_df <- function(data, feature_names, level_order = c("ascending"
     term_labels <- stats::setNames(rep(feature_names, lengths(term_levels_list)), rev(term_levels))
     data.frame(feature = unlist(term_labels), level = unlist(names(term_labels)), stringsAsFactors = FALSE)
 }
+
+# function used in plot() methods to make pretty feature headers
+make_feature_headers <- function(x, fmt = "(%s)") {
+    feature_levels <- rev(split(x$level, x$feature))
+    for (i in seq_along(feature_levels)) {
+        feature_levels[[i]] <- levels(x$level)[match(feature_levels[[i]], levels(x$level))]
+        feature_levels[[i]] <- c(feature_levels[[i]], sprintf(fmt, names(feature_levels)[i]))
+    }
+    factor(as.character(x$level), levels = unique(unname(unlist(feature_levels))))
+}

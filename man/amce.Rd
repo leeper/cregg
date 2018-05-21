@@ -63,5 +63,5 @@ plot(x, group = "BY")
 }
 }
 \seealso{
-\code{\link{plot.cj_amce}}
+\code{\link{amce_diffs}} \code{\link{mm}} \code{\link{plot.cj_amce}}
 }

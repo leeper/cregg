@@ -45,5 +45,5 @@ mm(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills,
    id = ~ CaseID, h0 = 0.5)
 }
 \seealso{
-\code{\link{plot.cj_mm}}
+\code{\link{mm_diffs}} \code{\link{plot.cj_mm}}
 }
