@@ -20,6 +20,8 @@ This vignette provides an introduction to **cregg** a package for analyzing and 
  - Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs and munging of AMCE estimates into tidy data frames, via `amce()`
  - Calculation of marginal means (MMs) for conjoint designs and munging them into tidy data frames via `mm()`
  - Tabulation of display frequencies of feature attributes via `freqs()` and cross-tabulation of feature restrictions using `props()`
+ - Diagnostics to assess preference heterogeneity, including an omnibus statstical test (`cj_anova()`) and tidying of differences in AMCEs across subgroups (`amce_diffs()`)
+ - Diagnostics to choose feature reference categories, via `amce_by_reference()`
  - **ggplot2**-based visualizations of AMCEs and MMs, via `plot()` methods for all of the above
 
 The package takes its name from the surname of a famous White House Press Secretary.
@@ -75,7 +77,7 @@ This makes it very easy to modify, combine, print, etc. the resulting output. It
 plot(amces)
 ```
 
-# Subgroup Analyis
+## Subgroup Analyis
 
 The high-level `cj()` provides some convenience functionality for examining results across subgroups of respondents. This can be useful for splitting results by subgroups or for diagnostics. For example, Hainmueller et al. were interested in result by respondent ethnocentrism. We can create a median split on the ethnocentrism variable and plot marginal means for the two groups:
 
@@ -90,7 +92,7 @@ plot(cj(hainmueller, ChosenImmigrant ~ CountryOfOrigin + LanguageSkills,
 
 Strikingly the results are quite similar for the two subgroup.
 
-# Diagnostics
+## Diagnostics
 
 The package provides a number of diagnostic fucnctions. 
 
@@ -149,5 +151,52 @@ Again, in this example there are no obvious concerns generated form the diagnost
 
 ### Reference Group Selection
 
-Coming soon...
+Reference categories for AMCEs are often arbitrary and can affect intuitions about results, so the package also provides a diagnostic tool for helping to decide on an appropriate reference category:
+
+```{r amce_diagnostic}
+amce_diagnostic <- amce_by_reference(hainmueller, ChosenImmigrant ~ LanguageSkills, ~LanguageSkills, id = ~ CaseID)
+plot(amce_diagnostic)
+```
+
+While the reference category has no meaningful bearing on estimation, it can affect inferences especially when subgroups are compared. For this reason, it can be useful to assess the substantive inferences from difference reference categories alongside any subgroup analysis. To provide simple subgroup analyses, the `cj()` function provides a `by` argument to iterate over subsets of `data` and calculate AMCEs or MMs on each subgroup.
+
+For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:
+
+```{r mm_by}
+mm_by <- cj(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills,
+            id = ~ CaseID, estimate = "mm", by = ~ contest_no)
+plot(mm_by, group = "contest_no", vline = 0.5)
+```
+
+A more formal test of these differences is provided by a nested model comparison test:
+
+```{r cj_anova}
+cj_anova(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, by = ~ contest_no)
+```
+
+which provides a test of whether any of the interactions between the `by` variable and feature levels differ from zero.
+
+And, finally, while it is increasingly common to present grouped dot-and-whisker charts as comparisons of subgroup AMCEs, that comparison can be misleading of preferences differ substantially in the reference category. When that occurs, similar AMCEs do not necessarily mean similar preferences; this is a subtle distinction that must be respected when engaging in *descriptive* as opposed to *causal* interpretation of conjoint results.
+
+For example, we might want to understand differences in preferences by ethnocentrism, which can most clearly be seen in a subgroup MM plot:
+
+```{r conditioanl_mms}
+hainmueller$ethnosplit <- cut(hainmueller$ethnocentrism, 2)
+x <- cj(na.omit(hainmueller), f1, id = ~ CaseID, estimate = "mm", by = ~ ethnosplit)
+plot(x, group = "ethnosplit", vline = 0.5)
+```
+
+But if we want to interpret differences in the sizes of AMCEs (rather than descriptive differences in preferences), we might be inclined to design a similar visualization, replacing MMs with AMCEs. But in such cases, we cannot comment on the descriptive similarity in preferences across subgroups only the heterogeneity in causal effects of feature variations. To make (dis)similarity explicit, such visualizations should include an explicit test of differences in effect sizes. Facetting works well:
+
+```{r conditional_amces}
+# calculate conditional AMCEs
+amces <- cj(na.omit(hainmueller), ChosenImmigrant ~ Gender + Education + LanguageSkills,
+            id = ~ CaseID, estimate = "amce", by = ~ ethnosplit)
+diffs <- cj(na.omit(hainmueller), ChosenImmigrant ~ Gender + Education + LanguageSkills,
+            id = ~ CaseID, estimate = "diff", by = ~ ethnosplit)
+stacked <- rbind(amces[!names(amces) %in% c("z", "p")], diffs[!names(diffs) %in% c("t", "p")])
+plot(stacked) + ggplot2::facet_wrap(~BY, ncol = 3L)
+```
+
+But again, this plot showcases differences in conjoint effect sizes (AMCEs) not descriptive differences in underlying preferences.
 

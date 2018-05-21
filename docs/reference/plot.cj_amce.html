@@ -25,10 +25,15 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Plot AMCE estimates, MM descriptives, and frequency plots — plot.cj_amce" />
 
 <meta property="og:description" content="ggplot2-based plotting of conjoint AMCEs estimates and MMs" />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,8 +56,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">cregg</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">cregg</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.8</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -89,6 +98,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -96,16 +106,19 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Plot AMCE estimates, MM descriptives, and frequency plots</h1>
-    <small>Source: <a href='https:/github.com/leeper/cregg/blob/master/R/plot.R'><code>R/plot.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/leeper/cregg/blob/master/R/plot.R'><code>R/plot.R</code></a></small>
+    <div class="hidden name"><code>plot.cj_amce.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>ggplot2-based plotting of conjoint AMCEs estimates and MMs</p>
     
+    </div>
 
     <pre class="usage"><span class='co'># S3 method for cj_amce</span>
 <span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='fu'>attr</span>(<span class='no'>x</span>, <span class='st'>"by"</span>), <span class='kw'>feature_headers</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
@@ -114,7 +127,7 @@
   <span class='kw'>legend_pos</span> <span class='kw'>=</span> <span class='st'>"bottom"</span>, <span class='kw'>xlim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>vline</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>vline_color</span> <span class='kw'>=</span> <span class='st'>"gray"</span>,
   <span class='kw'>theme</span> <span class='kw'>=</span> <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme'>theme_bw</a></span>(), <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -185,13 +198,12 @@
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='amce.html'>amce</a></code>, <code><a href='mm.html'>mm</a></code></p>
+    <div class='dont-index'><p><code><a href='amce.html'>amce</a></code>, <code><a href='mm.html'>mm</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='co'># load data</span>
-<span class='fu'>requireNamespace</span>(<span class='st'>"ggplot2"</span>)
 <span class='fu'>data</span>(<span class='st'>"hainmueller"</span>)
 
 <span class='co'># calculate MMs</span>
@@ -200,23 +212,24 @@
          <span class='no'>JobPlans</span> + <span class='no'>ReasonForApplication</span> + <span class='no'>PriorEntry</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
 
 <span class='co'># plot MMs</span>
+<span class='co'>## simple plot</span>
 <span class='fu'>plot</span>(<span class='no'>d1</span>)
+<span class='co'>## plot with facetting by feature</span>
+<span class='fu'>plot</span>(<span class='no'>d1</span>, <span class='kw'>feature_headers</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) +
+  <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a></span>(~<span class='no'>feature</span>, <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>1L</span>,
+                      <span class='kw'>scales</span> <span class='kw'>=</span> <span class='st'>"free_y"</span>, <span class='kw'>strip.position</span> <span class='kw'>=</span> <span class='st'>"right"</span>)
 
 <span class='co'># MMs split by profile number</span>
-<span class='no'>stacked</span> <span class='kw'>&lt;-</span> <span class='fu'>do.call</span>(<span class='st'>"rbind"</span>, <span class='fu'>lapply</span>(<span class='fl'>1</span>:<span class='fl'>3</span>, <span class='kw'>function</span>(<span class='no'>x</span>) {
-    <span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mm.html'>mm</a></span>(<span class='no'>hainmueller</span>[<span class='no'>hainmueller</span>$<span class='no'>contest_no</span> <span class='kw'>==</span> <span class='no'>x</span>,], <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> +
+<span class='no'>stacked</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cregg.html'>cj</a></span>(<span class='no'>hainmueller</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> +
               <span class='no'>Education</span> + <span class='no'>LanguageSkills</span> + <span class='no'>CountryOfOrigin</span> + <span class='no'>Job</span> + <span class='no'>JobExperience</span> +
-              <span class='no'>JobPlans</span> + <span class='no'>ReasonForApplication</span> + <span class='no'>PriorEntry</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
-    <span class='no'>out</span>$<span class='no'>contest</span> <span class='kw'>&lt;-</span> <span class='no'>x</span>
-    <span class='no'>out</span>
-}))
-<span class='no'>stacked</span>$<span class='no'>contest</span> <span class='kw'>&lt;-</span> <span class='fu'>factor</span>(<span class='no'>stacked</span>$<span class='no'>contest</span>, <span class='kw'>levels</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>3</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"First"</span>, <span class='st'>"Second"</span>, <span class='st'>"Third"</span>))
+              <span class='no'>JobPlans</span> + <span class='no'>ReasonForApplication</span> + <span class='no'>PriorEntry</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>,
+              <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='st'>"mm"</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~ <span class='no'>contest_no</span>)
 
 <span class='co'>## plot with grouping</span>
-<span class='fu'>plot</span>(<span class='no'>stacked</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"contest"</span>, <span class='kw'>feature_headers</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>plot</span>(<span class='no'>stacked</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"contest_no"</span>, <span class='kw'>feature_headers</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'>## plot with facetting</span>
-<span class='fu'>plot</span>(<span class='no'>stacked</span>) + <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a></span>(~<span class='no'>contest</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>1L</span>)
+<span class='fu'>plot</span>(<span class='no'>stacked</span>) + <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a></span>(~<span class='no'>contest_no</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>1L</span>)
 
 <span class='co'># estimate AMCEs</span>
 <span class='no'>d2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cregg.html'>cj</a></span>(<span class='no'>hainmueller</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span> +
@@ -255,6 +268,8 @@
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

@@ -13,7 +13,7 @@ test_that("amce_diffs() works", {
 })
 
 test_that("amce_by_reference() works", {
-    expect_true(inherits(x <- amce_by_reference(hainmueller, ChosenImmigrant ~ LanguageSkills, id = ~ CaseID, variable = ~Gender), "cj_amce"))
+    expect_true(inherits(x <- amce_by_reference(hainmueller, ChosenImmigrant ~ LanguageSkills + Gender, id = ~ CaseID, variable = ~Gender), "cj_amce"))
     expect_true(inherits(plot(x), "ggplot"))
 })
 

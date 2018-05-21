@@ -18,7 +18,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-vignette">
+    <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -27,8 +27,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">cregg</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">cregg</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.8</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
@@ -73,19 +77,19 @@
 
       
       </header><div class="row">
-  <div class="col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Introduction to cregg</h1>
             
-            <h4 class="date">2018-03-17</h4>
+            <h4 class="date">2018-05-21</h4>
       
-      <small>Source: <a href="https:/github.com/leeper/cregg/blob/master/vignettes/Introduction.Rmd"><code>vignettes/Introduction.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/leeper/cregg/blob/master/vignettes/Introduction.Rmd"><code>vignettes/Introduction.Rmd</code></a></small>
+      <div class="hidden name"><code>Introduction.Rmd</code></div>
 
     </div>
 
     
     
-<div class="contents">
 <p>This vignette provides an introduction to <strong>cregg</strong> a package for analyzing and visualizing the results of conjoint experiments, which are factorial discrete choice experiments that are increasingly popular in the political and social sciences for studying decision making and preferences over multidimensional issues. cregg provides functionality that is useful for analyzing and otherwise examining data from these designs, namely:</p>
 <ul>
 <li>Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs and munging of AMCE estimates into tidy data frames, via <code><a href="../reference/amce.html">amce()</a></code>
@@ -93,6 +97,9 @@
 <li>Calculation of marginal means (MMs) for conjoint designs and munging them into tidy data frames via <code><a href="../reference/mm.html">mm()</a></code>
 </li>
 <li>Tabulation of display frequencies of feature attributes via <code><a href="../reference/freqs.html">freqs()</a></code> and cross-tabulation of feature restrictions using <code><a href="../reference/freqs.html">props()</a></code>
+</li>
+<li>Diagnostics to assess preference heterogeneity, including an omnibus statstical test (<code><a href="../reference/diffs.html">cj_anova()</a></code>) and tidying of differences in AMCEs across subgroups (<code><a href="../reference/diffs.html">amce_diffs()</a></code>)</li>
+<li>Diagnostics to choose feature reference categories, via <code><a href="../reference/amce.html">amce_by_reference()</a></code>
 </li>
 <li>
 <strong>ggplot2</strong>-based visualizations of AMCEs and MMs, via <code>plot()</code> methods for all of the above</li>
@@ -148,9 +155,9 @@ amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg
 <span class="kw">plot</span>(amces)</code></pre></div>
 <p><img src="Introduction_files/figure-html/plot_amce-1.png" width="960"></p>
 </div>
-<div id="subgroup-analyis" class="section level1">
-<h1 class="hasAnchor">
-<a href="#subgroup-analyis" class="anchor"></a>Subgroup Analyis</h1>
+<div id="subgroup-analyis" class="section level2">
+<h2 class="hasAnchor">
+<a href="#subgroup-analyis" class="anchor"></a>Subgroup Analyis</h2>
 <p>The high-level <code><a href="../reference/cregg.html">cj()</a></code> provides some convenience functionality for examining results across subgroups of respondents. This can be useful for splitting results by subgroups or for diagnostics. For example, Hainmueller et al. were interested in result by respondent ethnocentrism. We can create a median split on the ethnocentrism variable and plot marginal means for the two groups:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hainmueller<span class="op">$</span>ethno_cut &lt;-<span class="st"> </span><span class="kw">factor</span>(hainmueller<span class="op">$</span>ethnocentrism <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(hainmueller<span class="op">$</span>ethnocentrism, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">"high"</span>, 
     <span class="st">"low"</span>))
@@ -159,9 +166,9 @@ amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg
 <p><img src="Introduction_files/figure-html/ethnocentrism_split-1.png" width="960"></p>
 <p>Strikingly the results are quite similar for the two subgroup.</p>
 </div>
-<div id="diagnostics" class="section level1">
-<h1 class="hasAnchor">
-<a href="#diagnostics" class="anchor"></a>Diagnostics</h1>
+<div id="diagnostics" class="section level2">
+<h2 class="hasAnchor">
+<a href="#diagnostics" class="anchor"></a>Diagnostics</h2>
 <p>The package provides a number of diagnostic fucnctions.</p>
 <div id="display-frequencies-and-proportions" class="section level3">
 <h3 class="hasAnchor">
@@ -226,8 +233,42 @@ amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg
 <div id="reference-group-selection" class="section level3">
 <h3 class="hasAnchor">
 <a href="#reference-group-selection" class="anchor"></a>Reference Group Selection</h3>
-<p>Coming soon…</p>
-</div>
+<p>Reference categories for AMCEs are often arbitrary and can affect intuitions about results, so the package also provides a diagnostic tool for helping to decide on an appropriate reference category:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">amce_diagnostic &lt;-<span class="st"> </span><span class="kw"><a href="../reference/amce.html">amce_by_reference</a></span>(hainmueller, ChosenImmigrant <span class="op">~</span><span class="st"> </span>LanguageSkills, <span class="op">~</span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID)
+<span class="kw">plot</span>(amce_diagnostic)</code></pre></div>
+<p><img src="Introduction_files/figure-html/amce_diagnostic-1.png" width="960"></p>
+<p>While the reference category has no meaningful bearing on estimation, it can affect inferences especially when subgroups are compared. For this reason, it can be useful to assess the substantive inferences from difference reference categories alongside any subgroup analysis. To provide simple subgroup analyses, the <code><a href="../reference/cregg.html">cj()</a></code> function provides a <code>by</code> argument to iterate over subsets of <code>data</code> and calculate AMCEs or MMs on each subgroup.</p>
+<p>For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mm_by &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(hainmueller, ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>contest_no)
+<span class="kw">plot</span>(mm_by, <span class="dt">group =</span> <span class="st">"contest_no"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
+<p><img src="Introduction_files/figure-html/mm_by-1.png" width="960"></p>
+<p>A more formal test of these differences is provided by a nested model comparison test:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/diffs.html">cj_anova</a></span>(hainmueller, ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">by =</span> <span class="op">~</span>contest_no)</code></pre></div>
+<pre><code>Analysis of Deviance Table
+
+Model 1: ChosenImmigrant ~ Gender + Education + LanguageSkills
+Model 2: ChosenImmigrant ~ Gender + Education + LanguageSkills + contest_no + 
+    Gender:contest_no + Education:contest_no + LanguageSkills:contest_no
+  Resid. Df Resid. Dev Df Deviance      F Pr(&gt;F)
+1     13949     3353.0                          
+2     13938     3349.6 11   3.3873 1.2814 0.2279</code></pre>
+<p>which provides a test of whether any of the interactions between the <code>by</code> variable and feature levels differ from zero.</p>
+<p>And, finally, while it is increasingly common to present grouped dot-and-whisker charts as comparisons of subgroup AMCEs, that comparison can be misleading of preferences differ substantially in the reference category. When that occurs, similar AMCEs do not necessarily mean similar preferences; this is a subtle distinction that must be respected when engaging in <em>descriptive</em> as opposed to <em>causal</em> interpretation of conjoint results.</p>
+<p>For example, we might want to understand differences in preferences by ethnocentrism, which can most clearly be seen in a subgroup MM plot:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hainmueller<span class="op">$</span>ethnosplit &lt;-<span class="st"> </span><span class="kw">cut</span>(hainmueller<span class="op">$</span>ethnocentrism, <span class="dv">2</span>)
+x &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw">na.omit</span>(hainmueller), f1, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>ethnosplit)
+<span class="kw">plot</span>(x, <span class="dt">group =</span> <span class="st">"ethnosplit"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
+<p><img src="Introduction_files/figure-html/conditioanl_mms-1.png" width="960"></p>
+<p>But if we want to interpret differences in the sizes of AMCEs (rather than descriptive differences in preferences), we might be inclined to design a similar visualization, replacing MMs with AMCEs. But in such cases, we cannot comment on the descriptive similarity in preferences across subgroups only the heterogeneity in causal effects of feature variations. To make (dis)similarity explicit, such visualizations should include an explicit test of differences in effect sizes. Facetting works well:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># calculate conditional AMCEs</span>
+amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw">na.omit</span>(hainmueller), ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"amce"</span>, 
+    <span class="dt">by =</span> <span class="op">~</span>ethnosplit)
+diffs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw">na.omit</span>(hainmueller), ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"diff"</span>, 
+    <span class="dt">by =</span> <span class="op">~</span>ethnosplit)
+stacked &lt;-<span class="st"> </span><span class="kw">rbind</span>(amces[<span class="op">!</span><span class="kw">names</span>(amces) <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">"z"</span>, <span class="st">"p"</span>)], diffs[<span class="op">!</span><span class="kw">names</span>(diffs) <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">"t"</span>, <span class="st">"p"</span>)])
+<span class="kw">plot</span>(stacked) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="op">~</span>BY, <span class="dt">ncol =</span> 3L)</code></pre></div>
+<p><img src="Introduction_files/figure-html/conditional_amces-1.png" width="960"></p>
+<p>But again, this plot showcases differences in conjoint effect sizes (AMCEs) not descriptive differences in underlying preferences.</p>
 </div>
 </div>
   </div>
@@ -257,6 +298,8 @@ amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg
 
       </footer>
 </div>
+
+  
 
   </body>
 </html>
