@@ -8,7 +8,7 @@ output:
     toc_float:
       collapsed: false
       smooth_scroll: false
-    toc_depth: 2
+    toc_depth: 3
 vignette: >
   %\VignetteIndexEntry{Introduction to cregg}
   %\VignetteEngine{knitr::rmarkdown}
@@ -50,6 +50,8 @@ library("cregg")
 data("hainmueller")
 ```
 
+### Marginal Means
+
 The package provides straightforward calculation and visualization of descriptive marginal means (MMs). These represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, MMs can take any value in the full range of the outcome. Calculation of MMs entail no modelling assumptions are simply descriptive quantities of interest:
 
 ```{r mmplot}
@@ -61,6 +63,8 @@ plot(mm(hainmueller, f1, id = ~ CaseID), vline = 0.5)
 ```
 
 cregg functions uses `attr(data$feature, "label")` to provide pretty printing of feature labels, so that variable names can be arbitrary. These can be overwritten using the `feature_labels` argument to override these settings. Feature levels are always deduced from the `levels()` of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in `feature_order`.
+
+### Marginal Effects
 
 A more common analytic approach for conjoints is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses `glm()` and `svyglm()` to perform estimation and [margins](https://cran.r-project.org/package=margins) to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. (No functionality is provided at the moment for explict estimation of feature interaction effects.) Just like for `mm()`, the output of `cj()` (or its alias, `amce()`) is a tidy data frame:
 
@@ -77,6 +81,8 @@ This makes it very easy to modify, combine, print, etc. the resulting output. It
 plot(amces)
 ```
 
+### Reference Category Diagnostics for AMCEs
+
 Reference categories for AMCEs are often arbitrary and can affect intuitions about results, so the package also provides a diagnostic tool for helping to decide on an appropriate reference category:
 
 ```{r amce_diagnostic, fig.height = 5}
@@ -88,6 +94,8 @@ plot(amce_diagnostic, group = "BY")
 
 While the reference category has no meaningful bearing on estimation, it can affect inferences especially when subgroups are compared. For this reason, it can be useful to assess the substantive inferences from difference reference categories alongside any subgroup analysis. To provide simple subgroup analyses, the `cj()` function provides a `by` argument to iterate over subsets of `data` and calculate AMCEs or MMs on each subgroup.
 
+### Subgroup Marignal Means
+
 For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:
 
 ```{r mm_by}
@@ -96,6 +104,8 @@ mm_by <- cj(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills,
 plot(mm_by, group = "contest_no", vline = 0.5)
 ```
 
+### Tests of Preference Heterogeneity
+
 A more formal test of these differences is provided by a nested model comparison test:
 
 ```{r cj_anova}
@@ -103,6 +113,8 @@ cj_anova(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, by 
 ```
 
 which provides a test of whether any of the interactions between the `by` variable and feature levels differ from zero.
+
+### Differences in Conditional AMCEs
 
 And, finally, while it is increasingly common to present grouped dot-and-whisker charts as comparisons of subgroup AMCEs, that comparison can be misleading of preferences differ substantially in the reference category. When that occurs, similar AMCEs do not necessarily mean similar preferences; this is a subtle distinction that must be respected when engaging in *descriptive* as opposed to *causal* interpretation of conjoint results.
 
@@ -178,29 +190,18 @@ The main `amce()` and `mm()` functions can also be used for balance testing. Rat
 plot(mm(hainmueller,
         ethnocentrism ~ Job + Education + CountryOfOrigin + ReasonForApplication,
         id = ~ CaseID),
-     xlim = range(hainmueller$ethnocentrism, na.rm = TRUE),
+     xlim = c(10,30),
      vline = mean(hainmueller$ethnocentrism, na.rm = TRUE))
 ```
 Given that confidence intervals for each feature hover closely around the grand mean, there is little reason to believe that imbalance is a problem. The same analysis could be performed using `amce()`.
 
-### Carryover Testing
+### Carryover and Left/Right Diagnostics
 
-The high-level functionality of `cj()` from earlier for performing subgroup analyses can also be used for testing carryover problems.
-
-```{r carryovers}
-plot(cj(hainmueller, f1, id = ~CaseID, by = ~ contest_no, estimate = "mm"),
-     group = "contest_no", vline = 0.5)
-```
-
-Here marginal means are shown separately for each "contest number" (first, second, third, etc.) from the study. As should be quite visually clear, there are no obvious patterns wherein a given feature generates consistently more or less positive rating based upon the order of the rating tasks.
-
-### Left/Right Preferences
-
-The same basic approach can be used to evaluate whether there is, for example, any preference for the lefthand or righthand profile (in a two-profile design):
+Subgroup diagnostics can be used to evaluate whether there is, for example, any preference for the lefthand or righthand profile (in a two-profile design):
 
 ```{r leftright}
 plot(cj(hainmueller, f1, id = ~CaseID, by = ~ profile, estimate = "mm"),
      group = "profile", vline = 0.5)
 ```
 
-Again, in this example there are no obvious concerns generated form the diagnostic.
+Again, in this example there are no obvious concerns generated from the diagnostic. The same approach can be used to perform other diagnostics, such as detecting carryover problems.
