@@ -1,3 +1,8 @@
+# cregg 0.1.10
+
+* Fixed a factor ordering issue in `mm_diffs()`.
+* Added tests of numeric accuracy of estimates for all main functions.
+
 # cregg 0.1.9
 
 * Added new function `mm_diffs()` for calculating differences in marginal means.

@@ -55,7 +55,8 @@ function(
     
     mm <- cj(data = data, formula = formula, estimate = "mm", id = id, weights = weights, by = by,
              feature_order = feature_order, feature_labels = feature_labels, level_order = level_order, alpha = alpha, ...)
-    mm_split <- split(mm, mm[["BY"]])
+    # split and order by factor levels
+    mm_split <- split(mm, mm[["BY"]])[levels(data[[by_var]])]
     out <- mm_split[[1L]]
     ## difference
     out[["estimate"]] <- mm_split[[2L]][["estimate"]] - mm_split[[1L]][["estimate"]]

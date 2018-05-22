@@ -16,6 +16,12 @@ test_that("amce() works", {
     expect_true(inherits(plot(x), "ggplot"))
 })
 
+test_that("amce() works", {
+    x1 <- amce(hainmueller, ChosenImmigrant ~ Gender + LanguageSkills, id = ~ CaseID)
+    x2 <- amce(hainmueller, ChosenImmigrant ~ Gender * LanguageSkills, id = ~ CaseID)
+    expect_true(!identical(x1, x2), label = "amce() respects model specification")
+})
+
 test_that("amce_diffs() works", {
     expect_true(inherits(x <- amce_diffs(hainmueller, ChosenImmigrant ~ LanguageSkills, by = ~ Gender, id = ~ CaseID), "cj_diffs"))
     expect_true(inherits(plot(x), "ggplot"))
