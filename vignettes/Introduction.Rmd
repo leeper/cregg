@@ -31,7 +31,7 @@ The main selling point of cregg is simplicity of implementation and - unlike the
  - Using factor base levels rather than trying to set baseline levels atomically
  - Using "label" attributes on variables to provide pretty printing
 
-Additionally all functions have arguments in data-formula order, making it simple to pipe into them via `%>%`.
+Additionally all functions have arguments in `data`-then-`formula` order, making it simple to pipe into them via `%>%`.
 
 Contributions and feedback are welcome on [GitHub](https://github.com/leeper/cregg/issues).
 
@@ -98,7 +98,7 @@ While the reference category has no meaningful bearing on estimation, it can aff
 
 For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:
 
-```{r mm_by}
+```{r mm_by, fig.height=8}
 mm_by <- cj(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills,
             id = ~ CaseID, estimate = "mm", by = ~ contest_no)
 plot(mm_by, group = "contest_no", vline = 0.5)
@@ -162,7 +162,7 @@ plot(rbind(diff_amces, diff_mms), feature_headers = FALSE) +
 
 ## Diagnostics
 
-The package provides a number of diagnostic fucnctions.
+The package provides a number of diagnostic functions.
 
 ### Display Frequencies and Proportions
 
@@ -186,7 +186,7 @@ So that it is possible to very the design was implemented as intended or to perf
 
 The main `amce()` and `mm()` functions can also be used for balance testing. Rather than comparing outcomes across features levels, we will compare a covariate across feature levels. Both approaches will give a similar result:
 
-```{r balance_testing}
+```{r balance_testing, fig.height=8}
 plot(mm(hainmueller,
         ethnocentrism ~ Job + Education + CountryOfOrigin + ReasonForApplication,
         id = ~ CaseID),
