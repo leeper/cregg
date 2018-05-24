@@ -23,8 +23,7 @@ function(
     # sanity check that 'by' is only an single variable
     stopifnot(length(by) == 2L)
     by_var <- as.character(by)[2L]
-    # ensure that by only takes two values
-    stopifnot(length(na.omit(unique(data[[by_var]]))) == 2L)
+    
     # coerce 'by_var' to factor
     if (!is.factor(data[[by_var]])) {
         data[[by_var]] <- factor(data[[by_var]])
@@ -57,25 +56,29 @@ function(
              feature_order = feature_order, feature_labels = feature_labels, level_order = level_order, alpha = alpha, ...)
     # split and order by factor levels
     mm_split <- split(mm, mm[["BY"]])[levels(data[[by_var]])]
-    out <- mm_split[[1L]]
-    ## difference
-    out[["estimate"]] <- mm_split[[2L]][["estimate"]] - mm_split[[1L]][["estimate"]]
-    ## SE of difference
-    n_1 <- sum(!is.na(data[data[[by_var]] == mm_split[[1L]][[by_var]][1L], outcome, drop = TRUE]))
-    n_2 <- sum(!is.na(data[data[[by_var]] == mm_split[[2L]][[by_var]][1L], outcome, drop = TRUE]))
-    variance <- ((mm_split[[2L]][["std.error"]]^2)) + ((mm_split[[1L]][["std.error"]]^2))
-    out[["std.error"]] <- sqrt( variance )
-    ## z-statistic
-    out[["z"]] <- out[["estimate"]]/out[["std.error"]]
-    ## p-value
-    out[["p"]] <- 2L*(1L-stats::pnorm(out[["z"]]))
-    ## CIs
-    out[["lower"]] <- out[["estimate"]] - (stats::qnorm(1-alpha) * out[["std.error"]])
-    out[["upper"]] <- out[["estimate"]] + (stats::qnorm(1-alpha) * out[["std.error"]])
     
-    # format output
+    # loop over all levels, differencing against the first one
+    for (i in seq_len(length(mm_split))[-1L]) {
+        ## difference
+        mm_split[[i]][["estimate"]] <- mm_split[[i]][["estimate"]] - mm_split[[1L]][["estimate"]]
+        ## SE of difference
+        variance <- ((mm_split[[i]][["std.error"]]^2)) + ((mm_split[[1L]][["std.error"]]^2))
+        mm_split[[i]][["std.error"]] <- sqrt( variance )
+        ## z-statistic
+        mm_split[[i]][["z"]] <- mm_split[[i]][["estimate"]]/mm_split[[i]][["std.error"]]
+        ## p-value
+        mm_split[[i]][["p"]] <- 2L*(1L-stats::pnorm(mm_split[[i]][["z"]]))
+        ## CIs
+        mm_split[[i]][["lower"]] <- mm_split[[i]][["estimate"]] - (stats::qnorm(1-alpha) * mm_split[[i]][["std.error"]])
+        mm_split[[i]][["upper"]] <- mm_split[[i]][["estimate"]] + (stats::qnorm(1-alpha) * mm_split[[i]][["std.error"]])
+        
+        # format output
+        mm_split[[i]][[by_var]] <- paste0(mm_split[[i]][[by_var]][1L], " - ", mm_split[[1L]][[by_var]][1L])
+    }
+    # bind list of differences (except the baseline level)
+    out <- do.call("rbind", mm_split[-1L])
     out[["BY"]] <- "Difference"
-    out[[by_var]] <- paste0(mm_split[[2L]][[by_var]][1L], " - ", mm_split[[1L]][[by_var]][1L])
+    rownames(out) <- seq_len(nrow(out))
     class(out) <- c("cj_diffs", "data.frame")
     return(out)
 }
