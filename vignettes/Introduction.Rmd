@@ -149,8 +149,7 @@ mms <- cj(na.omit(hainmueller), ChosenImmigrant ~ ReasonForApplication + Languag
           id = ~ CaseID, estimate = "mm", by = ~ ethnosplit)
 diff_mms <- cj(na.omit(hainmueller), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
                id = ~ CaseID, estimate = "mm_diff", by = ~ ethnosplit)
-mm_stacked <- rbind(mms[!names(mms) %in% c("z", "p")], diff_mms[!names(diff_mms) %in% c("t", "p")])
-plot(mm_stacked) + ggplot2::facet_wrap(~BY, ncol = 3L)
+plot(rbind(mms, diff_mms)) + ggplot2::facet_wrap(~BY, ncol = 3L)
 ```
 
 And while the inferential differences may be small, the risk of using differences in conditional AMCEs versus differences in MMs is that both the size and even the direction of subgroup differences can be misleading when presented as differences in AMCEs:
