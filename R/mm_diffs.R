@@ -65,17 +65,13 @@ function(
     n_2 <- sum(!is.na(data[data[[by_var]] == mm_split[[2L]][[by_var]][1L], outcome, drop = TRUE]))
     variance <- ((mm_split[[2L]][["std.error"]]^2)) + ((mm_split[[1L]][["std.error"]]^2))
     out[["std.error"]] <- sqrt( variance )
-    ## t
-    names(out)[names(out) == "z"] <- "t"
-    out[["t"]] <- out[["estimate"]]/out[["std.error"]]
+    ## z-statistic
+    out[["z"]] <- out[["estimate"]]/out[["std.error"]]
     ## p-value
-    den_1 <- (mm_split[[1L]][["std.error"]]^4)/((n_2^2) * (n_2 -1L))
-    den_2 <- (mm_split[[2L]][["std.error"]]^4)/((n_1^2) * (n_1 -1L))
-    degrees_of_freedom <- (variance^2) / (den_1 + den_2)
-    out[["p"]] <- 2L*(1L-stats::pt(-out[["t"]], degrees_of_freedom))
+    out[["p"]] <- 2L*(1L-stats::pnorm(out[["z"]]))
     ## CIs
-    out[["lower"]] <- out[["estimate"]] - stats::qt((1-alpha) + (alpha/2), degrees_of_freedom) * out[["std.error"]]
-    out[["upper"]] <- out[["estimate"]] + stats::qt((1-alpha) + (alpha/2), degrees_of_freedom) * out[["std.error"]]
+    out[["lower"]] <- out[["estimate"]] - (stats::qnorm(1-alpha) * out[["std.error"]])
+    out[["upper"]] <- out[["estimate"]] + (stats::qnorm(1-alpha) * out[["std.error"]])
     
     # format output
     out[["BY"]] <- "Difference"
