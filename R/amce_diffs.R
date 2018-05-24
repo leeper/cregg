@@ -47,6 +47,7 @@
 #' amce_diffs(hainmueller, ChosenImmigrant ~ LanguageSkills2, ~ Gender, id = ~ CaseID)
 #'
 #' @seealso \code{\link{amce}} \code{\link{mm}} \code{\link{freqs}} \code{\link{plot.cj_amce}}
+#' @importFrom lmtest coeftest
 #' @export
 amce_diffs <-
 function(
@@ -204,12 +205,36 @@ function(
     # drop lowest level of '_by_level' to leave only differences
     coef_df <- coef_df[!coef_df[["_by_level"]] == rownames(con)[1L], , drop = FALSE]
     
+    # setup standard errors and create `coef_summary`
+    if (is.null(id) || !length(all.vars(id))) {
+        # get `coef_summary` matrix
+        coef_summary <- unclass(lmtest::coeftest(mod))
+        
+        # calculate confidence intervals
+        confints <- confint(mod, level = 1-alpha)
+        colnames(confints) <- c("lower", "upper")
+        coef_summary <- cbind(coef_summary, confints)
+        
+    } else {
+        # get clustered var-cov matrix
+        if (inherits(data, "data.frame")) {
+            cluster_vector <- stats::get_all_vars(id, data)[[1L]]
+        } else if (inherits(data, "survey.design")) {
+            cluster_vector <- stats::get_all_vars(id, data[["variables"]])[[1L]]
+        }
+        vc <- sandwich::vcovCL(mod, cluster_vector)
+        
+        # get `coef_summary` matrix
+        coef_summary <- unclass(lmtest::coeftest(mod, vc))
+        
+        # calculate confidence intervals
+        coef_summary <- cbind(coef_summary,
+                              "lower" = coef_summary[,"Estimate"] - stats::qnorm((1-alpha) + (alpha/2)) * coef_summary[, "Std. Error"],
+                              "upper" = coef_summary[,"Estimate"] + stats::qnorm((1-alpha) + (alpha/2)) * coef_summary[, "Std. Error"])
+    }
+    
     # setup full coef summary (only includes subset of coefficients that are estimable)
     estimate_summary <- summary(mod)
-    coef_summary <- coef(estimate_summary)
-    confints <- confint(mod, level = 1-alpha)
-    colnames(confints) <- c("lower", "upper")
-    coef_summary <- cbind(coef_summary, confints)
     
     # populate 'coef_summary' with non-estimable coefficients ("aliased")
     if (any(aliased <- estimate_summary$aliased)) {
@@ -234,7 +259,7 @@ function(
     
     # return
     out <- structure(merged[, c("BY", "outcome", "_base_var", "_base_level", "_by_level", names(merged)[c(2:7)])],
-                     names = c("BY", "outcome", "feature", "level", by_var, "estimate", "std.error", "t", "p", "lower", "upper"),
+                     names = c("BY", "outcome", "feature", "level", by_var, "estimate", "std.error", "z", "p", "lower", "upper"),
                      by = by_var,
                      class = c("cj_diffs", "data.frame"))
     out$feature <- factor(out$feature, levels = feature_order, labels = feature_labels[feature_order])
