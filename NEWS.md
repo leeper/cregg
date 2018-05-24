@@ -1,3 +1,7 @@
+# cregg 0.1.11
+
+* Variances returend by `amce_diffs()` now respect clustering. (#9)
+
 # cregg 0.1.10
 
 * Fixed a factor ordering issue in `mm_diffs()`.
