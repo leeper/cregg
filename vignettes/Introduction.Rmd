@@ -121,16 +121,19 @@ And, finally, while it is increasingly common to present grouped dot-and-whisker
 For example, we might want to understand differences in preferences by ethnocentrism, which can most clearly be seen in a subgroup MM plot:
 
 ```{r conditional_mms}
-hainmueller$ethnosplit <- cut(hainmueller$ethnocentrism, 2)
+## the original plot is split at the value of 10, which is not a true median split
+hainmueller$ethnosplit <- NA_real_
+hainmueller$ethnosplit[hainmueller$ethnocentrism <= 10] <- 1L
+hainmueller$ethnosplit[hainmueller$ethnocentrism > 10] <- 2L
+hainmueller$ethnosplit <- factor(hainmueller$ethnosplit, 1:2, c("Low Ethnocentrism", "High Ethnocentrism"))
 x <- cj(na.omit(hainmueller), f1, id = ~ CaseID, estimate = "mm", by = ~ ethnosplit)
 plot(x, group = "ethnosplit", vline = 0.5)
 ```
 
 But if we want to interpret differences in the sizes of AMCEs (rather than descriptive differences in preferences), we might be inclined to design a similar visualization, replacing MMs with AMCEs. But in such cases, we cannot comment on the descriptive similarity in preferences across subgroups only the heterogeneity in causal effects of feature variations. To make (dis)similarity explicit, such visualizations should include an explicit test of differences in effect sizes. Facetting works well:
 
-```{r conditional_amces, fig.height = 4}
+```{r conditional_amces, dependson = c("conditional_mms"), fig.height = 4}
 # calculate conditional AMCEs
-hainmueller$ethnosplit <- cut(hainmueller$ethnocentrism, 2)
 amces <- cj(na.omit(hainmueller), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
             id = ~ CaseID, estimate = "amce", by = ~ ethnosplit)
 diff_amces <- cj(na.omit(hainmueller), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
@@ -141,9 +144,8 @@ plot(amce_stacked) + ggplot2::facet_wrap(~BY, ncol = 3L)
 
 But again, this plot showcases differences in conjoint effect sizes (AMCEs) not descriptive differences in underlying preferences. A plot of the differences in MMs might be clearer:
 
-```{r conditional_differences, fig.height = 4}
+```{r conditional_differences, dependson = c("conditional_amces"), fig.height = 4}
 # calculate conditional AMCEs
-hainmueller$ethnosplit <- cut(hainmueller$ethnocentrism, 2)
 mms <- cj(na.omit(hainmueller), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
           id = ~ CaseID, estimate = "mm", by = ~ ethnosplit)
 diff_mms <- cj(na.omit(hainmueller), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
@@ -152,6 +154,8 @@ mm_stacked <- rbind(mms[!names(mms) %in% c("z", "p")], diff_mms[!names(diff_mms)
 plot(mm_stacked) + ggplot2::facet_wrap(~BY, ncol = 3L)
 ```
 
+And while the inferential differences may be small, the risk of using differences in conditional AMCEs versus differences in MMs is that both the size and even the direction of subgroup differences can be misleading when presented as differences in AMCEs:
+
 ```{r amce_vs_mm, fig.height = 4}
 diff_amces$Estimate <- "AMCE Difference"
 diff_mms$Estimate <- "MM Difference"
@@ -159,10 +163,9 @@ plot(rbind(diff_amces, diff_mms), feature_headers = FALSE) +
   ggplot2::facet_wrap(~Estimate, ncol = 2L)
 ```
 
-
 ## Diagnostics
 
-The package provides a number of diagnostic functions.
+The package provides a number of useful diagnostic functions.
 
 ### Display Frequencies and Proportions
 
