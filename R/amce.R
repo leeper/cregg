@@ -6,6 +6,7 @@
 #' @param variable An RHS formula containing a single factor variable from \code{formula}. This will be used by \code{amce_by_reference} to estimate AMCEs relative to each possible factor level as a reference category. If more than one RHS variables are specified, the first will be used.
 #' @template id
 #' @template weights
+#' @template constraints
 #' @template feature_order
 #' @template feature_labels
 #' @template level_order
@@ -42,6 +43,7 @@ function(data,
          formula,
          id = NULL,
          weights = NULL,
+         constraints = NULL,
          feature_order = NULL,
          feature_labels = NULL,
          level_order = c("ascending", "descending"),
@@ -104,12 +106,61 @@ function(data,
         }
         vc <- sandwich::vcovCL(mod, cluster_vector)
     }
-    ## marginal effects
-    if (is.null(svydesign)) {
-        coef_dat <- summary(margins::margins(mod, data = data, vcov = vc), level = 1-alpha)
+    
+    # handle constraints if, present
+    if (!is.null(constraints)) {
+        # with constraints, we need averaging of AMEs over subsets of data
+        # but the key thing is it is averaging over possible feature combinations (unweighted by their actual frequency)
+        
+        # vector of constrained variables
+        constrained_vars <- unique(unlist(lapply(constraints, all.vars))
+        # vector of unconstrained variables
+        unconstrained_vars <- RHS[!RHS %in% constrained_vars]
+        
+        # first estimate unconstrained terms
+        if (is.null(svydesign)) {
+            coef_dat <- summary(margins::margins(mod, data = data, vcov = vc, variables = unconstrained_vars), level = 1-alpha)
+        } else {
+            coef_dat <- summary(margins::margins(mod, data = data, design = svydesign, vcov = vc, variables = unconstrained_vars), level = 1-alpha)
+        }
+        
+        # then estimate constrained terms over appropriate subsets of data
+        
+        ## to do that, first get a list of levels over which averaging should occur
+        constraint_list <- lapply(constraints, function(one) {
+            subset(props(data = data, formula = one), Proportion != 0)
+        }
+        
+        ## for each constrained term, we need to:
+        ## > handle the fact that `mod` will have NA coefficient estimates for interaction terms that are not possible
+        ## > estimate its marginal effect on the subset of data where the two (or more) features co-occur
+        ## > handle that different levels of a given feature may have different constraints
+        constrained_ames <- lapply(constrained_vars, function(one) {
+            # subset the data for this constraint
+            data_subset <- data
+            
+            # calculate MEs
+            if (is.null(svydesign)) {
+                coef_dat <- summary(margins::margins(mod, data = data_subset, vcov = vc, variables = one), level = 1-alpha)
+            } else {
+                coef_dat <- summary(margins::margins(mod, data = data_subset, design = svydesign, vcov = vc, variables = one), level = 1-alpha)
+            }
+            return(coef_dat)
+        })
+        
+        # update coef_dat with constrained AMCEs
+        coef_dat <- rbind(coef_dat, do.call(constrained_ames))
+        
     } else {
-        coef_dat <- summary(margins::margins(mod, data = data, design = svydesign, vcov = vc), level = 1-alpha)
+        ## without constraints AMCEs are simple marginal effects
+        if (is.null(svydesign)) {
+            coef_dat <- summary(margins::margins(mod, data = data, vcov = vc), level = 1-alpha)
+        } else {
+            coef_dat <- summary(margins::margins(mod, data = data, design = svydesign, vcov = vc), level = 1-alpha)
+        }
     }
+    
+    # cleanup output from summary(margins())
     names(coef_dat) <- c("factor", "estimate", "std.error", "z", "p", "lower", "upper")
     
     # cleanup term names
