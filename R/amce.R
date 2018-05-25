@@ -53,6 +53,9 @@ function(data,
 
     # get outcome variable
     outcome <- all.vars(stats::update(formula, . ~ 0))
+    if (!length(outcome) || outcome == ".") {
+        stop("'formula' is missing a left-hand outcome variable")
+    }
     
     # get RHS variables, variable labels, and factor levels
     RHS <- all.vars(stats::update(formula, 0 ~ . ))
