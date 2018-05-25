@@ -35,9 +35,9 @@ function(
     # process feature_order argument
     if (!is.null(feature_order)) {
         if (length(RHS) > length(feature_order)) {
-            warning("'feature_order' appears to be missing values")
+            stop("'feature_order' appears to be missing values")
         } else if (length(RHS) < length(feature_order)) {
-            warning("'feature_order' appears to have excess values")
+            stop("'feature_order' appears to have excess values")
         }
     } else {
         feature_order <- RHS
@@ -55,9 +55,11 @@ function(
     # convert feature labels and levels to data frame
     term_labels_df <- make_term_labels_df(data, feature_order, level_order = level_order)
     
+    # estimate marginal means, by 'by_var'
     mm <- cj(data = data, formula = formula, estimate = "mm", id = id, weights = weights, by = by,
              feature_order = feature_order, feature_labels = feature_labels, level_order = level_order, alpha = alpha, ...)
-    # split and order by factor levels
+    
+    # split the output of 'mm' and order by factor levels
     mm_split <- split(mm, mm[["BY"]])[levels(data[[by_var]])]
     
     # loop over all levels, differencing against the first one
@@ -97,7 +99,8 @@ function(
     # bind list of differences (except the baseline level)
     out <- do.call("rbind", mm_split[-1L])
     out[["BY"]] <- "Difference"
+    out[["statistic"]] <- "mm"
     rownames(out) <- seq_len(nrow(out))
     class(out) <- c("cj_diffs", "data.frame")
-    return(out)
+    return(out[c("BY", "statistic", setdiff(names(out), c("BY", "statistic")))])
 }

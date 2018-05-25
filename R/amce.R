@@ -63,9 +63,9 @@ function(data,
     # process feature_order argument
     if (!is.null(feature_order)) {
         if (length(RHS) > length(feature_order)) {
-            warning("'feature_order' appears to be missing values")
+            stop("'feature_order' appears to be missing values")
         } else if (length(RHS) < length(feature_order)) {
-            warning("'feature_order' appears to have excess values")
+            stop("'feature_order' appears to have excess values")
         }
     } else {
         feature_order <- RHS
@@ -111,30 +111,31 @@ function(data,
     }
     ## marginal effects
     if (is.null(svydesign)) {
-        coef_dat <- summary(margins::margins(mod, data = data, vcov = vc), level = 1-alpha)
+        out <- summary(margins::margins(mod, data = data, vcov = vc), level = 1-alpha)
     } else {
-        coef_dat <- summary(margins::margins(mod, data = data, design = svydesign, vcov = vc), level = 1-alpha)
+        out <- summary(margins::margins(mod, data = data, design = svydesign, vcov = vc), level = 1-alpha)
     }
-    names(coef_dat) <- c("factor", "estimate", "std.error", "z", "p", "lower", "upper")
+    names(out) <- c("factor", "estimate", "std.error", "z", "p", "lower", "upper")
     
     # cleanup term names
-    coef_dat <- cbind(clean_term_names(coef_dat$factor, RHS), coef_dat[-1L])
+    out <- cbind(clean_term_names(out$factor, RHS), out[-1L])
     
     # fill in missing base levels with 0s
-    coef_dat <- merge(coef_dat[!coef_dat$feature %in% c("", "(Intercept)"),], 
+    out <- merge(out[!out$feature %in% c("", "(Intercept)"),], 
                       term_labels_df, 
                       by = c("feature", "level"), all = TRUE)
-    coef_dat$estimate[is.na(coef_dat$estimate)] <- 0
+    out[["estimate"]][is.na(out[["estimate"]])] <- 0
     
     # label features and levels
-    coef_dat$feature <- factor(coef_dat$feature,
+    out[["feature"]] <- factor(out[["feature"]],
                                levels = feature_order,
                                labels = feature_labels[feature_order])
-    coef_dat$level <- factor(coef_dat$level, levels = term_labels_df$level)
-    coef_dat$outcome <- outcome
+    out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
+    out[["outcome"]] <- outcome
+    out[["statistic"]] <- "amce"
     
     # return
-    out <- coef_dat[c("outcome", "feature", "level", "estimate", "std.error", "z", "p", "lower", "upper")]
+    out <- out[c("outcome", "statistic", "feature", "level", "estimate", "std.error", "z", "p", "lower", "upper")]
     out <- out[order(out$level),]
     rownames(out) <- seq_len(nrow(out))
     return(structure(out, class = c("cj_amce", "data.frame")))
@@ -143,6 +144,7 @@ function(data,
 #' @rdname amce
 #' @export
 amce_by_reference <- function(data, formula, variable, ...) {
+    
     # get outcome variable
     variable <- all.vars(stats::update(variable, 0 ~ .))[[1L]]
     
@@ -156,7 +158,7 @@ amce_by_reference <- function(data, formula, variable, ...) {
         out[[i]] <- amce(data, formula, ...)
         out[[i]][["BY"]] <- levs[i]
     }
-
+    
     # return value
     ## stack
     out <- do.call("rbind", out)

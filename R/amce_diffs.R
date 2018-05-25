@@ -80,9 +80,9 @@ function(
     # process feature_order argument
     if (!is.null(feature_order)) {
         if (length(RHS) > length(feature_order)) {
-            warning("'feature_order' appears to be missing values")
+            stop("'feature_order' appears to be missing values")
         } else if (length(RHS) < length(feature_order)) {
-            warning("'feature_order' appears to have excess values")
+            stop("'feature_order' appears to have excess values")
         }
     } else {
         feature_order <- RHS
@@ -256,13 +256,14 @@ function(
     merged <- merge(coef_summary, coef_df, by = "_name")
     merged[["outcome"]] <- outcome
     merged[["BY"]] <- "Difference"
+    merged[["statistic"]] <- "amce_differences"
     
     # return
-    out <- structure(merged[, c("BY", "outcome", "_base_var", "_base_level", "_by_level", names(merged)[c(2:7)])],
-                     names = c("BY", "outcome", "feature", "level", by_var, "estimate", "std.error", "z", "p", "lower", "upper"),
+    out <- structure(merged[, c("BY", "outcome", "statistic", "_base_var", "_base_level", "_by_level", names(merged)[c(2:7)])],
+                     names = c("BY", "outcome", "statistic", "feature", "level", by_var, "estimate", "std.error", "z", "p", "lower", "upper"),
                      by = by_var,
                      class = c("cj_diffs", "data.frame"))
-    out$feature <- factor(out$feature, levels = feature_order, labels = feature_labels[feature_order])
-    out$level <- factor(out$level, levels = term_labels_df$level)
+    out[["feature"]] <- factor(out[["feature"]], levels = feature_order, labels = feature_labels[feature_order])
+    out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
     return(out)
 }

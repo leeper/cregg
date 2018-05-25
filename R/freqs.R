@@ -47,9 +47,9 @@ function(
     # process feature_order argument
     if (!is.null(feature_order)) {
         if (length(RHS) > length(feature_order)) {
-            warning("'feature_order' appears to be missing values")
+            stop("'feature_order' appears to be missing values")
         } else if (length(RHS) < length(feature_order)) {
-            warning("'feature_order' appears to have excess values")
+            stop("'feature_order' appears to have excess values")
         }
     } else {
         feature_order <- RHS
@@ -95,17 +95,18 @@ function(
     names(coef_dat) <- c("level", "estimate")
     
     # attach feature labels
-    coef_dat <- merge(coef_dat, make_term_labels_df(data, RHS), by = c("level"), all = TRUE)
-    coef_dat$feature <- factor(coef_dat$feature,
+    out <- merge(coef_dat, make_term_labels_df(data, RHS), by = c("level"), all = TRUE)
+    out[["feature"]] <- factor(out[["feature"]],
                                levels = feature_order,
                                labels = feature_labels[feature_order])
-    coef_dat$level <- factor(coef_dat$level, levels = term_labels_df$level)
+    out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
     
     # return organized data frame
-    coef_dat <- coef_dat[c("feature", "level", "estimate")]
-    coef_dat <- coef_dat[order(coef_dat$level),]
-    rownames(coef_dat) <- seq_len(nrow(coef_dat))
-    return(structure(coef_dat, class = c("cj_freqs", "data.frame")))
+    out[["statistic"]] <- "frequencies"
+    out <- out[c("statistic", "feature", "level", "estimate")]
+    out <- out[order(out[["level"]]),]
+    rownames(out) <- seq_len(nrow(out))
+    return(structure(out, class = c("cj_freqs", "data.frame")))
 }
 
 #' @rdname freqs

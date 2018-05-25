@@ -19,7 +19,7 @@ test_that("mm() returns correct marginal means", {
     mm_x1 <- aggregate(y~x1, data = dat, mean)
     mm_x2 <- aggregate(y~x2, data = dat, mean)
     est <- mm(dat, y ~ x1 + x2, id = ~ id)
-    expect_true(all(c("outcome", "feature", "level", "estimate", "std.error", "lower", "upper") %in% names(est)),
+    expect_true(all(c("outcome", "statistic", "feature", "level", "estimate", "std.error", "lower", "upper") %in% names(est)),
                 label = "mm() returns correct column names")
     expect_true(identical(nrow(est), 6L),
                 label = "mm() returns correct number of estimates")
@@ -37,7 +37,7 @@ test_that("mm_diffs() returns correct differences", {
     mm_x1 <- aggregate(y~x1 + group, data = dat, mean)
     mm_x2 <- aggregate(y~x2 + group, data = dat, mean)
     est <- mm_diffs(dat, y ~ x1 + x2, id = ~ id, by = ~ group)
-    expect_true(all(c("BY", "outcome", "feature", "level", "estimate", "std.error", "lower", "upper", "group") %in% names(est)),
+    expect_true(all(c("BY", "outcome", "statistic", "feature", "level", "estimate", "std.error", "lower", "upper", "group") %in% names(est)),
                 label = "mm_diffs() returns correct column names")
     expect_true(all(est$group == "High - Low"),
                 label = "mm_diffs() returns correct number of estimates")
@@ -56,7 +56,7 @@ test_that("mm_diffs() returns correct differences", {
 test_that("amce() returns correct marginal effects", {
     reg <- glm(y~x1+x2, data = dat)
     est <- amce(dat, y ~ x1 + x2, id = ~ id)
-    expect_true(all(c("outcome", "feature", "level", "estimate", "std.error", "lower", "upper") %in% names(est)),
+    expect_true(all(c("outcome", "statistic", "feature", "level", "estimate", "std.error", "lower", "upper") %in% names(est)),
                 label = "amce() returns correct column names")
     expect_true(identical(nrow(est), 6L),
                 label = "amce() returns correct number of estimates")
@@ -81,7 +81,7 @@ test_that("cj() by group returns correct marginal effects", {
     reg_low <- glm(y~x1+x2, data = dat, subset = group == "Low")
     reg_high <- glm(y~x1+x2, data = dat, subset = group == "High")
     est <- cj(dat, y ~ x1 + x2, id = ~ id, by = ~ group)
-    expect_true(all(c("outcome", "feature", "level", "estimate", "std.error", "lower", "upper") %in% names(est)),
+    expect_true(all(c("outcome", "statistic", "feature", "level", "estimate", "std.error", "lower", "upper") %in% names(est)),
                 label = "grouped cj() returns correct column names")
     expect_true(identical(nrow(est), 12L),
                 label = "grouped cj() returns correct number of estimates")
@@ -106,7 +106,7 @@ test_that("amce_diffs() returns correct differences", {
     reg_low <- glm(y~x1+x2, data = dat, subset = group == "Low")
     reg_high <- glm(y~x1+x2, data = dat, subset = group == "High")
     est <- amce_diffs(dat, y ~ x1 + x2, id = ~ id, by = ~ group)
-    expect_true(all(c("outcome", "feature", "level", "estimate", "std.error", "lower", "upper") %in% names(est)),
+    expect_true(all(c("outcome", "statistic", "feature", "level", "estimate", "std.error", "lower", "upper") %in% names(est)),
                 label = "amce_diffs() returns correct column names")
     expect_true(identical(nrow(est), 4L),
                 label = "amce_diffs() returns correct number of estimates")

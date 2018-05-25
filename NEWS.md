@@ -1,3 +1,9 @@
+# cregg 0.1.12
+
+* Expanded test suite to cover survey-weighted data. Note: `cj_anova()` currently does not work with weighted data due to a bug in `survey::anova.svyglm()`.
+* Cleaned up internal code for consistency.
+* Added 'statistic' column to function outputs.
+
 # cregg 0.1.11
 
 * Variances returend by `amce_diffs()` now respect clustering. (#9)

@@ -6,7 +6,7 @@ function(
   formula,
   id = NULL,
   weights = NULL,
-  estimate = c("amce", "freqs", "mm", "amce_differences", "mm_differences"),
+  estimate = c("amce", "frequencies", "mm", "amce_differences", "mm_differences"),
   by = NULL,
   ...
 ) {
@@ -41,7 +41,8 @@ function(
           class = c(paste0("cj_", estimate), "data.frame"),
           BY = TRUE
         )
-        out$BY <- factor(names(split_df)[out$BY])
+        out[["BY"]] <- factor(names(split_df)[out$BY])
+        out[["statistic"]] <- estimate
     } else {
         if (estimate %in% c("mm_differences", "amce_differences")) {
             stop("Argument 'by' is required when estimate %in% c('mm_differences', 'amce_differences')")
