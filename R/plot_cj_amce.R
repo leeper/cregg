@@ -21,10 +21,10 @@
 #' @examples
 #' \dontrun{
 #' # load data
-#' data("hainmueller")
+#' data("immigration")
 #' 
 #' # calculate MMs
-#' d1 <- mm(hainmueller, ChosenImmigrant ~ Gender + Education + 
+#' d1 <- mm(immigration, ChosenImmigrant ~ Gender + Education + 
 #'          LanguageSkills + CountryOfOrigin + Job + JobExperience + 
 #'          JobPlans + ReasonForApplication + PriorEntry, id = ~ CaseID)
 #' 
@@ -37,7 +37,7 @@
 #'                       scales = "free_y", strip.position = "right")
 #'
 #' # MMs split by profile number
-#' stacked <- cj(hainmueller, ChosenImmigrant ~ Gender + 
+#' stacked <- cj(immigration, ChosenImmigrant ~ Gender + 
 #'               Education + LanguageSkills + CountryOfOrigin + Job + JobExperience + 
 #'               JobPlans + ReasonForApplication + PriorEntry, id = ~ CaseID,
 #'               estimate = "mm", by = ~ contest_no)
@@ -49,7 +49,7 @@
 #' plot(stacked) + ggplot2::facet_wrap(~contest_no, nrow = 1L)
 #' 
 #' # estimate AMCEs
-#' d2 <- cj(hainmueller, ChosenImmigrant ~ Gender + Education + 
+#' d2 <- cj(immigration, ChosenImmigrant ~ Gender + Education + 
 #'          LanguageSkills + CountryOfOrigin + Job + JobExperience + 
 #'          JobPlans + ReasonForApplication + PriorEntry, id = ~ CaseID)
 #' 

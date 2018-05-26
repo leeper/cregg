@@ -18,8 +18,8 @@
 #' Plotting functionality is provided in \code{\link{plot.cj_mm}}.
 #' 
 #' @examples
-#' data(hainmueller)
-#' mm(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills,
+#' data(immigration)
+#' mm(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills,
 #'    id = ~ CaseID, h0 = 0.5)
 #' @seealso \code{\link{mm_diffs}} \code{\link{plot.cj_mm}}
 #' @import stats

@@ -18,18 +18,18 @@
 #' 
 #' Users may desire to specify a \code{family} argument via \code{\dots}, which should be a \dQuote{family} object such as \code{gaussian}. Sensible alternatives are \code{binomial} (for binary outcomes) and quasibinomial (for weighted survey data). See \code{\link[stats]{family}} for details.
 #' @examples
-#' data(hainmueller)
+#' data(immigration)
 #' # estimating AMCEs
-#' amce(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, 
+#' amce(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills, 
 #'      id = ~ CaseID, feature_order = c("LanguageSkills", "Gender", "Education"))
 #' 
 #' \dontrun{
 #' # balance testing example
-#' plot(amce(hainmueller[!is.na(hainmueller$ethnocentrism),
+#' plot(amce(immigration[!is.na(immigration$ethnocentrism),
 #'      ethnocentrism ~ Gender + Education + LanguageSkills, id = ~ CaseID))
 #' 
 #' # reference category sensitivity
-#' x <- amce_by_reference(hainmueller, ChosenImmigrant ~ LanguageSkills + Education, 
+#' x <- amce_by_reference(immigration, ChosenImmigrant ~ LanguageSkills + Education, 
 #'        variable = ~ LanguageSkills, id = ~ CaseID)
 #' # plot
 #' plot(x, group = "BY")

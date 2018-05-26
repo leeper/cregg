@@ -1,3 +1,7 @@
+# cregg 0.1.13
+
+* Renamed `hainmueller` dataset to `immigration`.
+
 # cregg 0.1.12
 
 * Expanded test suite to cover survey-weighted data. Note: `cj_anova()` currently does not work with weighted data due to a bug in `survey::anova.svyglm()`.

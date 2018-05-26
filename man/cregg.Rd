@@ -39,10 +39,10 @@ Note: cregg currently only works with full factorial conjoint experiments. Desig
 \dontrun{
 # load data
 requireNamespace("ggplot2")
-data("hainmueller")
+data("immigration")
 
 # calculate MMs
-d1 <- cj(hainmueller, ChosenImmigrant ~ Gender + Education + 
+d1 <- cj(immigration, ChosenImmigrant ~ Gender + Education + 
          LanguageSkills + CountryOfOrigin + Job + JobExperience + 
          JobPlans + ReasonForApplication + PriorEntry, id = ~ CaseID,
          estimate = "mm", h0 = 0.5)
@@ -51,7 +51,7 @@ d1 <- cj(hainmueller, ChosenImmigrant ~ Gender + Education +
 plot(d1)
 
 # MMs split by profile number
-stacked <- cj(hainmueller, ChosenImmigrant ~ Gender + Education + 
+stacked <- cj(immigration, ChosenImmigrant ~ Gender + Education + 
               LanguageSkills + CountryOfOrigin + Job + JobExperience + 
               JobPlans + ReasonForApplication + PriorEntry, id = ~ CaseID,
               estimate = "mm", by = ~ contest_no)
@@ -63,7 +63,7 @@ plot(stacked, group = "contest_no", vline = 0.5, feature_headers = FALSE)
 plot(stacked) + ggplot2::facet_wrap(~contest_no, nrow = 1L)
 
 # estimate AMCEs
-d2 <- cj(hainmueller, ChosenImmigrant ~ Gender + Education + 
+d2 <- cj(immigration, ChosenImmigrant ~ Gender + Education + 
          LanguageSkills + CountryOfOrigin + Job + JobExperience + 
          JobPlans + ReasonForApplication + PriorEntry, id = ~ CaseID)
 
@@ -71,14 +71,15 @@ d2 <- cj(hainmueller, ChosenImmigrant ~ Gender + Education +
 plot(d2)
 
 ## subgroup analysis
-hainmueller$ethnosplit <- cut(hainmueller$ethnocentrism, 2)
-x <- cj(na.omit(hainmueller), ChosenImmigrant ~ Gender + Education + LanguageSkills,
+immigration$ethnosplit <- cut(immigration$ethnocentrism, 2)
+x <- cj(na.omit(immigration), ChosenImmigrant ~ Gender + Education + LanguageSkills,
         id = ~ CaseID, estimate = "mm", h0 = 0.5, by = ~ ethnosplit)
 plot(x, group = "ethnosplit", vline = 0.5)
 }
 }
 \seealso{
-\code{\link{amce}} \code{\link{mm}} \code{\link{freqs}} \code{\link{mm_diffs}} \code{\link{plot.cj_amce}}
+Functions: \code{\link{amce}} \code{\link{mm}} \code{\link{freqs}} \code{\link{mm_diffs}} \code{\link{plot.cj_amce}}
+ Data: \code{\link{immigration}} \code{\link{taxes}}
 }
 \author{
 Thomas J. Leeper <thosjleeper@gmail.com>

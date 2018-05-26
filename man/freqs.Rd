@@ -38,15 +38,15 @@ These two functions provide slightly different functionality. \code{props} provi
 \code{freqs} provides \emph{marginal} display frequencies, which are a descriptive check on the presentation of individual conjoint features (for example, to ensure equal or intentionally unequal appearance of levels). This is mostly useful for plotting functionality provided in \code{\link{plot.cj_freqs}}, which provides barcharts for the frequency with which each level of each feature was presented.
 }
 \examples{
-data(hainmueller)
+data(immigration)
 # display frequencies
-freqs(hainmueller, ~ Gender + Education + LanguageSkills, id = ~ CaseID)
+freqs(immigration, ~ Gender + Education + LanguageSkills, id = ~ CaseID)
 
 # restrictions
 ## check display proportions
-props(hainmueller, ~ Job, id = ~ CaseID)
+props(immigration, ~ Job, id = ~ CaseID)
 ## check which combinations were not allowed
-subset(props(hainmueller, ~ Job + Education, id = ~ CaseID), Proportion == 0)
+subset(props(immigration, ~ Job + Education, id = ~ CaseID), Proportion == 0)
 
 }
 \seealso{

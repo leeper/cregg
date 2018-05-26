@@ -1,4 +1,4 @@
-#' @rdname hainmueller
+#' @rdname immigration
 #' @docType data
 #' @title Immigration Conjoint Experiment Dataset from Hainmueller et. al. (2014)
 #' @description A dataset containing the results of a conjoint survey of a representative sample of American adults who were asked to choose which hypothetical immigrants they think should be admitted into the United States. Each row corresponds to a single profile presented to the respondent.
@@ -21,12 +21,12 @@
 #'    \item{\samp{LangPos}}{a numeric vector}
 #'    \item{\samp{PriorPos}}{a numeric vector}
 #'  }
-#' @source Hainmueller, J., Hopkins, D., and Yamamoto T. (2014) Causal Inference in Conjoint Analysis: Understanding Multi-Dimensional Choices via Stated Preference Experiments. Political Analysis 22(1):1-30
+#' @source Hainmueller, J., Hopkins, D., and Yamamoto T. 2014. \dQuote{Causal Inference in Conjoint Analysis: Understanding Multi-Dimensional Choices via Stated Preference Experiments.} \emph{Political Analysis} 22(1): 1-30. \url{http://doi.org/10.1093/pan/mpt024}
 #' @note This is a modified version of the dataset available from the \href{https://cran.r-project.org/package=cjoint}{cjoint} package.
 #' @examples
 #' \dontrun{
-#' data("hainmueller")
-#' cj(hainmueller, ChosenImmigrant ~ Gender + Education, id = ~ CaseID)
+#' data("immigration")
+#' cj(immigration, ChosenImmigrant ~ Gender + Education, id = ~ CaseID)
 #' }
-#' @seealso \code{\link{amce}} \code{\link{mm}} \code{\link{mm}}
-"hainmueller"
+#' @seealso \code{\link{cj}} \code{\link{taxes}}
+"immigration"

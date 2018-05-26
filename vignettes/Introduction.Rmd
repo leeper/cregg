@@ -47,7 +47,7 @@ The package includes an example conjoint dataset (borrowed and lightly modified 
 
 ```{r load}
 library("cregg")
-data("hainmueller")
+data("immigration")
 ```
 
 ### Marginal Means
@@ -59,7 +59,7 @@ The package provides straightforward calculation and visualization of descriptiv
 f1 <- ChosenImmigrant ~ Gender + Education + LanguageSkills + 
        CountryOfOrigin + Job + JobExperience + JobPlans + 
        ReasonForApplication + PriorEntry
-plot(mm(hainmueller, f1, id = ~ CaseID), vline = 0.5)
+plot(mm(immigration, f1, id = ~ CaseID), vline = 0.5)
 ```
 
 cregg functions uses `attr(data$feature, "label")` to provide pretty printing of feature labels, so that variable names can be arbitrary. These can be overwritten using the `feature_labels` argument to override these settings. Feature levels are always deduced from the `levels()` of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in `feature_order`.
@@ -70,7 +70,7 @@ A more common analytic approach for conjoints is to estimate average marginal co
 
 ```{r amce}
 # estimation
-amces <- cj(hainmueller, f1, id = ~ CaseID)
+amces <- cj(immigration, f1, id = ~ CaseID)
 head(amces[c("feature", "level", "estimate", "std.error")], 20L)
 ```
 
@@ -86,7 +86,7 @@ plot(amces)
 Reference categories for AMCEs are often arbitrary and can affect intuitions about results, so the package also provides a diagnostic tool for helping to decide on an appropriate reference category:
 
 ```{r amce_diagnostic, fig.height = 5}
-amce_diagnostic <- amce_by_reference(hainmueller, ChosenImmigrant ~ LanguageSkills, ~LanguageSkills, id = ~ CaseID)
+amce_diagnostic <- amce_by_reference(immigration, ChosenImmigrant ~ LanguageSkills, ~LanguageSkills, id = ~ CaseID)
 plot(amce_diagnostic, group = "BY")
 ```
 
@@ -99,7 +99,7 @@ While the reference category has no meaningful bearing on estimation, it can aff
 For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:
 
 ```{r mm_by, fig.height=8}
-mm_by <- cj(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills,
+mm_by <- cj(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills,
             id = ~ CaseID, estimate = "mm", by = ~ contest_no)
 plot(mm_by, group = "contest_no", vline = 0.5)
 ```
@@ -109,7 +109,7 @@ plot(mm_by, group = "contest_no", vline = 0.5)
 A more formal test of these differences is provided by a nested model comparison test:
 
 ```{r cj_anova}
-cj_anova(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, by = ~ contest_no)
+cj_anova(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills, by = ~ contest_no)
 ```
 
 which provides a test of whether any of the interactions between the `by` variable and feature levels differ from zero.
@@ -122,11 +122,11 @@ For example, we might want to understand differences in preferences by ethnocent
 
 ```{r conditional_mms}
 ## the original plot is split at the value of 10, which is not a true median split
-hainmueller$ethnosplit <- NA_real_
-hainmueller$ethnosplit[hainmueller$ethnocentrism <= 10] <- 1L
-hainmueller$ethnosplit[hainmueller$ethnocentrism > 10] <- 2L
-hainmueller$ethnosplit <- factor(hainmueller$ethnosplit, 1:2, c("Low Ethnocentrism", "High Ethnocentrism"))
-x <- cj(na.omit(hainmueller), f1, id = ~ CaseID, estimate = "mm", by = ~ ethnosplit)
+immigration$ethnosplit <- NA_real_
+immigration$ethnosplit[immigration$ethnocentrism <= 10] <- 1L
+immigration$ethnosplit[immigration$ethnocentrism > 10] <- 2L
+immigration$ethnosplit <- factor(immigration$ethnosplit, 1:2, c("Low Ethnocentrism", "High Ethnocentrism"))
+x <- cj(na.omit(immigration), f1, id = ~ CaseID, estimate = "mm", by = ~ ethnosplit)
 plot(x, group = "ethnosplit", vline = 0.5)
 ```
 
@@ -134,9 +134,9 @@ But if we want to interpret differences in the sizes of AMCEs (rather than descr
 
 ```{r conditional_amces, dependson = c("conditional_mms"), fig.height = 4}
 # calculate conditional AMCEs
-amces <- cj(na.omit(hainmueller), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
+amces <- cj(na.omit(immigration), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
             id = ~ CaseID, estimate = "amce", by = ~ ethnosplit)
-diff_amces <- cj(na.omit(hainmueller), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
+diff_amces <- cj(na.omit(immigration), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
                  id = ~ CaseID, estimate = "amce_diff", by = ~ ethnosplit)
 plot(rbind(amces, diff_amces)) + ggplot2::facet_wrap(~BY, ncol = 3L)
 ```
@@ -145,9 +145,9 @@ But again, this plot showcases differences in conjoint effect sizes (AMCEs) not 
 
 ```{r conditional_differences, dependson = c("conditional_amces"), fig.height = 4}
 # calculate conditional AMCEs
-mms <- cj(na.omit(hainmueller), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
+mms <- cj(na.omit(immigration), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
           id = ~ CaseID, estimate = "mm", by = ~ ethnosplit)
-diff_mms <- cj(na.omit(hainmueller), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
+diff_mms <- cj(na.omit(immigration), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
                id = ~ CaseID, estimate = "mm_diff", by = ~ ethnosplit)
 plot(rbind(mms, diff_mms)) + ggplot2::facet_wrap(~BY, ncol = 3L)
 ```
@@ -171,14 +171,14 @@ For example, to check display frequencies of conjoint features (to ensure equal 
 
 ```{r plot_freqs}
 # plotting of display frequencies
-plot(freqs(hainmueller, f1, id = ~ CaseID))
+plot(freqs(immigration, f1, id = ~ CaseID))
 ```
 
 As can be clear in the above, constraints were imposed in the original study on the allowed combinations of `Job` and `Education` and also on combinations of `CountryOfOrigin` and `ReasonForApplication`. The `props()` function provides tidy proportions tables to quickly 
 
 ```{r table_freqs}
-subset(props(hainmueller, ~ Job + Education, id = ~ CaseID), Proportion == 0)
-subset(props(hainmueller, ~ CountryOfOrigin + ReasonForApplication, id = ~ CaseID), Proportion == 0)
+subset(props(immigration, ~ Job + Education, id = ~ CaseID), Proportion == 0)
+subset(props(immigration, ~ CountryOfOrigin + ReasonForApplication, id = ~ CaseID), Proportion == 0)
 ```
 
 So that it is possible to very the design was implemented as intended or to perform further subgroup analyses.
@@ -188,11 +188,11 @@ So that it is possible to very the design was implemented as intended or to perf
 The main `amce()` and `mm()` functions can also be used for balance testing. Rather than comparing outcomes across features levels, we will compare a covariate across feature levels. Both approaches will give a similar result:
 
 ```{r balance_testing, fig.height=8}
-plot(mm(hainmueller,
+plot(mm(immigration,
         ethnocentrism ~ Job + Education + CountryOfOrigin + ReasonForApplication,
         id = ~ CaseID),
      xlim = c(10,30),
-     vline = mean(hainmueller$ethnocentrism, na.rm = TRUE))
+     vline = mean(immigration$ethnocentrism, na.rm = TRUE))
 ```
 Given that confidence intervals for each feature hover closely around the grand mean, there is little reason to believe that imbalance is a problem. The same analysis could be performed using `amce()`.
 
@@ -201,7 +201,7 @@ Given that confidence intervals for each feature hover closely around the grand 
 Subgroup diagnostics can be used to evaluate whether there is, for example, any preference for the lefthand or righthand profile (in a two-profile design):
 
 ```{r leftright}
-plot(cj(hainmueller, f1, id = ~CaseID, by = ~ profile, estimate = "mm"),
+plot(cj(immigration, f1, id = ~CaseID, by = ~ profile, estimate = "mm"),
      group = "profile", vline = 0.5)
 ```
 

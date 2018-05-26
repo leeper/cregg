@@ -53,28 +53,28 @@ Tests for preference heterogeneity in conjoint experiments
 \code{amce_diffs} provides a data frame of differences in AMCEs (the coefficient on an interaction by each RHS factor and the variable in \code{by}). This provides an estimate of the difference in causal effects of each factor level relative to the baseline level (i.e., the difference in conditional AMCEs). This quantity is easily misinterpreted as the difference in preferences, which it is not. If preferences in the reference category differ across levels of \code{by}, the the difference in conditional AMCEs will have an unpredictable sign and significance. See \code{\link{amce_by_reference}} for a diagnostic.
 }
 \examples{
-data(hainmueller)
+data(immigration)
 # Test for heterogeneity by profile order
-cj_anova(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, by = ~ contest_no)
+cj_anova(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills, by = ~ contest_no)
 
 # Test for heterogeneity by CountryOfOrigin feature
-cj_anova(hainmueller, ChosenImmigrant ~ Gender + Education, by = ~ CountryOfOrigin)
+cj_anova(immigration, ChosenImmigrant ~ Gender + Education, by = ~ CountryOfOrigin)
 
 \dontrun{
 # Differences in MMs by Gender feature
-mm_diffs(hainmueller, ChosenImmigrant ~ LanguageSkills + Education, ~ Gender, id = ~ CaseID)
+mm_diffs(immigration, ChosenImmigrant ~ LanguageSkills + Education, ~ Gender, id = ~ CaseID)
 
 # Differences in AMCEs by Gender feature (i.e., feature interactions)
-amce_diffs(hainmueller, ChosenImmigrant ~ LanguageSkills + Education, ~ Gender, id = ~ CaseID)
+amce_diffs(immigration, ChosenImmigrant ~ LanguageSkills + Education, ~ Gender, id = ~ CaseID)
 }
 
 # preferences differ for Male and Female immigrants with 'Broken English' ability
-mm_diffs(hainmueller, ChosenImmigrant ~ LanguageSkills, ~ Gender, id = ~ CaseID)
+mm_diffs(immigration, ChosenImmigrant ~ LanguageSkills, ~ Gender, id = ~ CaseID)
 
 # yet differences in conditional AMCEs  depend on the reference category
-amce_diffs(hainmueller, ChosenImmigrant ~ LanguageSkills, ~ Gender, id = ~ CaseID)
-hainmueller$LanguageSkills2 <- relevel(hainmueller$LanguageSkills, "Used Interpreter")
-amce_diffs(hainmueller, ChosenImmigrant ~ LanguageSkills2, ~ Gender, id = ~ CaseID)
+amce_diffs(immigration, ChosenImmigrant ~ LanguageSkills, ~ Gender, id = ~ CaseID)
+immigration$LanguageSkills2 <- relevel(immigration$LanguageSkills, "Used Interpreter")
+amce_diffs(immigration, ChosenImmigrant ~ LanguageSkills2, ~ Gender, id = ~ CaseID)
 
 }
 \seealso{
