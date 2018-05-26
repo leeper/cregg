@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.8</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.13</span>
       </span>
     </div>
 
@@ -110,7 +110,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Preference Heterogeneity Diagnostics</h1>
-    <small class="dont-index">Source: <a href='https://github.com/leeper/cregg/blob/master/R/diffs.R'><code>R/diffs.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/leeper/cregg/blob/master/R/amce_diffs.R'><code>R/amce_diffs.R</code></a>, <a href='https://github.com/leeper/cregg/blob/master/R/cj_anova.R'><code>R/cj_anova.R</code></a>, <a href='https://github.com/leeper/cregg/blob/master/R/mm_diffs.R'><code>R/mm_diffs.R</code></a></small>
     <div class="hidden name"><code>diffs.Rd</code></div>
     </div>
 
@@ -124,7 +124,11 @@
   <span class='kw'>feature_order</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>feature_labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>level_order</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"ascending"</span>, <span class='st'>"descending"</span>), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='no'>...</span>)
 
-<span class='fu'>cj_anova</span>(<span class='no'>data</span>, <span class='no'>formula</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>cj_anova</span>(<span class='no'>data</span>, <span class='no'>formula</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
+
+<span class='fu'>mm_diffs</span>(<span class='no'>data</span>, <span class='no'>formula</span>, <span class='no'>by</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>feature_order</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>feature_labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>level_order</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"ascending"</span>, <span class='st'>"descending"</span>), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -139,7 +143,7 @@
     </tr>
     <tr>
       <th>by</th>
-      <td><p>A formula containing only RHS variables, specifying grouping factors over which to perform estimation.</p></td>
+      <td><p>A formula containing only RHS variables, specifying grouping factors over which to perform estimation. For <code>amce_diffs</code>, this can be a factor or something coercable to factor. For <code>mm_diffs</code> the variable must only take two levels.</p></td>
     </tr>
     <tr>
       <th>id</th>
@@ -159,7 +163,7 @@
     </tr>
     <tr>
       <th>level_order</th>
-      <td><p>A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via <code><a href='plot.cj_amce.html'>plot.cj_mm</a></code>, etc.</p></td>
+      <td><p>A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via <code>plot.cj_mm</code>, etc.</p></td>
     </tr>
     <tr>
       <th>alpha</th>
@@ -173,21 +177,24 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>amce_diffs</code> returns a data frame similar to the one returned by <code><a href='cregg.html'>cj</a></code>, including a <code>BY</code> column for easy merging with results returned by that function. <code>cj_anova</code> returns an <code><a href='http://www.rdocumentation.org/packages/stats/topics/anova'>anova</a></code> object.</p>
+    <p><code>amce_diffs</code> and <code>mm_diffs</code> return a data frame similar to the one returned by <code><a href='cregg.html'>cj</a></code>, including a <code>BY</code> column (with the value &#8220;Difference&#8221;) for easy merging with results returned by that function.</p>
+<p><code>cj_anova</code> returns an <code><a href='http://www.rdocumentation.org/packages/stats/topics/anova'>anova</a></code> object.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>cj_anova</code> takes a model formula (&#8220;reduced&#8221; model) and generates a &#8220;full&#8221; model with full saturated interactions between the variables specified in <code>by</code> and all RHS variables in <code>formula</code>, then computes an F-test comparing the two models, providing a test for whether preferences vary across levels of <code>by</code>. This is, in essence, a test of whether all such interaction coefficients are distinguishable from zero. Because the test depends on overall model fit, not the coefficient variances, clustering is irrelevant.</p>
+<p><code>mm_diffs</code> provides a data frame of differences in marginal means (literally differencing the results from <code><a href='mm.html'>mm</a></code> across levels of <code>by</code>. This provides the clearest direct measure of preference differences from a conjoint design. <code>by</code> must</p>
+<p><code>amce_diffs</code> provides a data frame of differences in AMCEs (the coefficient on an interaction by each RHS factor and the variable in <code>by</code>). This provides an estimate of the difference in causal effects of each factor level relative to the baseline level (i.e., the difference in conditional AMCEs). This quantity is easily misinterpreted as the difference in preferences, which it is not. If preferences in the reference category differ across levels of <code>by</code>, the the difference in conditional AMCEs will have an unpredictable sign and significance. See <code><a href='amce.html'>amce_by_reference</a></code> for a diagnostic.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='amce.html'>amce</a></code> <code><a href='mm.html'>mm</a></code> <code><a href='freqs.html'>freqs</a></code> <code><a href='plot.cj_amce.html'>plot.cj_amce</a></code></p></div>
+    <div class='dont-index'><p><code><a href='amce.html'>amce</a></code> <code><a href='mm.html'>mm</a></code> <code><a href='freqs.html'>freqs</a></code> <code><a href='plot.html'>plot.cj_amce</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>hainmueller</span>)
+    <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>immigration</span>)
 <span class='co'># Test for heterogeneity by profile order</span>
-<span class='fu'>cj_anova</span>(<span class='no'>hainmueller</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span> + <span class='no'>LanguageSkills</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~ <span class='no'>contest_no</span>)</div><div class='output co'>#&gt; Analysis of Deviance Table
+<span class='fu'>cj_anova</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span> + <span class='no'>LanguageSkills</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~ <span class='no'>contest_no</span>)</div><div class='output co'>#&gt; Analysis of Deviance Table
 #&gt; 
 #&gt; Model 1: ChosenImmigrant ~ Gender + Education + LanguageSkills
 #&gt; Model 2: ChosenImmigrant ~ Gender + Education + LanguageSkills + contest_no + 
@@ -196,7 +203,7 @@
 #&gt; 1     13949     3353.0                          
 #&gt; 2     13938     3349.6 11   3.3873 1.2814 0.2279</div><div class='input'>
 <span class='co'># Test for heterogeneity by CountryOfOrigin feature</span>
-<span class='fu'>cj_anova</span>(<span class='no'>hainmueller</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~ <span class='no'>CountryOfOrigin</span>)</div><div class='output co'>#&gt; Analysis of Deviance Table
+<span class='fu'>cj_anova</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~ <span class='no'>CountryOfOrigin</span>)</div><div class='output co'>#&gt; Analysis of Deviance Table
 #&gt; 
 #&gt; Model 1: ChosenImmigrant ~ Gender + Education
 #&gt; Model 2: ChosenImmigrant ~ Gender + Education + CountryOfOrigin + Gender:CountryOfOrigin + 
@@ -206,37 +213,54 @@
 #&gt; 2     13880     3374.5 72   33.286 1.9016 6.756e-06 ***
 #&gt; ---
 #&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</div><div class='input'>
+</div><span class='co'># NOT RUN {</span>
+<span class='co'># Differences in MMs by Gender feature</span>
+<span class='fu'>mm_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span> + <span class='no'>Education</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
+
 <span class='co'># Differences in AMCEs by Gender feature (i.e., feature interactions)</span>
-<span class='fu'>amce_diffs</span>(<span class='no'>hainmueller</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span> + <span class='no'>Education</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)</div><div class='output co'>#&gt; <span class='message'>Waiting for profiling to be done...</span></div><div class='output co'>#&gt;           BY         outcome                feature                    level
-#&gt; 1 Difference ChosenImmigrant Educational Attainment                4th Grade
-#&gt; 2 Difference ChosenImmigrant Educational Attainment                8th Grade
-#&gt; 3 Difference ChosenImmigrant Educational Attainment           College Degree
-#&gt; 4 Difference ChosenImmigrant Educational Attainment          Graduate Degree
-#&gt; 5 Difference ChosenImmigrant Educational Attainment              High School
-#&gt; 6 Difference ChosenImmigrant Educational Attainment         Two-Year College
-#&gt; 7 Difference ChosenImmigrant        Language Skills           Broken English
-#&gt; 8 Difference ChosenImmigrant        Language Skills Tried English but Unable
-#&gt; 9 Difference ChosenImmigrant        Language Skills         Used Interpreter
-#&gt;          Gender     estimate  std.error          t         p       lower
-#&gt; 1 Male - Female -0.005966999 0.03110785 -0.1918165 0.8478887 -0.06693727
-#&gt; 2 Male - Female -0.030625179 0.03118286 -0.9821157 0.3260599 -0.09174247
-#&gt; 3 Male - Female -0.014844848 0.03131950 -0.4739810 0.6355209 -0.07622994
-#&gt; 4 Male - Female -0.042143177 0.03110228 -1.3549867 0.1754437 -0.10310253
-#&gt; 5 Male - Female -0.013956325 0.03123056 -0.4468804 0.6549684 -0.07516710
-#&gt; 6 Male - Female -0.047183288 0.03115487 -1.5144753 0.1299280 -0.10824572
-#&gt; 7 Male - Female -0.029903918 0.02343386 -1.2760985 0.2019420 -0.07583345
-#&gt; 8 Male - Female  0.004543744 0.02333837  0.1946898 0.8456386 -0.04119863
-#&gt; 9 Male - Female -0.013293411 0.02342970 -0.5673744 0.5704690 -0.05921478
-#&gt;        upper
-#&gt; 1 0.05500327
-#&gt; 2 0.03049211
-#&gt; 3 0.04654025
-#&gt; 4 0.01881617
-#&gt; 5 0.04725445
-#&gt; 6 0.01387914
-#&gt; 7 0.01602561
-#&gt; 8 0.05028611
-#&gt; 9 0.03262796</div><div class='input'>
+<span class='fu'>amce_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span> + <span class='no'>Education</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
+<span class='co'># }</span><div class='input'>
+<span class='co'># preferences differ for Male and Female immigrants with 'Broken English' ability</span>
+<span class='fu'>mm_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)</div><div class='output co'>#&gt;           BY statistic         outcome         feature                    level
+#&gt; 1 Difference        mm ChosenImmigrant Language Skills           Fluent English
+#&gt; 2 Difference        mm ChosenImmigrant Language Skills           Broken English
+#&gt; 3 Difference        mm ChosenImmigrant Language Skills Tried English but Unable
+#&gt; 4 Difference        mm ChosenImmigrant Language Skills         Used Interpreter
+#&gt;       estimate  std.error          z        p       lower        upper
+#&gt; 1 -0.015436300 0.01646401 -0.9375783 1.651539 -0.04251719  0.011644591
+#&gt; 2 -0.047683617 0.01701027 -2.8032247 1.994941 -0.07566303 -0.019704208
+#&gt; 3 -0.009770039 0.01685683 -0.5795893 1.437808 -0.03749706  0.017956979
+#&gt; 4 -0.030670893 0.01684262 -1.8210283 1.931397 -0.05837454 -0.002967244
+#&gt;          Gender
+#&gt; 1 Male - Female
+#&gt; 2 Male - Female
+#&gt; 3 Male - Female
+#&gt; 4 Male - Female</div><div class='input'>
+<span class='co'># yet differences in conditional AMCEs  depend on the reference category</span>
+<span class='fu'>amce_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)</div><div class='output co'>#&gt;           BY         outcome        statistic         feature
+#&gt; 1 Difference ChosenImmigrant amce_differences Language Skills
+#&gt; 2 Difference ChosenImmigrant amce_differences Language Skills
+#&gt; 3 Difference ChosenImmigrant amce_differences Language Skills
+#&gt;                      level        Gender     estimate  std.error          z
+#&gt; 1           Broken English Male - Female -0.032247317 0.02366186 -1.3628393
+#&gt; 2 Tried English but Unable Male - Female  0.005666262 0.02313999  0.2448688
+#&gt; 3         Used Interpreter Male - Female -0.015234592 0.02388354 -0.6378698
+#&gt;           p       lower      upper
+#&gt; 1 0.1729332 -0.07862372 0.01412908
+#&gt; 2 0.8065580 -0.03968728 0.05101980
+#&gt; 3 0.5235584 -0.06204548 0.03157629</div><div class='input'><span class='no'>immigration</span>$<span class='no'>LanguageSkills2</span> <span class='kw'>&lt;-</span> <span class='fu'>relevel</span>(<span class='no'>immigration</span>$<span class='no'>LanguageSkills</span>, <span class='st'>"Used Interpreter"</span>)
+<span class='fu'>amce_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills2</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)</div><div class='output co'>#&gt;           BY         outcome        statistic         feature
+#&gt; 1 Difference ChosenImmigrant amce_differences LanguageSkills2
+#&gt; 2 Difference ChosenImmigrant amce_differences LanguageSkills2
+#&gt; 3 Difference ChosenImmigrant amce_differences LanguageSkills2
+#&gt;                      level        Gender    estimate  std.error          z
+#&gt; 1           Broken English Male - Female -0.01701272 0.02372866 -0.7169694
+#&gt; 2           Fluent English Male - Female  0.01523459 0.02388354  0.6378698
+#&gt; 3 Tried English but Unable Male - Female  0.02090085 0.02366212  0.8833043
+#&gt;           p       lower      upper
+#&gt; 1 0.4733930 -0.06352005 0.02949460
+#&gt; 2 0.5235584 -0.03157629 0.06204548
+#&gt; 3 0.3770719 -0.02547605 0.06727776</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Immigration Conjoint Experiment Dataset from Hainmueller et. al. (2014) — hainmueller • cregg</title>
+<title>Immigration Conjoint Experiment Dataset from Hainmueller et. al. (2014) — immigration • cregg</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -28,7 +28,7 @@
 
 
 
-<meta property="og:title" content="Immigration Conjoint Experiment Dataset from Hainmueller et. al. (2014) — hainmueller" />
+<meta property="og:title" content="Immigration Conjoint Experiment Dataset from Hainmueller et. al. (2014) — immigration" />
 
 <meta property="og:description" content="A dataset containing the results of a conjoint survey of a representative sample of American adults who were asked to choose which hypothetical immigrants they think should be admitted into the United States. Each row corresponds to a single profile presented to the respondent." />
 <meta name="twitter:card" content="summary" />
@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.8</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.13</span>
       </span>
     </div>
 
@@ -110,8 +110,8 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Immigration Conjoint Experiment Dataset from Hainmueller et. al. (2014)</h1>
-    <small class="dont-index">Source: <a href='https://github.com/leeper/cregg/blob/master/R/hainmueller.R'><code>R/hainmueller.R</code></a></small>
-    <div class="hidden name"><code>hainmueller.Rd</code></div>
+    <small class="dont-index">Source: <a href='https://github.com/leeper/cregg/blob/master/R/immigration.R'><code>R/immigration.R</code></a></small>
+    <div class="hidden name"><code>immigration.Rd</code></div>
     </div>
 
     <div class="ref-description">
@@ -120,7 +120,7 @@
     
     </div>
 
-    <pre class="usage"><span class='no'>hainmueller</span></pre>
+    <pre class="usage"><span class='no'>immigration</span></pre>
         
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
@@ -145,7 +145,7 @@
     
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
-    <p>Hainmueller, J., Hopkins, D., and Yamamoto T. (2014) Causal Inference in Conjoint Analysis: Understanding Multi-Dimensional Choices via Stated Preference Experiments. Political Analysis 22(1):1-30</p>
+    <p>Hainmueller, J., Hopkins, D., and Yamamoto T. 2014. &#8220;Causal Inference in Conjoint Analysis: Understanding Multi-Dimensional Choices via Stated Preference Experiments.&#8221; <em>Political Analysis</em> 22(1): 1-30. <a href='http://doi.org/10.1093/pan/mpt024'>http://doi.org/10.1093/pan/mpt024</a></p>
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
@@ -153,13 +153,13 @@
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='amce.html'>amce</a></code> <code><a href='mm.html'>mm</a></code> <code><a href='mm.html'>mm</a></code></p></div>
+    <div class='dont-index'><p><code><a href='cregg.html'>cj</a></code> <code><a href='taxes.html'>taxes</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>data</span>(<span class='st'>"hainmueller"</span>)
-<span class='fu'><a href='cregg.html'>cj</a></span>(<span class='no'>hainmueller</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
+<span class='fu'>data</span>(<span class='st'>"immigration"</span>)
+<span class='fu'><a href='cregg.html'>cj</a></span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.8</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.13</span>
       </span>
     </div>
 
@@ -154,7 +154,7 @@
     </tr>
     <tr>
       <th>level_order</th>
-      <td><p>A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via <code><a href='plot.cj_amce.html'>plot.cj_mm</a></code>, etc.</p></td>
+      <td><p>A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via <code>plot.cj_mm</code>, etc.</p></td>
     </tr>
     <tr>
       <th>&#8230;</th>
@@ -169,33 +169,33 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>These two functions provide slightly different functionality. <code>props</code> provides tidy proportion tables to examine cross-feature restrictions in conjoint designs that are not equally randomized. This enables, for example, tabulation and visualization of complete restrictions (where combinations of two or more features are not permitted), as well as calculation of AMCEs for constrained designs appropriately weighted by the display proportions for particular combinations of features.</p>
-<p><code>freqs</code> provides <em>marginal</em> display frequencies, which are a descriptive check on the presentation of individual conjoint features (for example, to ensure equal or intentionally unequal appearance of levels). This is mostly useful for plotting functionality provided in <code><a href='plot.cj_amce.html'>plot.cj_freqs</a></code>, which provides barcharts for the frequency with which each level of each feature was presented.</p>
+<p><code>freqs</code> provides <em>marginal</em> display frequencies, which are a descriptive check on the presentation of individual conjoint features (for example, to ensure equal or intentionally unequal appearance of levels). This is mostly useful for plotting functionality provided in <code>plot.cj_freqs</code>, which provides barcharts for the frequency with which each level of each feature was presented.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='plot.cj_amce.html'>plot.cj_mm</a></code></p></div>
+    <div class='dont-index'><p><code>plot.cj_mm</code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>hainmueller</span>)
+    <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>immigration</span>)
 <span class='co'># display frequencies</span>
-<span class='fu'>freqs</span>(<span class='no'>hainmueller</span>, ~ <span class='no'>Gender</span> + <span class='no'>Education</span> + <span class='no'>LanguageSkills</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)</div><div class='output co'>#&gt;                   feature                    level estimate
-#&gt; 1                  Gender                   Female     7130
-#&gt; 2                  Gender                     Male     6830
-#&gt; 3  Educational Attainment                No Formal     1964
-#&gt; 4  Educational Attainment                4th Grade     2018
-#&gt; 5  Educational Attainment                8th Grade     1998
-#&gt; 6  Educational Attainment              High School     1994
-#&gt; 7  Educational Attainment         Two-Year College     2005
-#&gt; 8  Educational Attainment           College Degree     1963
-#&gt; 9  Educational Attainment          Graduate Degree     2018
-#&gt; 10        Language Skills           Fluent English     3576
-#&gt; 11        Language Skills           Broken English     3440
-#&gt; 12        Language Skills Tried English but Unable     3501
-#&gt; 13        Language Skills         Used Interpreter     3443</div><div class='input'>
+<span class='fu'>freqs</span>(<span class='no'>immigration</span>, ~ <span class='no'>Gender</span> + <span class='no'>Education</span> + <span class='no'>LanguageSkills</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)</div><div class='output co'>#&gt;      statistic                feature                    level estimate
+#&gt; 1  frequencies                 Gender                   Female     7130
+#&gt; 2  frequencies                 Gender                     Male     6830
+#&gt; 3  frequencies Educational Attainment                No Formal     1964
+#&gt; 4  frequencies Educational Attainment                4th Grade     2018
+#&gt; 5  frequencies Educational Attainment                8th Grade     1998
+#&gt; 6  frequencies Educational Attainment              High School     1994
+#&gt; 7  frequencies Educational Attainment         Two-Year College     2005
+#&gt; 8  frequencies Educational Attainment           College Degree     1963
+#&gt; 9  frequencies Educational Attainment          Graduate Degree     2018
+#&gt; 10 frequencies        Language Skills           Fluent English     3576
+#&gt; 11 frequencies        Language Skills           Broken English     3440
+#&gt; 12 frequencies        Language Skills Tried English but Unable     3501
+#&gt; 13 frequencies        Language Skills         Used Interpreter     3443</div><div class='input'>
 <span class='co'># restrictions</span>
 <span class='co'>## check display proportions</span>
-<span class='fu'>props</span>(<span class='no'>hainmueller</span>, ~ <span class='no'>Job</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)</div><div class='output co'>#&gt;                    Job Proportion
+<span class='fu'>props</span>(<span class='no'>immigration</span>, ~ <span class='no'>Job</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)</div><div class='output co'>#&gt;                    Job Proportion
 #&gt; 1              Janitor 0.11697708
 #&gt; 2               Waiter 0.12335244
 #&gt; 3  Child Care Provider 0.12578797
@@ -207,7 +207,7 @@
 #&gt; 9                Nurse 0.12399713
 #&gt; 10  Research Scientist 0.03868195
 #&gt; 11              Doctor 0.03939828</div><div class='input'><span class='co'>## check which combinations were not allowed</span>
-<span class='fu'>subset</span>(<span class='fu'>props</span>(<span class='no'>hainmueller</span>, ~ <span class='no'>Job</span> + <span class='no'>Education</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>), <span class='no'>Proportion</span> <span class='kw'>==</span> <span class='fl'>0</span>)</div><div class='output co'>#&gt;                    Job   Education Proportion
+<span class='fu'>subset</span>(<span class='fu'>props</span>(<span class='no'>immigration</span>, ~ <span class='no'>Job</span> + <span class='no'>Education</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>), <span class='no'>Proportion</span> <span class='kw'>==</span> <span class='fl'>0</span>)</div><div class='output co'>#&gt;                    Job   Education Proportion
 #&gt; 5    Financial Analyst   No Formal          0
 #&gt; 8  Computer Programmer   No Formal          0
 #&gt; 10  Research Scientist   No Formal          0
