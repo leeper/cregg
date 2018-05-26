@@ -45,15 +45,7 @@ function(
     RHS <- all.vars(stats::update(formula, 0 ~ . ))
     
     # process feature_order argument
-    if (!is.null(feature_order)) {
-        if (length(RHS) > length(feature_order)) {
-            stop("'feature_order' appears to be missing values")
-        } else if (length(RHS) < length(feature_order)) {
-            stop("'feature_order' appears to have excess values")
-        }
-    } else {
-        feature_order <- RHS
-    }
+    feature_order <- check_feature_order(feature_order, RHS)
     
     # get `id` as character string
     idvar <- all.vars(update(id, 0 ~ . ))
