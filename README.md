@@ -32,7 +32,7 @@ The package includes an example conjoint dataset (borrowed and lightly modified 
 
 ```r
 library("cregg")
-data("hainmueller")
+data("immigration")
 ```
 
 The package provides straightforward calculation and visualization of descriptive marginal means (MMs). These represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, MMs can take any value in the full range of the outcome. Calculation of MMs entail no modelling assumptions are simply descriptive quantities of interest:
@@ -42,7 +42,7 @@ The package provides straightforward calculation and visualization of descriptiv
 # descriptive plotting
 f1 <- ChosenImmigrant ~ Gender + Education + LanguageSkills + CountryOfOrigin + Job + JobExperience + JobPlans + ReasonForApplication + 
     PriorEntry
-plot(mm(hainmueller, f1, id = ~CaseID), vline = 0.5)
+plot(mm(immigration, f1, id = ~CaseID), vline = 0.5)
 ```
 
 ![plot of chunk mmplot](figure/mmplot-1.png)
@@ -54,7 +54,7 @@ A more common analytic approach for conjoints is to estimate average marginal co
 
 ```r
 # estimation
-amces <- cj(hainmueller, f1, id = ~CaseID)
+amces <- cj(immigration, f1, id = ~CaseID)
 head(amces[c("feature", "level", "estimate", "std.error")], 20L)
 ```
 
@@ -96,7 +96,7 @@ To provide simple subgroup analyses, the `cj()` function provides a `by` argumen
 
 
 ```r
-mm_by <- cj(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, id = ~CaseID, estimate = "mm", by = ~contest_no)
+mm_by <- cj(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills, id = ~CaseID, estimate = "mm", by = ~contest_no)
 plot(mm_by, group = "contest_no", vline = 0.5)
 ```
 
@@ -106,7 +106,7 @@ A more formal test of these differences is provided by a nested model comparison
 
 
 ```r
-cj_anova(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, by = ~contest_no)
+cj_anova(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills, by = ~contest_no)
 ```
 
 ```

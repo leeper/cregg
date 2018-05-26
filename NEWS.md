@@ -1,5 +1,6 @@
 # cregg 0.1.13
 
+* Added another example datast, `taxes`, from Ballard-Rosa et al. (2016).
 * Renamed `hainmueller` dataset to `immigration`.
 
 # cregg 0.1.12
