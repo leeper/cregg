@@ -5,9 +5,9 @@
 \alias{amce_by_reference}
 \title{Tidy estimation of AMCEs}
 \usage{
-amce(data, formula, id = NULL, weights = NULL, feature_order = NULL,
-  feature_labels = NULL, level_order = c("ascending", "descending"),
-  alpha = 0.05, ...)
+amce(data, formula, id = NULL, weights = NULL, constraints = NULL,
+  feature_order = NULL, feature_labels = NULL,
+  level_order = c("ascending", "descending"), alpha = 0.05, ...)
 
 amce_by_reference(data, formula, variable, ...)
 }
@@ -31,6 +31,8 @@ amce_by_reference(data, formula, variable, ...)
 \item{\dots}{For \code{amce}: additional arguments to \code{\link[stats]{glm}} or \code{\link[survey]{svyglm}}, the latter being used if \code{weights} is non-NULL. For \code{amce_by_reference}: additional arguments passed to \code{amce}.}
 
 \item{variable}{An RHS formula containing a single factor variable from \code{formula}. This will be used by \code{amce_by_reference} to estimate AMCEs relative to each possible factor level as a reference category. If more than one RHS variables are specified, the first will be used.}
+
+\item{contraints}{Optionally, a list of RHS-only two-variable formulae specifying constraints between factors in \code{formula}, like \code{list(~x1 + x2, ~ x3 + x4)}. More complex constraints (three or more way) are not allowed.}
 }
 \value{
 A data frame
@@ -52,6 +54,10 @@ amce(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills,
      id = ~ CaseID, feature_order = c("LanguageSkills", "Gender", "Education"))
 
 \dontrun{
+# estimating AMCEs with constraints
+amce(immigration, ChosenImmigrant ~ Gender + ReasonForApplication + CountryOfOrigin,
+     id = ~CaseID, constraints = list(~ReasonForApplication + CountryOfOrigin))
+
 # balance testing example
 plot(amce(immigration[!is.na(immigration$ethnocentrism),
      ethnocentrism ~ Gender + Education + LanguageSkills, id = ~ CaseID))

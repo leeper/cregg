@@ -1,1 +1,1 @@
-#' @param contraints Optionally, a list of RHS-only formulae specifying constraints between factors in \code{formula}, like \code{list(~x1 + x2, ~ x3 + x4)}.
+#' @param contraints Optionally, a list of RHS-only two-variable formulae specifying constraints between factors in \code{formula}, like \code{list(~x1 + x2, ~ x3 + x4)}. More complex constraints (three or more way) are not allowed.

@@ -79,19 +79,20 @@ function(
         mm_split[[i]][["z"]] <- mm_split[[i]][["estimate"]]/mm_split[[i]][["std.error"]]
         
         # p-value
-        mm_split[[i]][["p"]] <- 2L*(1L-stats::pnorm(mm_split[[i]][["z"]]))
+        mm_split[[i]][["p"]] <- 2L*(1L-stats::pnorm(abs(mm_split[[i]][["z"]])))
         
         # CIs
         mm_split[[i]][["lower"]] <- mm_split[[i]][["estimate"]] - (stats::qnorm(1-alpha) * mm_split[[i]][["std.error"]])
         mm_split[[i]][["upper"]] <- mm_split[[i]][["estimate"]] + (stats::qnorm(1-alpha) * mm_split[[i]][["std.error"]])
         
         # format output
-        mm_split[[i]][[by_var]] <- paste0(mm_split[[i]][[by_var]][1L], " - ", mm_split[[1L]][[by_var]][1L])
+        #mm_split[[i]][[by_var]] <- paste0(mm_split[[i]][[by_var]][1L], " - ", mm_split[[1L]][[by_var]][1L])
+        mm_split[[i]][[by_var]] <- mm_split[[i]][[by_var]][1L]
     }
     # bind list of differences (except the baseline level)
     out <- do.call("rbind", mm_split[-1L])
     out[["BY"]] <- "Difference"
-    out[["statistic"]] <- "mm"
+    out[["statistic"]] <- "mm_difference"
     rownames(out) <- seq_len(nrow(out))
     class(out) <- c("cj_diffs", "data.frame")
     return(out[c("BY", "statistic", setdiff(names(out), c("BY", "statistic")))])

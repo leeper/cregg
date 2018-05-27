@@ -25,6 +25,10 @@
 #'      id = ~ CaseID, feature_order = c("LanguageSkills", "Gender", "Education"))
 #' 
 #' \dontrun{
+#' # estimating AMCEs with constraints
+#' amce(immigration, ChosenImmigrant ~ Gender + ReasonForApplication + CountryOfOrigin,
+#'      id = ~CaseID, constraints = list(~ReasonForApplication + CountryOfOrigin))
+#' 
 #' # balance testing example
 #' plot(amce(immigration[!is.na(immigration$ethnocentrism),
 #'      ethnocentrism ~ Gender + Education + LanguageSkills, id = ~ CaseID))
@@ -107,47 +111,112 @@ function(
     
     # handle constraints if, present
     if (!is.null(constraints)) {
-        # with constraints, we need averaging of AMEs over subsets of data
+        # with constraints, we need averaging of multiple AMEs over subsets of data
         # but the key thing is it is averaging over possible feature combinations (unweighted by their actual frequency)
         
+        # check that constraints only have two terms
+        if (any(lengths(constraints) > 2L)) {
+            stop("'constraints' can only have two variables")
+        }
+        
         # vector of constrained variables
-        constrained_vars <- unique(unlist(lapply(constraints, all.vars))
+        constraint_terms_vec <- unlist(lapply(constraints, all.vars))
+        ## check that constraints do not include duplicated terms
+        if (any(duplicated(constraint_terms_vec))) {
+            stop("all variables in 'constraints' must be unique")
+        }
+        constrained_vars <- unique(constraint_terms_vec)
         # vector of unconstrained variables
         unconstrained_vars <- RHS[!RHS %in% constrained_vars]
         
         # first estimate unconstrained terms
-        if (is.null(svydesign)) {
-            out <- summary(margins::margins(mod, data = data, vcov = vc, variables = unconstrained_vars), level = 1-alpha)
+        if (length(unconstrained_vars)) {
+            # estimate 'unconstrained_vars'
+            if (is.null(svydesign)) {
+                unconstrained_amces <- summary(margins::margins(mod, data = data, vcov = vc, variables = unconstrained_vars), level = 1-alpha)
+            } else {
+                unconstrained_amces <- summary(margins::margins(mod, data = data, design = svydesign, vcov = vc, variables = unconstrained_vars), level = 1-alpha)
+            }
         } else {
-            out <- summary(margins::margins(mod, data = data, design = svydesign, vcov = vc, variables = unconstrained_vars), level = 1-alpha)
+            # if no 'unconstrained_vars', return empty data frame
+            unconstrained_amces <- data.frame(outcome = character(),
+                               statistic = character(),
+                               feature = character(),
+                               level = character(),
+                               estimate = numeric(),
+                               std.error = numeric(),
+                               z = numeric(),
+                               p = numeric(),
+                               lower = numeric(),
+                               upper = numeric(),
+                               check.names = FALSE,
+                               stringsAsFactors = FALSE)
         }
         
         # then estimate constrained terms over appropriate subsets of data
         
-        ## to do that, first get a list of levels over which averaging should occur
-        constraint_list <- lapply(constraints, function(one) {
-            subset(props(data = data, formula = one), Proportion != 0)
-        }
+        ## NEED TO CHECK CONSTRAINTS FOR REPETITION OF TERMS
         
         ## for each constrained term, we need to:
         ## > handle the fact that `mod` will have NA coefficient estimates for interaction terms that are not possible
         ## > estimate its marginal effect on the subset of data where the two (or more) features co-occur
         ## > handle that different levels of a given feature may have different constraints
-        constrained_ames <- lapply(constrained_vars, function(one) {
+        constrained_amces <- lapply(constraints, function(one) {
             # subset the data for this constraint
-            data_subset <- data
+            proportions <- props(data = data, formula = one)
+            proportions_allowed <- subset(proportions, Proportion != 0)
+            proportions_disallowed <- subset(proportions, Proportion == 0)
             
-            # calculate MEs
-            if (is.null(svydesign)) {
-                out <- summary(margins::margins(mod, data = data_subset, vcov = vc, variables = one), level = 1-alpha)
-            } else {
-                out <- summary(margins::margins(mod, data = data_subset, design = svydesign, vcov = vc, variables = one), level = 1-alpha)
+            # identify variables
+            variables_in_this_constraint <- setdiff(unlist(lapply(one, all.vars)), "~")
+            var1 <- variables_in_this_constraint[1L]
+            var2 <- variables_in_this_constraint[2L]
+            
+            # function to calculate AMCEs
+            calculate_amce <- function(to_average) {
+                # calculate AMCE etc
+                est <- mean(to_average[["estimate"]], na.rm = TRUE)
+                se <- sqrt(mean(na.omit(to_average[["std.error"]]^2), na.rm = TRUE))
+                to_average[1, "statistic"] <- "amce"
+                to_average[1, "estimate"] <- est
+                to_average[1, "std.error"] <- se
+                to_average[1, "z"] <- est/se
+                to_average[1, "p"] <- 2L*(1L-stats::pnorm(abs(to_average[1, "z"])))
+                to_average[1, "lower"] <- est - (stats::qnorm(1-alpha) * se)
+                to_average[1, "upper"] <- est + (stats::qnorm(1-alpha) * se)
+                # cleanup return
+                if (var1 %in% names(to_average)) {
+                    to_average[1, "feature"] <- feature_labels[[var1]]
+                    to_average[, "level"] <- to_average[[var1]]
+                    to_average[[var1]] <- NULL
+                } else {
+                    to_average[1, "feature"] <- feature_labels[[var2]]
+                    to_average[, "level"] <- to_average[[var2]]
+                    to_average[[var2]] <- NULL
+                }
+                return(to_average[1, , drop = FALSE])
             }
-            return(out)
+            
+            # calculate MEs for first variable, constraining second
+            one_out1 <- cj(data = data, formula = update(formula, one), id = id, estimate = "mm_diff", alpha = alpha, by = formula(paste("~", var1)))
+            ## AVERAGE OVER DIFFERENCES TO GET AMCEs
+            one_out1_subset <- one_out1[one_out1[["feature"]] == feature_labels[[var2]], ]
+            one_out1 <- do.call("rbind", lapply(split(one_out1_subset, one_out1_subset[[var1]]), calculate_amce))
+            
+            # calculate MEs for second variable, constraining first
+            one_out2 <- cj(data = data, formula = update(formula, one), id = id, estimate = "mm_diff", alpha = alpha, by = formula(paste("~", var2)))
+            ## AVERAGE OVER DIFFERENCES TO GET AMCEs
+            one_out2_subset <- one_out2[one_out2[["feature"]] == feature_labels[[var1]], ]
+            one_out2 <- do.call("rbind", lapply(split(one_out2_subset, one_out2_subset[[var2]]), calculate_amce))
+            
+            one_out <- rbind(one_out1, one_out2)
+            rownames(one_out) <- seq_len(nrow(one_out))
+            return(one_out)
         })
         
         # update out with constrained AMCEs
-        out <- rbind(out, do.call(constrained_ames))
+        browser()
+        out <- rbind(unconstrained_amces, constrained_amces)
         
     } else {
         ## without constraints AMCEs are simple marginal effects
