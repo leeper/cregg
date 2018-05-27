@@ -23,15 +23,22 @@
 #' # load data
 #' requireNamespace("ggplot2")
 #' data("immigration")
+#' data("taxes")
 #' 
 #' # calculate MMs
 #' d1 <- cj(immigration, ChosenImmigrant ~ Gender + Education + 
 #'          LanguageSkills + CountryOfOrigin + Job + JobExperience + 
 #'          JobPlans + ReasonForApplication + PriorEntry, id = ~ CaseID,
 #'          estimate = "mm", h0 = 0.5)
-#' 
 #' # plot MMs
-#' plot(d1)
+#' plot(d1, vline = 0.5)
+#'
+#' # calculate MMs for survey-weighted data
+#' d1 <- cj(taxes, chose_plan ~ taxrate1 + taxrate2 + taxrate3 +
+#'          taxrate4 + taxrate5 + taxrate6 + taxrev, id = ~ ID,
+#'          weights = ~ weight, estimate = "mm", h0 = 0.5)
+#' # plot MMs
+#' plot(d1, vline = 0.5)
 #'
 #' # MMs split by profile number
 #' stacked <- cj(immigration, ChosenImmigrant ~ Gender + Education + 

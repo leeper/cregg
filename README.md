@@ -1,6 +1,6 @@
 # Simple Conjoint Analyses and Visualization
 
-**cregg** is a package for analyzing and visualizing the results of conjoint ("cj") factorial experiments. It provides functionality that is useful for analyzing and otherwise examining conjoint experimental data:
+**cregg** is a package for analyzing and visualizing the results of conjoint ("cj") factorial experiments using methods described by Hainmueller, Hopkins, and Yamamoto (2014). It provides functionality that is useful for analyzing and otherwise examining conjoint experimental data:
 
  - Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs and munging of AMCE estimates into tidy data frames, via `amce()`
  - Calculation of marginal means (MMs) for conjoint designs and munging them into tidy data frames via `mm()`
@@ -9,18 +9,23 @@
  - Diagnostics to choose feature reference categories, via `amce_by_reference()`
  - **ggplot2**-based visualizations of AMCEs and MMs, via `plot()` methods for all of the above
 
-The package takes its name from the surname of a famous White House Press Secretary.
+To demonstrate package functionality, the package includes two example datasets:
 
-The main selling point of cregg is simplicity of implementation and - unlike the [cjoint](https://cran.r-project.org/package=cjoint) package - cregg tries to follow tidy data principles throughout and provides a formula-based interface that meshes well with the underlying [**survey**](https://cran.r-project.org/package=survey)-based effect estimation API. Thus the response from any function is a tidy data frame that can easily be stacked with others (e.g., for computing AMCEs for subsets of respondents and then producing a facetted or grouped visualization). It also tries to take better advantage of data preprocessing steps by:
+ - `taxes`, a full randomized choice task conjoint experiment conducted by Ballard-Rosa et al. (2016)
+ - `immigration`, a partial factorial conjoint experiment with several restrictions between features conducted by Hainmueller, Hopkins, and Yamamoto (2014)
+
+The main selling point of cregg is simplicity of implementation and a consistent attempt to follow tidy data principles throughout. The package also provides a formula-based interface that meshes well with the underlying [**survey**](https://cran.r-project.org/package=survey)-based effect estimation API. Thus the response from any function is a tidy data frame that can easily be stacked with others (e.g., for computing AMCEs for subsets of respondents) and then producing ggplot2 visualizations.
+
+It also provides some sugar:
 
  - Using factor base levels rather than trying to set baseline levels atomically
- - Using "label" attributes on variables to provide pretty printing
+ - Using "label" attributes on variables to provide pretty printing, with options to relabel features on the fly
+ - A convenient API (via the `cj(..., by = ~ group)` statement) for repeated, subgroup operations without the need for `lapply()` or `for` loops
+ - All functions have arguments in data-formula order, making it simple to pipe into them via the magrittr pipe (`%>%`).
 
-Additionally all functions have arguments in data-formula order, making it simple to pipe into them via `%>%`.
+A detailed website showcasing package functionality is available at: https://thomasleeper.com/cregg/. Contributions and feedback are welcome on [GitHub](https://github.com/leeper/cregg/issues).
 
-A detailed website showcasing package functionality is available at: https://thomasleeper.com/cregg/
-
-Contributions and feedback are welcome on [GitHub](https://github.com/leeper/cregg/issues).
+The package takes its name from the surname of a famous White House Press Secretary.
 
 ## Basic Code Examples
 
@@ -33,6 +38,7 @@ The package includes an example conjoint dataset (borrowed and lightly modified 
 ```r
 library("cregg")
 data("immigration")
+data("taxes")
 ```
 
 The package provides straightforward calculation and visualization of descriptive marginal means (MMs). These represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, MMs can take any value in the full range of the outcome. Calculation of MMs entail no modelling assumptions are simply descriptive quantities of interest:
@@ -54,32 +60,32 @@ A more common analytic approach for conjoints is to estimate average marginal co
 
 ```r
 # estimation
-amces <- cj(immigration, f1, id = ~CaseID)
+amces <- cj(taxes, chose_plan ~ taxrate1 + taxrate2 + taxrate3 + taxrate4 + taxrate5 + taxrate6 + taxrev, id = ~ID)
 head(amces[c("feature", "level", "estimate", "std.error")], 20L)
 ```
 
 ```
-                  feature                    level     estimate   std.error
-1                  Gender                   Female  0.000000000          NA
-2                  Gender                     Male -0.024978435 0.007983009
-3  Educational Attainment                No Formal  0.000000000          NA
-4  Educational Attainment                4th Grade  0.033367996 0.014971357
-5  Educational Attainment                8th Grade  0.057600734 0.015021063
-6  Educational Attainment              High School  0.119492095 0.015118761
-7  Educational Attainment         Two-Year College  0.154588453 0.015840268
-8  Educational Attainment           College Degree  0.180948898 0.016183493
-9  Educational Attainment          Graduate Degree  0.169440741 0.015809304
-10        Language Skills           Fluent English  0.000000000          NA
-11        Language Skills           Broken English -0.056822717 0.011265303
-12        Language Skills Tried English but Unable -0.127357585 0.011321142
-13        Language Skills         Used Interpreter -0.159808492 0.011553933
-14      Country of Origin                    India  0.000000000          NA
-15      Country of Origin                  Germany  0.047646243 0.016667948
-16      Country of Origin                   France  0.026564521 0.017327948
-17      Country of Origin                   Mexico  0.009818758 0.017530373
-18      Country of Origin              Philippines  0.034102011 0.017412416
-19      Country of Origin                   Poland  0.032666819 0.017640451
-20      Country of Origin                    China -0.020128816 0.017843819
+                          feature         level      estimate   std.error
+1           Tax rate for <$10,000      <10k: 0%  0.0000000000          NA
+2           Tax rate for <$10,000      <10k: 5% -0.0139987267 0.008367718
+3           Tax rate for <$10,000     <10k: 15% -0.0897702241 0.009883554
+4           Tax rate for <$10,000     <10k: 25% -0.2215066470 0.012497932
+5    Tax rate for $10,000-$35,000    10-35k: 5%  0.0000000000          NA
+6    Tax rate for $10,000-$35,000   10-35k: 15% -0.0161677383 0.010015769
+7    Tax rate for $10,000-$35,000   10-35k: 25% -0.0849079259 0.015824370
+8    Tax rate for $10,000-$35,000   10-35k: 35% -0.1868125806 0.021074682
+9    Tax rate for $25,000-$85,000    35-85k: 5%  0.0000000000          NA
+10   Tax rate for $25,000-$85,000   35-85k: 15%  0.0005356495 0.008242105
+11   Tax rate for $25,000-$85,000   35-85k: 25% -0.0533364485 0.009713809
+12   Tax rate for $25,000-$85,000   35-85k: 35% -0.1083416179 0.011917151
+13  Tax rate for $85,000-$175,000   85-175k: 5%  0.0000000000          NA
+14  Tax rate for $85,000-$175,000  85-175k: 15%  0.0194226595 0.007719126
+15  Tax rate for $85,000-$175,000  85-175k: 25%  0.0108897506 0.008078966
+16  Tax rate for $85,000-$175,000  85-175k: 35% -0.0015463277 0.008431674
+17 Tax rate for $175,000-$375,000  175-375k: 5%  0.0000000000          NA
+18 Tax rate for $175,000-$375,000 175-375k: 15%  0.0384042184 0.008581007
+19 Tax rate for $175,000-$375,000 175-375k: 25%  0.0504838117 0.008867028
+20 Tax rate for $175,000-$375,000 175-375k: 35%  0.0716090284 0.009162901
 ```
 
 This makes it very easy to modify, combine, print, etc. the resulting output. It also makes it easy to visualize using ggplot2. A convenience visualization function is provided:

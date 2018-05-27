@@ -101,10 +101,14 @@ plot(stacked, group = "contest_no", feature_headers = FALSE)
 ## plot with facetting
 plot(stacked) + ggplot2::facet_wrap(~contest_no, nrow = 1L)
 
-# estimate AMCEs
-d2 <- cj(immigration, ChosenImmigrant ~ Gender + Education + 
-         LanguageSkills + CountryOfOrigin + Job + JobExperience + 
-         JobPlans + ReasonForApplication + PriorEntry, id = ~ CaseID)
+# estimate AMCEs over different subsets of data
+reasons12 <- subset(immigration, ReasonForApplication \%in\% levels(ReasonForApplication)[1:2])
+d2_1 <- cj(immigration, ChosenImmigrant ~ CountryOfOrigin, id = ~ CaseID)
+d2_2 <- cj(reasons12, ChosenImmigrant ~ CountryOfOrigin, id = ~ CaseID,
+           feature_labels = list(CountryOfOrigin = "Country Of Origin"))
+d2_1$reasons <- "1,2,3"
+d2_2$reasons <- "1,2"
+plot(rbind(d2_1, d2_2), group = "reasons")
 
 # plot AMCEs
 plot(d2)

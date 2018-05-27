@@ -30,15 +30,22 @@ Hainmueller, J., Hopkins, D., and Yamamoto T. 2014. \dQuote{Causal Inference in 
 immigration
 }
 \description{
-A dataset containing the results of a conjoint survey of a representative sample of American adults who were asked to choose which hypothetical immigrants they think should be admitted into the United States. Each row corresponds to a single profile presented to the respondent.
+A dataset containing the results of a conjoint survey of a representative sample of American adults who were asked to choose which hypothetical immigrants they think should be admitted into the United States. Each row corresponds to a single profile presented to the respondent. The dataset results from a mostly full factorial design with restrictions on two combinations of features. (1) Profile immigrants from \samp{CountryOfOrigin} \dQuote{India}, \dQuote{Germany}, \dQuote{France}, \dQuote{Mexico}, \dQuote{Philippines}, and \dQuote{Poland} could be paired only with \samp{ReasonForApplication} \dQuote{Seek better job} or \dQuote{Reunite with family}; profiles from the remaining countries could be paired with any \samp{ReasonForApplication}. (2) Profile immigrants with \samp{Job} \dQuote{Financial Analyst}, \dQuote{Computer Programmer}, \dQuote{Research Scientist}, or \dQuote{Doctor} could not be paired with \samp{Education} levels \dQuote{No Formal}, \dQuote{4th Grade}, \dQuote{8th Grade}, or \dQuote{High School}. All other features were fully randomized against all other features.
 }
 \note{
-This is a modified version of the dataset available from the \href{https://cran.r-project.org/package=cjoint}{cjoint} package.
+This is a modified version of the \samp{hainmueller} dataset available from the \href{https://cran.r-project.org/package=cjoint}{cjoint} package.
 }
 \examples{
 \dontrun{
 data("immigration")
-cj(immigration, ChosenImmigrant ~ Gender + Education, id = ~ CaseID)
+
+# view constraints between features
+subset(props(immigration, ~ Job + Education, id = ~ CaseID), Proportion == 0)
+subset(props(immigration, ~ ReasonForApplication + CountryOfOrigin, 
+             id = ~ CaseID), Proportion == 0)
+
+# AMCEs for subset of fully randomized features
+cj(immigration, ChosenImmigrant ~ Gender + LanguageSkills, id = ~ CaseID)
 }
 }
 \seealso{

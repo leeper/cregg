@@ -1,20 +1,21 @@
 #' @rdname plot
 #' @export
 plot.cj_mm <- 
-function(x, 
-         group = attr(x, "by"),
-         feature_headers = TRUE,
-         header_fmt = "(%s)",
-         size = 1.0,
-         xlab = "Marginal Mean",
-         ylab = "",
-         legend_title = if (is.null(group)) "Feature" else group,
-         legend_pos = "bottom",
-         xlim = NULL,
-         vline = 0,
-         vline_color = "gray",
-         theme = ggplot2::theme_bw(),
-         ...
+function(
+  x,
+  group = attr(x, "by"),
+  feature_headers = TRUE,
+  header_fmt = "(%s)",
+  size = 1.0,
+  xlab = "Marginal Mean",
+  ylab = "",
+  legend_title = if (is.null(group)) "Feature" else group,
+  legend_pos = "bottom",
+  xlim = NULL,
+  vline = 0,
+  vline_color = "gray",
+  theme = ggplot2::theme_bw(),
+  ...
 ) {
     
     # optionally, add gaps between features
@@ -72,6 +73,7 @@ function(x,
         legend.position = legend_pos,
         panel.grid.major = ggplot2::element_blank(),
         panel.grid.minor = ggplot2::element_blank()
-      )
+      ) + 
+      ggplot2::guides(colour = ggplot2::guide_legend(title = legend_title))
     return(p)
 }

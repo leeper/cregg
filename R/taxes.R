@@ -1,7 +1,7 @@
 #' @rdname taxes
 #' @docType data
 #' @title Tax Preference Conjoint Experiment Dataset from Ballard-Rosa et al. (2016)
-#' @description A dataset containing the results of a conjoint survey of a representative sample of 2000 American adults who were asked to choose between alternative tax rate policies. Variables \samp{taxrate1}-\samp{taxrate6} refer to tax rates for different income brackets and \samp{taxrev} refers to levels of total tax revenue.
+#' @description A dataset containing the results of a fully randomized conjoint survey of a representative sample of 2000 American adults who were asked to choose between alternative tax rate policies. Variables \samp{taxrate1}-\samp{taxrate6} refer to tax rates for different income brackets and \samp{taxrev} refers to levels of total tax revenue.
 #' @format A data frame with 32000 observations on the following 13 variables. Each row corresponds to a single profile presented to a respondent.
 #'  \describe{
 #'    \item{\samp{chose_plan}}{A numeric vector denoting whether the immigrant profile was selected (=1) or not (=0).}
@@ -24,7 +24,7 @@
 #' data("taxes")
 #' f1 <- chose_plan ~ taxrate1 + taxrate2 + taxrate3 + 
 #'         taxrate4 + taxrate5 + taxrate6 + taxrev
-#' cj(taxes, f1, id = ~ ID, weights = weight)
+#' cj(taxes, f1, id = ~ ID, weights = ~     weight)
 #' }
 #' @seealso \code{\link{cj}} \code{\link{immigration}}
 "taxes"

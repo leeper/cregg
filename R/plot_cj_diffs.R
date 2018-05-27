@@ -1,20 +1,21 @@
 #' @rdname plot
 #' @export
 plot.cj_diffs <-
-function(x, 
-         group = attr(x, "by"),
-         feature_headers = TRUE,
-         header_fmt = "(%s)",
-         size = 1.0,
-         xlab = "Estimated Difference",
-         ylab = "",
-         legend_title = if (is.null(group)) "Feature" else group,
-         legend_pos = "bottom",
-         xlim = NULL,
-         vline = 0,
-         vline_color = "gray",
-         theme = ggplot2::theme_bw(),
-         ...
+function(
+  x,
+  group = attr(x, "by"),
+  feature_headers = TRUE,
+  header_fmt = "(%s)",
+  size = 1.0,
+  xlab = "Estimated Difference",
+  ylab = "",
+  legend_title = if (is.null(group)) "Feature" else group,
+  legend_pos = "bottom",
+  xlim = NULL,
+  vline = 0,
+  vline_color = "gray",
+  theme = ggplot2::theme_bw(),
+  ...
 ) {
     
     # optionally, add gaps between features

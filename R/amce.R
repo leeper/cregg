@@ -40,15 +40,16 @@
 #' @importFrom sandwich vcovCL
 #' @export
 amce <- 
-function(data,
-         formula,
-         id = NULL,
-         weights = NULL,
-         feature_order = NULL,
-         feature_labels = NULL,
-         level_order = c("ascending", "descending"),
-         alpha = 0.05,
-         ...
+function(
+  data,
+  formula,
+  id = NULL,
+  weights = NULL,
+  feature_order = NULL,
+  feature_labels = NULL,
+  level_order = c("ascending", "descending"),
+  alpha = 0.05,
+  ...
 ) {
 
     # get outcome variable

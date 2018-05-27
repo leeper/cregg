@@ -48,10 +48,14 @@
 #' ## plot with facetting
 #' plot(stacked) + ggplot2::facet_wrap(~contest_no, nrow = 1L)
 #' 
-#' # estimate AMCEs
-#' d2 <- cj(immigration, ChosenImmigrant ~ Gender + Education + 
-#'          LanguageSkills + CountryOfOrigin + Job + JobExperience + 
-#'          JobPlans + ReasonForApplication + PriorEntry, id = ~ CaseID)
+#' # estimate AMCEs over different subsets of data
+#' reasons12 <- subset(immigration, ReasonForApplication %in% levels(ReasonForApplication)[1:2])
+#' d2_1 <- cj(immigration, ChosenImmigrant ~ CountryOfOrigin, id = ~ CaseID)
+#' d2_2 <- cj(reasons12, ChosenImmigrant ~ CountryOfOrigin, id = ~ CaseID,
+#'            feature_labels = list(CountryOfOrigin = "Country Of Origin"))
+#' d2_1$reasons <- "1,2,3"
+#' d2_2$reasons <- "1,2"
+#' plot(rbind(d2_1, d2_2), group = "reasons")
 #' 
 #' # plot AMCEs
 #' plot(d2)
@@ -62,20 +66,21 @@
 #' @import scales
 #' @export
 plot.cj_amce <- 
-function(x, 
-         group = attr(x, "by"),
-         feature_headers = TRUE,
-         header_fmt = "(%s)",
-         size = 1.0,
-         xlab = "Estimated AMCE",
-         ylab = "",
-         legend_title = if (is.null(group)) "Feature" else group,
-         legend_pos = "bottom",
-         xlim = NULL,
-         vline = 0,
-         vline_color = "gray",
-         theme = ggplot2::theme_bw(),
-         ...
+function(
+  x,
+  group = attr(x, "by"),
+  feature_headers = TRUE,
+  header_fmt = "(%s)",
+  size = 1.0,
+  xlab = "Estimated AMCE",
+  ylab = "",
+  legend_title = if (is.null(group)) "Feature" else group,
+  legend_pos = "bottom",
+  xlim = NULL,
+  vline = 0,
+  vline_color = "gray",
+  theme = ggplot2::theme_bw(),
+  ...
 ) {
     
     # optionally, add gaps between features

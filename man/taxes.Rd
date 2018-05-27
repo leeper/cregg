@@ -27,14 +27,14 @@ Ballard-Rosa, Cameron, Lucy Martin, and Kenneth Scheve. 2016. \dQuote{The Struct
 taxes
 }
 \description{
-A dataset containing the results of a conjoint survey of a representative sample of 2000 American adults who were asked to choose between alternative tax rate policies. Variables \samp{taxrate1}-\samp{taxrate6} refer to tax rates for different income brackets and \samp{taxrev} refers to levels of total tax revenue.
+A dataset containing the results of a fully randomized conjoint survey of a representative sample of 2000 American adults who were asked to choose between alternative tax rate policies. Variables \samp{taxrate1}-\samp{taxrate6} refer to tax rates for different income brackets and \samp{taxrev} refers to levels of total tax revenue.
 }
 \examples{
 \dontrun{
 data("taxes")
 f1 <- chose_plan ~ taxrate1 + taxrate2 + taxrate3 + 
         taxrate4 + taxrate5 + taxrate6 + taxrev
-cj(taxes, f1, id = ~ ID, weights = weight)
+cj(taxes, f1, id = ~ ID, weights = ~     weight)
 }
 }
 \seealso{
