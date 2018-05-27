@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.8</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.13</span>
       </span>
     </div>
 
@@ -155,7 +155,7 @@
     </tr>
     <tr>
       <th>level_order</th>
-      <td><p>A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via <code><a href='plot.cj_amce.html'>plot.cj_mm</a></code>, etc.</p></td>
+      <td><p>A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via <code>plot.cj_mm</code>, etc.</p></td>
     </tr>
     <tr>
       <th>alpha</th>
@@ -183,50 +183,52 @@
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='plot.cj_amce.html'>plot.cj_amce</a></code></p></div>
+    <div class='dont-index'><p><code><a href='diffs.html'>amce_diffs</a></code> <code><a href='mm.html'>mm</a></code> <code><a href='plot.html'>plot.cj_amce</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>hainmueller</span>)
+    <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>immigration</span>)
 <span class='co'># estimating AMCEs</span>
-<span class='fu'>amce</span>(<span class='no'>hainmueller</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span> + <span class='no'>LanguageSkills</span>,
-     <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>, <span class='kw'>feature_order</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"LanguageSkills"</span>, <span class='st'>"Gender"</span>, <span class='st'>"Education"</span>))</div><div class='output co'>#&gt;            outcome                feature                    level    estimate
-#&gt; 1  ChosenImmigrant        Language Skills           Fluent English  0.00000000
-#&gt; 2  ChosenImmigrant        Language Skills           Broken English -0.05933832
-#&gt; 3  ChosenImmigrant        Language Skills Tried English but Unable -0.12746827
-#&gt; 4  ChosenImmigrant        Language Skills         Used Interpreter -0.16199396
-#&gt; 5  ChosenImmigrant                 Gender                   Female  0.00000000
-#&gt; 6  ChosenImmigrant                 Gender                     Male -0.02726620
-#&gt; 7  ChosenImmigrant Educational Attainment                No Formal  0.00000000
-#&gt; 8  ChosenImmigrant Educational Attainment                4th Grade  0.03139746
-#&gt; 9  ChosenImmigrant Educational Attainment                8th Grade  0.05694292
-#&gt; 10 ChosenImmigrant Educational Attainment              High School  0.11825338
-#&gt; 11 ChosenImmigrant Educational Attainment         Two-Year College  0.17622493
-#&gt; 12 ChosenImmigrant Educational Attainment           College Degree  0.19676219
-#&gt; 13 ChosenImmigrant Educational Attainment          Graduate Degree  0.19290717
-#&gt;      std.error          z            p        lower       upper
-#&gt; 1           NA         NA           NA           NA          NA
-#&gt; 2  0.011803743  -5.027076 4.980141e-07 -0.082473226 -0.03620341
-#&gt; 3  0.011855107 -10.752182 5.787623e-27 -0.150703848 -0.10423268
-#&gt; 4  0.011996863 -13.503027 1.500807e-41 -0.185507378 -0.13848054
-#&gt; 5           NA         NA           NA           NA          NA
-#&gt; 6  0.008355089  -3.263424 1.100748e-03 -0.043641869 -0.01089052
-#&gt; 7           NA         NA           NA           NA          NA
-#&gt; 8  0.015401407   2.038610 4.148899e-02  0.001211256  0.06158366
-#&gt; 9  0.015430629   3.690253 2.240315e-04  0.026699440  0.08718639
-#&gt; 10 0.015606298   7.577285 3.528603e-14  0.087665593  0.14884116
-#&gt; 11 0.015604750  11.293032 1.420507e-29  0.145640187  0.20680968
-#&gt; 12 0.015948173  12.337600 5.682440e-35  0.165504342  0.22802003
-#&gt; 13 0.015744658  12.252230 1.634391e-34  0.162048209  0.22376613</div><div class='input'>
+<span class='fu'>amce</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span> + <span class='no'>LanguageSkills</span>,
+     <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>, <span class='kw'>feature_order</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"LanguageSkills"</span>, <span class='st'>"Gender"</span>, <span class='st'>"Education"</span>))</div><div class='output co'>#&gt;            outcome statistic                feature                    level
+#&gt; 1  ChosenImmigrant      amce        Language Skills           Fluent English
+#&gt; 2  ChosenImmigrant      amce        Language Skills           Broken English
+#&gt; 3  ChosenImmigrant      amce        Language Skills Tried English but Unable
+#&gt; 4  ChosenImmigrant      amce        Language Skills         Used Interpreter
+#&gt; 5  ChosenImmigrant      amce                 Gender                   Female
+#&gt; 6  ChosenImmigrant      amce                 Gender                     Male
+#&gt; 7  ChosenImmigrant      amce Educational Attainment                No Formal
+#&gt; 8  ChosenImmigrant      amce Educational Attainment                4th Grade
+#&gt; 9  ChosenImmigrant      amce Educational Attainment                8th Grade
+#&gt; 10 ChosenImmigrant      amce Educational Attainment              High School
+#&gt; 11 ChosenImmigrant      amce Educational Attainment         Two-Year College
+#&gt; 12 ChosenImmigrant      amce Educational Attainment           College Degree
+#&gt; 13 ChosenImmigrant      amce Educational Attainment          Graduate Degree
+#&gt;       estimate   std.error          z            p        lower       upper
+#&gt; 1   0.00000000          NA         NA           NA           NA          NA
+#&gt; 2  -0.05933832 0.011803743  -5.027076 4.980141e-07 -0.082473226 -0.03620341
+#&gt; 3  -0.12746827 0.011855107 -10.752182 5.787623e-27 -0.150703848 -0.10423268
+#&gt; 4  -0.16199396 0.011996863 -13.503027 1.500807e-41 -0.185507378 -0.13848054
+#&gt; 5   0.00000000          NA         NA           NA           NA          NA
+#&gt; 6  -0.02726620 0.008355089  -3.263424 1.100748e-03 -0.043641869 -0.01089052
+#&gt; 7   0.00000000          NA         NA           NA           NA          NA
+#&gt; 8   0.03139746 0.015401407   2.038610 4.148899e-02  0.001211256  0.06158366
+#&gt; 9   0.05694292 0.015430629   3.690253 2.240315e-04  0.026699440  0.08718639
+#&gt; 10  0.11825338 0.015606298   7.577285 3.528603e-14  0.087665593  0.14884116
+#&gt; 11  0.17622493 0.015604750  11.293032 1.420507e-29  0.145640187  0.20680968
+#&gt; 12  0.19676219 0.015948173  12.337600 5.682440e-35  0.165504342  0.22802003
+#&gt; 13  0.19290717 0.015744658  12.252230 1.634391e-34  0.162048209  0.22376613</div><div class='input'>
 </div># NOT RUN {
 # balance testing example
-plot(amce(hainmueller[!is.na(hainmueller$ethnocentrism),
+plot(amce(immigration[!is.na(immigration$ethnocentrism),
      ethnocentrism ~ Gender + Education + LanguageSkills, id = ~ CaseID))
 
 # reference category sensitivity
-x <- amce_by_reference(hainmueller, ChosenImmigrant ~ LanguageSkills + Education, 
+x <- amce_by_reference(immigration, ChosenImmigrant ~ LanguageSkills + Education, 
        variable = ~ LanguageSkills, id = ~ CaseID)
+# plot
 plot(x, group = "BY")
+
 # }
 </pre>
   </div>

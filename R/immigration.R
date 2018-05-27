@@ -1,7 +1,7 @@
-#' @rdname hainmueller
+#' @rdname immigration
 #' @docType data
 #' @title Immigration Conjoint Experiment Dataset from Hainmueller et. al. (2014)
-#' @description A dataset containing the results of a conjoint survey of a representative sample of American adults who were asked to choose which hypothetical immigrants they think should be admitted into the United States. Each row corresponds to a single profile presented to the respondent.
+#' @description A dataset containing the results of a conjoint survey of a representative sample of American adults who were asked to choose which hypothetical immigrants they think should be admitted into the United States. Each row corresponds to a single profile presented to the respondent. The dataset results from a mostly full factorial design with restrictions on two combinations of features. (1) Profile immigrants from \samp{CountryOfOrigin} \dQuote{India}, \dQuote{Germany}, \dQuote{France}, \dQuote{Mexico}, \dQuote{Philippines}, and \dQuote{Poland} could be paired only with \samp{ReasonForApplication} \dQuote{Seek better job} or \dQuote{Reunite with family}; profiles from the remaining countries could be paired with any \samp{ReasonForApplication}. (2) Profile immigrants with \samp{Job} \dQuote{Financial Analyst}, \dQuote{Computer Programmer}, \dQuote{Research Scientist}, or \dQuote{Doctor} could not be paired with \samp{Education} levels \dQuote{No Formal}, \dQuote{4th Grade}, \dQuote{8th Grade}, or \dQuote{High School}. All other features were fully randomized against all other features.
 #' @format A data frame with 13960 observations on the following 16 variables.
 #'  \describe{
 #'    \item{\samp{CaseID}}{a numeric vector indicating the respondent to which the particular profile corresponds}
@@ -21,12 +21,19 @@
 #'    \item{\samp{LangPos}}{a numeric vector}
 #'    \item{\samp{PriorPos}}{a numeric vector}
 #'  }
-#' @source Hainmueller, J., Hopkins, D., and Yamamoto T. (2014) Causal Inference in Conjoint Analysis: Understanding Multi-Dimensional Choices via Stated Preference Experiments. Political Analysis 22(1):1-30
-#' @note This is a modified version of the dataset available from the \href{https://cran.r-project.org/package=cjoint}{cjoint} package.
+#' @source Hainmueller, J., Hopkins, D., and Yamamoto T. 2014. \dQuote{Causal Inference in Conjoint Analysis: Understanding Multi-Dimensional Choices via Stated Preference Experiments.} \emph{Political Analysis} 22(1): 1-30. \url{http://doi.org/10.1093/pan/mpt024}
+#' @note This is a modified version of the \samp{hainmueller} dataset available from the \href{https://cran.r-project.org/package=cjoint}{cjoint} package.
 #' @examples
 #' \dontrun{
-#' data("hainmueller")
-#' cj(hainmueller, ChosenImmigrant ~ Gender + Education, id = ~ CaseID)
+#' data("immigration")
+#' 
+#' # view constraints between features
+#' subset(props(immigration, ~ Job + Education, id = ~ CaseID), Proportion == 0)
+#' subset(props(immigration, ~ ReasonForApplication + CountryOfOrigin, 
+#'              id = ~ CaseID), Proportion == 0)
+#' 
+#' # AMCEs for subset of fully randomized features
+#' cj(immigration, ChosenImmigrant ~ Gender + LanguageSkills, id = ~ CaseID)
 #' }
-#' @seealso \code{\link{amce}} \code{\link{mm}} \code{\link{mm}}
-"hainmueller"
+#' @seealso \code{\link{cj}} \code{\link{taxes}}
+"immigration"

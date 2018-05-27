@@ -1,16 +1,17 @@
 #' @rdname plot
 #' @export
 plot.cj_freqs <- 
-function(x, 
-         group = attr(x, "by"),
-         feature_headers = TRUE,
-         header_fmt = "(%s)",
-         xlab = "",
-         ylab = "Frequency",
-         legend_title = if (is.null(group)) "Feature" else group,
-         legend_pos = "bottom",
-         theme = ggplot2::theme_bw(),
-         ...
+function(
+  x,
+  group = attr(x, "by"),
+  feature_headers = TRUE,
+  header_fmt = "(%s)",
+  xlab = "",
+  ylab = "Frequency",
+  legend_title = if (is.null(group)) "Feature" else group,
+  legend_pos = "bottom",
+  theme = ggplot2::theme_bw(),
+  ...
 ) {
     
     # optionally, add gaps between features

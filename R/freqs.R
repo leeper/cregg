@@ -15,15 +15,15 @@
 #' \code{freqs} provides \emph{marginal} display frequencies, which are a descriptive check on the presentation of individual conjoint features (for example, to ensure equal or intentionally unequal appearance of levels). This is mostly useful for plotting functionality provided in \code{\link{plot.cj_freqs}}, which provides barcharts for the frequency with which each level of each feature was presented.
 #'
 #' @examples
-#' data(hainmueller)
+#' data(immigration)
 #' # display frequencies
-#' freqs(hainmueller, ~ Gender + Education + LanguageSkills, id = ~ CaseID)
+#' freqs(immigration, ~ Gender + Education + LanguageSkills, id = ~ CaseID)
 #' 
 #' # restrictions
 #' ## check display proportions
-#' props(hainmueller, ~ Job, id = ~ CaseID)
+#' props(immigration, ~ Job, id = ~ CaseID)
 #' ## check which combinations were not allowed
-#' subset(props(hainmueller, ~ Job + Education, id = ~ CaseID), Proportion == 0)
+#' subset(props(immigration, ~ Job + Education, id = ~ CaseID), Proportion == 0)
 #' 
 #' @seealso \code{\link{plot.cj_mm}}
 #' @import stats
@@ -45,15 +45,7 @@ function(
     RHS <- all.vars(stats::update(formula, 0 ~ . ))
     
     # process feature_order argument
-    if (!is.null(feature_order)) {
-        if (length(RHS) > length(feature_order)) {
-            warning("'feature_order' appears to be missing values")
-        } else if (length(RHS) < length(feature_order)) {
-            warning("'feature_order' appears to have excess values")
-        }
-    } else {
-        feature_order <- RHS
-    }
+    feature_order <- check_feature_order(feature_order, RHS)
     
     # get `id` as character string
     idvar <- all.vars(update(id, 0 ~ . ))
@@ -95,17 +87,18 @@ function(
     names(coef_dat) <- c("level", "estimate")
     
     # attach feature labels
-    coef_dat <- merge(coef_dat, make_term_labels_df(data, RHS), by = c("level"), all = TRUE)
-    coef_dat$feature <- factor(coef_dat$feature,
+    out <- merge(coef_dat, make_term_labels_df(data, RHS), by = c("level"), all = TRUE)
+    out[["feature"]] <- factor(out[["feature"]],
                                levels = feature_order,
                                labels = feature_labels[feature_order])
-    coef_dat$level <- factor(coef_dat$level, levels = term_labels_df$level)
+    out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
     
     # return organized data frame
-    coef_dat <- coef_dat[c("feature", "level", "estimate")]
-    coef_dat <- coef_dat[order(coef_dat$level),]
-    rownames(coef_dat) <- seq_len(nrow(coef_dat))
-    return(structure(coef_dat, class = c("cj_freqs", "data.frame")))
+    out[["statistic"]] <- "frequencies"
+    out <- out[c("statistic", "feature", "level", "estimate")]
+    out <- out[order(out[["level"]]),]
+    rownames(out) <- seq_len(nrow(out))
+    return(structure(out, class = c("cj_freqs", "data.frame")))
 }
 
 #' @rdname freqs

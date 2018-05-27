@@ -55,7 +55,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.8</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.13</span>
       </span>
     </div>
 
@@ -110,12 +110,53 @@
       <small>Source: <a href='https://github.com/leeper/cregg/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="cregg-0-1-13" class="section level1">
+<h1 class="page-header">
+<a href="#cregg-0-1-13" class="anchor"></a>cregg 0.1.13</h1>
+<ul>
+<li>Added another example datast, <code>taxes</code>, from Ballard-Rosa et al. (2016).</li>
+<li>Renamed <code>hainmueller</code> dataset to <code>immigration</code>.</li>
+</ul>
+</div>
+    <div id="cregg-0-1-12" class="section level1">
+<h1 class="page-header">
+<a href="#cregg-0-1-12" class="anchor"></a>cregg 0.1.12</h1>
+<ul>
+<li>Expanded test suite to cover survey-weighted data. Note: <code><a href="../reference/diffs.html">cj_anova()</a></code> currently does not work with weighted data due to a bug in <code><a href="http://www.rdocumentation.org/packages/survey/topics/anova.svyglm">survey::anova.svyglm()</a></code>.</li>
+<li>Cleaned up internal code for consistency.</li>
+<li>Added ‘statistic’ column to function outputs.</li>
+</ul>
+</div>
+    <div id="cregg-0-1-11" class="section level1">
+<h1 class="page-header">
+<a href="#cregg-0-1-11" class="anchor"></a>cregg 0.1.11</h1>
+<ul>
+<li>Variances returend by <code><a href="../reference/diffs.html">amce_diffs()</a></code> now respect clustering. (<a href='https://github.com/leeper/cregg/issues/9'>#9</a>)</li>
+</ul>
+</div>
+    <div id="cregg-0-1-10" class="section level1">
+<h1 class="page-header">
+<a href="#cregg-0-1-10" class="anchor"></a>cregg 0.1.10</h1>
+<ul>
+<li>Fixed a factor ordering issue in <code><a href="../reference/diffs.html">mm_diffs()</a></code>.</li>
+<li>Added tests of numeric accuracy of estimates for all main functions.</li>
+</ul>
+</div>
+    <div id="cregg-0-1-9" class="section level1">
+<h1 class="page-header">
+<a href="#cregg-0-1-9" class="anchor"></a>cregg 0.1.9</h1>
+<ul>
+<li>Added new function <code><a href="../reference/diffs.html">mm_diffs()</a></code> for calculating differences in marginal means.</li>
+</ul>
+</div>
     <div id="cregg-0-1-8" class="section level1">
 <h1 class="page-header">
 <a href="#cregg-0-1-8" class="anchor"></a>cregg 0.1.8</h1>
 <ul>
 <li>
 <code><a href="../reference/mm.html">mm()</a></code> gains an <code>h0</code> argument to specify a null hypothesis values so that z statistics and p-values are meaningful.</li>
+<li>Cleaned up documentation and expanded ‘Introduction’ vignette, moving README content to there.</li>
+<li>Require <strong>survey</strong> version 0.33 (for <code>family</code> argument).</li>
 <li>Added a basic test suite. (<a href='https://github.com/leeper/cregg/issues/4'>#4</a>)</li>
 </ul>
 </div>
@@ -184,6 +225,11 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#cregg-0-1-13">0.1.13</a></li>
+        <li><a href="#cregg-0-1-12">0.1.12</a></li>
+        <li><a href="#cregg-0-1-11">0.1.11</a></li>
+        <li><a href="#cregg-0-1-10">0.1.10</a></li>
+        <li><a href="#cregg-0-1-9">0.1.9</a></li>
         <li><a href="#cregg-0-1-8">0.1.8</a></li>
         <li><a href="#cregg-0-1-7">0.1.7</a></li>
         <li><a href="#cregg-0-1-6">0.1.6</a></li>

@@ -18,8 +18,8 @@
 #' Plotting functionality is provided in \code{\link{plot.cj_mm}}.
 #' 
 #' @examples
-#' data(hainmueller)
-#' mm(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills,
+#' data(immigration)
+#' mm(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills,
 #'    id = ~ CaseID, h0 = 0.5)
 #' @seealso \code{\link{mm_diffs}} \code{\link{plot.cj_mm}}
 #' @import stats
@@ -41,20 +41,15 @@ function(
     
     # get outcome variable
     outcome <- all.vars(stats::update(formula, . ~ 0))
+    if (!length(outcome) || outcome == ".") {
+        stop("'formula' is missing a left-hand outcome variable")
+    }
     
     # get RHS variables, variable labels, and factor levels
     RHS <- all.vars(stats::update(formula, 0 ~ . ))
     
     # process feature_order argument
-    if (!is.null(feature_order)) {
-        if (length(RHS) > length(feature_order)) {
-            warning("'feature_order' appears to be missing values")
-        } else if (length(RHS) < length(feature_order)) {
-            warning("'feature_order' appears to have excess values")
-        }
-    } else {
-        feature_order <- RHS
-    }
+    feature_order <- check_feature_order(feature_order, RHS)
     
     # get `id` as character string
     idvar <- all.vars(update(id, 0 ~ . ))
@@ -93,24 +88,25 @@ function(
     }
     
     # calculate MMs, SEs, etc.
-    coef_dat <- survey::svyby(~ OUTCOME, ~ Level, FUN = survey::svymean, design = svylong, na.rm = TRUE)
-    coef_dat$z <- (coef_dat$OUTCOME - h0)/coef_dat$se
-    coef_dat$p <- 2*stats::pnorm(-coef_dat$z)
-    coef_dat$lower <- coef_dat$OUTCOME - stats::qnorm((1-alpha) + (alpha/2)) * coef_dat$se
-    coef_dat$upper <- coef_dat$OUTCOME + stats::qnorm((1-alpha) + (alpha/2)) * coef_dat$se
-    names(coef_dat) <- c("level", "estimate", "std.error", "z", "p", "lower", "upper")
+    out <- survey::svyby(~ OUTCOME, ~ Level, FUN = survey::svymean, design = svylong, na.rm = TRUE)
+    out[["z"]] <- (out[["OUTCOME"]] - h0)/out[["se"]]
+    out[["p"]] <- 2*stats::pnorm(-out[["z"]])
+    out[["lower"]] <- out[["OUTCOME"]] - stats::qnorm((1-alpha) + (alpha/2)) * out[["se"]]
+    out[["upper"]] <- out[["OUTCOME"]] + stats::qnorm((1-alpha) + (alpha/2)) * out[["se"]]
+    names(out) <- c("level", "estimate", "std.error", "z", "p", "lower", "upper")
     
     # attach feature labels
-    coef_dat <- merge(coef_dat, make_term_labels_df(data, RHS), by = c("level"), all = TRUE)
-    coef_dat$feature <- factor(coef_dat$feature,
+    out <- merge(out, make_term_labels_df(data, RHS), by = c("level"), all = TRUE)
+    out[["feature"]] <- factor(out[["feature"]],
                                levels = feature_order,
                                labels = feature_labels[feature_order])
-    coef_dat$level <- factor(coef_dat$level, levels = term_labels_df$level)
-    coef_dat$outcome <- outcome
+    out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
+    out[["outcome"]] <- outcome
     
     # return organized data frame
-    coef_dat <- coef_dat[c("outcome", "feature", "level", "estimate", "std.error", "z", "p", "lower", "upper")]
-    coef_dat <- coef_dat[order(coef_dat$level),]
-    rownames(coef_dat) <- seq_len(nrow(coef_dat))
-    return(structure(coef_dat, class = c("cj_mm", "data.frame")))
+    out[["statistic"]] <- "mm"
+    out <- out[c("outcome", "statistic", "feature", "level", "estimate", "std.error", "z", "p", "lower", "upper")]
+    out <- out[order(out[["level"]]),]
+    rownames(out) <- seq_len(nrow(out))
+    return(structure(out, class = c("cj_mm", "data.frame")))
 }

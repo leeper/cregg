@@ -74,3 +74,19 @@ make_feature_headers <- function(x, fmt = "(%s)") {
     }
     factor(as.character(x$level), levels = unique(unname(unlist(feature_levels))))
 }
+
+# function used to check whether, if specified, the 'feature_order' argument is valid
+check_feature_order <- function(feature_order, RHS) {
+    if (!is.null(feature_order)) {
+        if (length(RHS) > length(feature_order)) {
+            stop("'feature_order' appears to be missing values")
+        } else if (length(RHS) < length(feature_order)) {
+            stop("'feature_order' appears to have excess values")
+        } else if (any(!names(feature_order) %in% RHS)) {
+            stop("'feature_order' appears to contain erroneous values")
+        }
+    } else {
+        feature_order <- RHS
+    }
+    return(feature_order)
+}

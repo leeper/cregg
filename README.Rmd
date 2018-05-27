@@ -1,6 +1,6 @@
 # Simple Conjoint Analyses and Visualization
 
-**cregg** is a package for analyzing and visualizing the results of conjoint ("cj") factorial experiments. It provides functionality that is useful for analyzing and otherwise examining conjoint experimental data:
+**cregg** is a package for analyzing and visualizing the results of conjoint ("cj") factorial experiments using methods described by Hainmueller, Hopkins, and Yamamoto (2014). It provides functionality that is useful for analyzing and otherwise examining conjoint experimental data:
 
  - Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs and munging of AMCE estimates into tidy data frames, via `amce()`
  - Calculation of marginal means (MMs) for conjoint designs and munging them into tidy data frames via `mm()`
@@ -9,18 +9,23 @@
  - Diagnostics to choose feature reference categories, via `amce_by_reference()`
  - **ggplot2**-based visualizations of AMCEs and MMs, via `plot()` methods for all of the above
 
-The package takes its name from the surname of a famous White House Press Secretary.
+To demonstrate package functionality, the package includes two example datasets:
 
-The main selling point of cregg is simplicity of implementation and - unlike the [cjoint](https://cran.r-project.org/package=cjoint) package - cregg tries to follow tidy data principles throughout and provides a formula-based interface that meshes well with the underlying [**survey**](https://cran.r-project.org/package=survey)-based effect estimation API. Thus the response from any function is a tidy data frame that can easily be stacked with others (e.g., for computing AMCEs for subsets of respondents and then producing a facetted or grouped visualization). It also tries to take better advantage of data preprocessing steps by:
+ - `taxes`, a full randomized choice task conjoint experiment conducted by Ballard-Rosa et al. (2016)
+ - `immigration`, a partial factorial conjoint experiment with several restrictions between features conducted by Hainmueller, Hopkins, and Yamamoto (2014)
+
+The main selling point of cregg is simplicity of implementation and a consistent attempt to follow tidy data principles throughout. The package also provides a formula-based interface that meshes well with the underlying [**survey**](https://cran.r-project.org/package=survey)-based effect estimation API. Thus the response from any function is a tidy data frame that can easily be stacked with others (e.g., for computing AMCEs for subsets of respondents) and then producing ggplot2 visualizations.
+
+It also provides some sugar:
 
  - Using factor base levels rather than trying to set baseline levels atomically
- - Using "label" attributes on variables to provide pretty printing
+ - Using "label" attributes on variables to provide pretty printing, with options to relabel features on the fly
+ - A convenient API (via the `cj(..., by = ~ group)` statement) for repeated, subgroup operations without the need for `lapply()` or `for` loops
+ - All functions have arguments in data-formula order, making it simple to pipe into them via the magrittr pipe (`%>%`).
 
-Additionally all functions have arguments in data-formula order, making it simple to pipe into them via `%>%`.
+A detailed website showcasing package functionality is available at: https://thomasleeper.com/cregg/. Contributions and feedback are welcome on [GitHub](https://github.com/leeper/cregg/issues).
 
-A detailed website showcasing package functionality is available at: https://thomasleeper.com/cregg/
-
-Contributions and feedback are welcome on [GitHub](https://github.com/leeper/cregg/issues).
+The package takes its name from the surname of a famous White House Press Secretary.
 
 ## Basic Code Examples
 
@@ -34,7 +39,8 @@ The package includes an example conjoint dataset (borrowed and lightly modified 
 
 ```{r load}
 library("cregg")
-data("hainmueller")
+data("immigration")
+data("taxes")
 ```
 
 The package provides straightforward calculation and visualization of descriptive marginal means (MMs). These represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, MMs can take any value in the full range of the outcome. Calculation of MMs entail no modelling assumptions are simply descriptive quantities of interest:
@@ -44,7 +50,7 @@ The package provides straightforward calculation and visualization of descriptiv
 f1 <- ChosenImmigrant ~ Gender + Education + LanguageSkills + 
        CountryOfOrigin + Job + JobExperience + JobPlans + 
        ReasonForApplication + PriorEntry
-plot(mm(hainmueller, f1, id = ~ CaseID), vline = 0.5)
+plot(mm(immigration, f1, id = ~ CaseID), vline = 0.5)
 ```
 
 cregg functions uses `attr(data$feature, "label")` to provide pretty printing of feature labels, so that variable names can be arbitrary. These can be overwritten using the `feature_labels` argument to override these settings. Feature levels are always deduced from the `levels()` of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in `feature_order`.
@@ -53,7 +59,8 @@ A more common analytic approach for conjoints is to estimate average marginal co
 
 ```{r amce}
 # estimation
-amces <- cj(hainmueller, f1, id = ~ CaseID)
+amces <- cj(taxes, chose_plan ~ taxrate1 + taxrate2 + taxrate3 + 
+            taxrate4 + taxrate5 + taxrate6 + taxrev, id = ~ ID)
 head(amces[c("feature", "level", "estimate", "std.error")], 20L)
 ```
 
@@ -67,7 +74,7 @@ plot(amces)
 To provide simple subgroup analyses, the `cj()` function provides a `by` argument to iterate over subsets of `data` and calculate AMCEs or MMs on each subgroup. For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:
 
 ```{r mm_by}
-mm_by <- cj(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills,
+mm_by <- cj(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills,
             id = ~ CaseID, estimate = "mm", by = ~ contest_no)
 plot(mm_by, group = "contest_no", vline = 0.5)
 ```
@@ -75,7 +82,7 @@ plot(mm_by, group = "contest_no", vline = 0.5)
 A more formal test of these differences is provided by a nested model comparison test:
 
 ```{r cj_anova}
-cj_anova(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, by = ~ contest_no)
+cj_anova(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills, by = ~ contest_no)
 ```
 
 which provides a test of whether any of the interactions between the `by` variable and feature levels differ from zero.
