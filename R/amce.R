@@ -143,7 +143,6 @@ function(
                                         alpha = alpha,
                                         ...)
             # subset to unconstrained variables
-            browser()
             unconstrained_amces <- unconstrained_amces[unconstrained_amces[["feature"]] %in% unname(unlist(feature_labels[unconstrained_vars])), , drop = FALSE]
         } else {
             # if no 'unconstrained_vars', return empty data frame
