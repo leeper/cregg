@@ -48,14 +48,15 @@ Estimate AMCEs for a conjoint analysis and return a tidy data frame of results
 Users may desire to specify a \code{family} argument via \code{\dots}, which should be a \dQuote{family} object such as \code{gaussian}. Sensible alternatives are \code{binomial} (for binary outcomes) and quasibinomial (for weighted survey data). See \code{\link[stats]{family}} for details.
 }
 \examples{
-data(immigration)
+data("taxes")
 # estimating AMCEs
-amce(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills, 
-     id = ~ CaseID, feature_order = c("LanguageSkills", "Gender", "Education"))
+amce(taxes, chose_plan ~ taxrate1 + taxrate2 + taxrate3 + 
+     taxrate4 + taxrate5 + taxrate6 + taxrev, id = ~ ID)
 
 \dontrun{
+data("immigration")
 # estimating AMCEs with constraints
-amce(immigration, ChosenImmigrant ~ Gender + ReasonForApplication + CountryOfOrigin,
+amce(immigration, ChosenImmigrant ~ Gender + ReasonForApplication * CountryOfOrigin,
      id = ~CaseID, constraints = list(~ReasonForApplication + CountryOfOrigin))
 
 # balance testing example
@@ -67,7 +68,6 @@ x <- amce_by_reference(immigration, ChosenImmigrant ~ LanguageSkills + Education
        variable = ~ LanguageSkills, id = ~ CaseID)
 # plot
 plot(x, group = "BY")
-
 }
 }
 \seealso{

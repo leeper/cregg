@@ -26,10 +26,10 @@
 #' data("taxes")
 #' 
 #' # calculate MMs
-#' d1 <- cj(immigration, ChosenImmigrant ~ Gender + Education + 
+#' f1 <- ChosenImmigrant ~ Gender + Education + 
 #'          LanguageSkills + CountryOfOrigin + Job + JobExperience + 
-#'          JobPlans + ReasonForApplication + PriorEntry, id = ~ CaseID,
-#'          estimate = "mm", h0 = 0.5)
+#'          JobPlans + ReasonForApplication + PriorEntry
+#' d1 <- cj(immigration, f1, id = ~ CaseID, estimate = "mm", h0 = 0.5)
 #' # plot MMs
 #' plot(d1, vline = 0.5)
 #'
@@ -41,9 +41,7 @@
 #' plot(d1, vline = 0.5)
 #'
 #' # MMs split by profile number
-#' stacked <- cj(immigration, ChosenImmigrant ~ Gender + Education + 
-#'               LanguageSkills + CountryOfOrigin + Job + JobExperience + 
-#'               JobPlans + ReasonForApplication + PriorEntry, id = ~ CaseID,
+#' stacked <- cj(immigration, f1, id = ~ CaseID,
 #'               estimate = "mm", by = ~ contest_no)
 #' 
 #' ## plot with grouping
@@ -53,9 +51,7 @@
 #' plot(stacked) + ggplot2::facet_wrap(~contest_no, nrow = 1L)
 #' 
 #' # estimate AMCEs
-#' d2 <- cj(immigration, ChosenImmigrant ~ Gender + Education + 
-#'          LanguageSkills + CountryOfOrigin + Job + JobExperience + 
-#'          JobPlans + ReasonForApplication + PriorEntry, id = ~ CaseID)
+#' d2 <- cj(immigration, f1, id = ~ CaseID)
 #' 
 #' # plot AMCEs
 #' plot(d2)

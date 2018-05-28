@@ -86,12 +86,13 @@ function(
         mm_split[[i]][["upper"]] <- mm_split[[i]][["estimate"]] + (stats::qnorm(1-alpha) * mm_split[[i]][["std.error"]])
         
         # format output
-        #mm_split[[i]][[by_var]] <- paste0(mm_split[[i]][[by_var]][1L], " - ", mm_split[[1L]][[by_var]][1L])
+        ## add column indicating value of 'by_var'
         mm_split[[i]][[by_var]] <- mm_split[[i]][[by_var]][1L]
+        ## indicate explicit difference as 'BY' column
+        mm_split[[i]][["BY"]] <- paste0(mm_split[[i]][[by_var]][1L], " - ", mm_split[[1L]][[by_var]][1L])
     }
     # bind list of differences (except the baseline level)
     out <- do.call("rbind", mm_split[-1L])
-    out[["BY"]] <- "Difference"
     out[["statistic"]] <- "mm_difference"
     rownames(out) <- seq_len(nrow(out))
     class(out) <- c("cj_diffs", "data.frame")
