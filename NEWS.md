@@ -1,3 +1,8 @@
+# cregg 0.1.14
+
+* Added support for constrained designs (when two-way constraints are present). (#6)
+* Removed **margins** dependency, leaving only linear probability model support.
+
 # cregg 0.1.13
 
 * Added another example datast, `taxes`, from Ballard-Rosa et al. (2016).

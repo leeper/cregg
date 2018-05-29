@@ -99,47 +99,37 @@ function(
     }
     
     # calculate marginal effects and standard errors
-    ## standard errors
-    if (is.null(id) || !length(all.vars(id))) {
-        vc <- stats::vcov(mod)
-    } else {
-        if (inherits(data, "data.frame")) {
-            cluster_vector <- stats::get_all_vars(id, data)[[1L]]
-        } else if (inherits(data, "survey.design")) {
-            cluster_vector <- stats::get_all_vars(id, data[["variables"]])[[1L]]
-        }
-        vc <- sandwich::vcovCL(mod, cluster_vector)
-    }
     
     # handle constraints if, present
     if (is.null(constraints)) {
         ## without constraints AMCEs are simple marginal effects
         ## this section is also called recursively when `!is.null(constraints)`
-        if (is.null(svydesign)) {
-            out <- summary(margins::margins(mod, data = data, vcov = vc, variables = variables), level = 1-alpha)
-        } else {
-            out <- summary(margins::margins(mod, data = data, design = svydesign, vcov = vc, variables = variables), level = 1-alpha)
-        }
-        # cleanup output from summary(margins())
-        names(out) <- c("factor", "estimate", "std.error", "z", "p", "lower", "upper")
+        
+        # calculate marginal effects, which are equivalent to AMCE for unconstrained variables (handling clutering as necessary)
+        out <- get_coef_summary(mod, data = data, id = id, alpha = alpha)
+        names(out) <- c("estimate", "std.error", "z", "p", "lower", "upper", "factor")
         
         # cleanup term names
-        out <- cbind(clean_term_names(out[["factor"]], RHS), out[-1L])
+        out <- cbind(clean_term_names(out[["factor"]], RHS), out[names(out) != "factor"])
         
         # fill in missing base levels with 0s
-        out <- merge(out[!out$feature %in% c("", "(Intercept)"),], 
+        out <- merge(out[!out$feature %in% c("", "(Intercept)"),],
                           term_labels_df, 
                           by = c("feature", "level"), all = TRUE)
         out[["estimate"]][is.na(out[["estimate"]])] <- 0
         out[["outcome"]] <- outcome
         out[["statistic"]] <- "amce"
         
+        # subset to variables in 'variables'
+        if (!is.null(variables)) {
+            out <- out[out[["feature"]] %in% variables, , drop = FALSE]
+        }
         # label features and levels
         out[["feature"]] <- factor(out[["feature"]],
                                    levels = feature_order,
                                    labels = feature_labels[feature_order])
     } else {
-        # with constraints, we need averaging of multiple AMEs over subsets of data
+        # with constraints, we need averaging of multiple AMCEs over subsets of data
         # but the key thing is it is averaging over possible feature combinations (unweighted by their actual frequency)
         
         # check that constraints only have two terms
@@ -168,7 +158,7 @@ function(
                                         id = id,
                                         weights = weights,
                                         constraints = NULL,
-                                        variables = uncontrained_vars,
+                                        variables = unconstrained_vars,
                                         feature_order = feature_order,
                                         feature_labels = feature_labels,
                                         level_order = level_order,
@@ -179,32 +169,32 @@ function(
         } else {
             # if no 'unconstrained_vars', return empty data frame
             unconstrained_amces <- data.frame(outcome = character(),
-                               statistic = character(),
-                               feature = character(),
-                               level = character(),
-                               estimate = numeric(),
-                               std.error = numeric(),
-                               z = numeric(),
-                               p = numeric(),
-                               lower = numeric(),
-                               upper = numeric(),
-                               check.names = FALSE,
-                               stringsAsFactors = FALSE)
+                                              statistic = character(),
+                                              feature = character(),
+                                              level = character(),
+                                              estimate = numeric(),
+                                              std.error = numeric(),
+                                              z = numeric(),
+                                              p = numeric(),
+                                              lower = numeric(),
+                                              upper = numeric(),
+                                              check.names = FALSE,
+                                              stringsAsFactors = FALSE)
         }
         
-        ## NEED TO CHECK CONSTRAINTS FOR REPETITION OF TERMS
-        
-        ## for each constrained term, we need to:
-        ## > handle the fact that `mod` will have NA coefficient estimates for interaction terms that are not possible
-        ## > estimate its marginal effect on the subset of data where the two (or more) features co-occur
-        ## > handle that different levels of a given feature may have different constraints
+        ## for each constraint, we need to:
+        ## > figure out what estimated coefficients go with each of the two terms (using `get_terms_df()` to identify terms and `get_coef_summary()` to get a clean model summary)
+        ## > average effects of first constrained variable across levels of second variable
+        ## > average effects of second constrained variable across levels of first variable
+        ## > if we were to generalize this to higher-order constraints, the code would simply have to be made more complex
+        ## > `rbind()` the two sets of results back together
         constrained_amces <- lapply(constraints, function(one) {
             # identify variables
             variables_in_this_constraint <- setdiff(unlist(lapply(one, all.vars)), "~")
             var1 <- variables_in_this_constraint[1L]
             var2 <- variables_in_this_constraint[2L]
             
-            # function to calculate AMCEs by averaging across MM differences
+            # function to calculate AMCEs by averaging coefficients
             calculate_amce <- function(to_average) {
                 
                 # subset
@@ -261,6 +251,8 @@ function(
             ## split merged object by 'var2' levels, calculating
             one_out2_list <- lapply(split(terms_df2, terms_df2[["_base_level"]], drop = TRUE), calculate_amce)
             one_out2 <- do.call("rbind", one_out2_list)
+            
+            # NOTE: IF WE HAD HIGHER-ORDER CONSTRAINTS, WE WOULD NEED ADDITIONL STEPS HERE
             
             # combine both sets of AMCEs
             one_out <- rbind(one_out1, one_out2)
