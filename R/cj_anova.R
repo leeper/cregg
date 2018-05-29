@@ -46,25 +46,3 @@ function(
     
     anova(estimates_reduced, estimates_full, test = "F")
 }
-
-# function to figure out term levels of coef_df "_name" column
-split_coef_name_by_term <- function(coefficient, term_label) {
-    # this strictly only works with two-way interactions
-    term_vec <- strsplit(term_label, ":")[[1L]]
-    if (length(term_vec) != 2L) {
-        return(rep(NA_character_, 2))
-    }
-    
-    ## extract level of term 1
-    # regular expression using positive lookbehind and positive lookahead on term names
-    m1 <- regexpr(paste0("(?<=", term_vec[1L], ").+(?=:", term_vec[2L], ")"), coefficient, perl = TRUE)
-    term1_level <- regmatches(coefficient, m1)
-    
-    ## extract level of term 2
-    m2 <- regexpr(paste0("(?<=:", term_vec[2L], ").+"), coefficient, perl = TRUE)
-    term2_level <- regmatches(coefficient, m2)
-    
-    out <- c(term1_level, term2_level)
-    names(out) <- c(term_vec)
-    out
-}
