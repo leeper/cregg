@@ -91,8 +91,8 @@ check_feature_order <- function(feature_order, RHS) {
     return(feature_order)
 }
 
-# function to figure out term levels of coef_df "_name" column
-## used in `get_coef_summary()` (which is used within `amce_diffs()`)
+# function to figure out term levels of terms_df "_name" column
+## used in `get_terms_df()` (below; which is used within `amce_diffs()`)
 split_coef_name_by_term <- function(coefficient, term_label) {
     # this strictly only works with two-way interactions
     term_vec <- strsplit(term_label, ":")[[1L]]
@@ -114,9 +114,9 @@ split_coef_name_by_term <- function(coefficient, term_label) {
     out
 }
 
-# function to convert model into data frame
+# function to get model terms converted into data frame
 ## used in `amce_diffs()`
-get_coef_summary <- function(mod, data, by_var, id = NULL, alpha = 0.05) {
+get_terms_df <- function(mod, data, by_var) {
     # extract coefficient names
     coefs <- coef(mod)
     
@@ -148,7 +148,7 @@ get_coef_summary <- function(mod, data, by_var, id = NULL, alpha = 0.05) {
     model_factors_df <- data.frame(t(model_factors[-1L, assign_vec, drop = FALSE] != 0), check.names = FALSE)
     
     # build a data frame of the coefficients and information from terms() and 'assign' attribute
-    coef_df <- cbind.data.frame(
+    terms_df <- cbind.data.frame(
       # add coefficient names
       "_name" = names(coefs),
       # add coefficient estimate values
@@ -161,49 +161,58 @@ get_coef_summary <- function(mod, data, by_var, id = NULL, alpha = 0.05) {
       "_by" = model_factors_df[[by_var]]
     )
     # cleanup rownames
-    rownames(coef_df) <- seq_len(nrow(coef_df))
+    rownames(terms_df) <- seq_len(nrow(terms_df))
     # convenience step to identify interactions
-    coef_df[["_interaction"]] <- coef_df[["_order"]] > 1L
+    terms_df[["_interaction"]] <- terms_df[["_order"]] > 1L
     
     # determine the variable that 'by_var' is interacted with
-    coef_df[["_base_var"]] <- NA_character_
+    terms_df[["_base_var"]] <- NA_character_
     base_term_list <- lapply(model_factors_df[setdiff(names(model_factors_df), by_var)], which)
     for (i in seq_along(base_term_list)) {
-        coef_df[["_base_var"]][base_term_list[[i]]] <- names(base_term_list)[i]
+        terms_df[["_base_var"]][base_term_list[[i]]] <- names(base_term_list)[i]
     }
     
-    # add factor levels for 'by_var' to 'coef_df'
-    coef_df[["_by_level"]] <- NA_character_
-    coef_df[["_base_level"]] <- NA_character_
+    # add factor levels for 'by_var' to 'terms_df'
+    terms_df[["_by_level"]] <- NA_character_
+    terms_df[["_base_level"]] <- NA_character_
         
     # get contrasts
     con <- contrasts(data[[by_var]])
     
     # apply function to data
-    for (i in seq_len(nrow(coef_df))) {
+    for (i in seq_len(nrow(terms_df))) {
         # if first-order term, don't apply function instead figure out base and by level manually
-        if (coef_df[["_order"]][i] == 1L) {
-            if (coef_df[["_term"]][i] == by_var) {
-                # do nothing, because we'll just delete these rows below, momentarily
-                coef_df[["_by_level"]][i] <- rownames(con)[1L]
+        if (terms_df[["_order"]][i] == 1L) {
+            if (terms_df[["_term"]][i] == by_var) {
+                # do nothing, because we'll just delete these rows later
+                terms_df[["_by_level"]][i] <- rownames(con)[1L]
             } else {
                 # variable is first-order term for base variable
-                coef_df[["_by_level"]][i] <- rownames(con)[1L]
-                coef_df[["_base_level"]][i] <- regmatches(coef_df[["_name"]][i], 
-                                                          regexpr(paste0("(?<=", coef_df[["_term"]][i], ").+"),
-                                                                  coef_df[["_name"]][i],
+                terms_df[["_by_level"]][i] <- rownames(con)[1L]
+                terms_df[["_base_level"]][i] <- regmatches(terms_df[["_name"]][i], 
+                                                          regexpr(paste0("(?<=", terms_df[["_term"]][i], ").+"),
+                                                                  terms_df[["_name"]][i],
                                                                   perl = TRUE))
             }
         } else {
             # use utility function to split coefficient names
-            tmp <- split_coef_name_by_term(as.character(coef_df[["_name"]][i]), as.character(coef_df[["_term"]][i]))
-            coef_df[["_base_level"]][i] <- tmp[1L]
-            coef_df[["_by_level"]][i] <- paste0(tmp[2L], " - ", rownames(con)[1L])
+            tmp <- split_coef_name_by_term(as.character(terms_df[["_name"]][i]), as.character(terms_df[["_term"]][i]))
+            terms_df[["_base_level"]][i] <- tmp[1L]
+            terms_df[["_by_level"]][i] <- paste0(tmp[2L], " - ", rownames(con)[1L])
         }
     }
     
-    # drop lowest level of '_by_level' to leave only differences
-    coef_df <- coef_df[!coef_df[["_by_level"]] == rownames(con)[1L], , drop = FALSE]
+    # return terms_df
+    return(terms_df)
+}
+
+
+# function to convert model estimates (possibly corrected for clustering) into a data frame
+## used in `amce_diffs()`
+get_coef_summary <- function(mod, data, id = NULL, alpha = 0.05) {
+    
+    # is there an intercept?
+    intercept <- if (attr(terms(mod), "intercept") == 1L) TRUE else FALSE
     
     # setup standard errors and create `coef_summary`
     if (is.null(id) || !length(all.vars(id))) {
@@ -252,7 +261,5 @@ get_coef_summary <- function(mod, data, by_var, id = NULL, alpha = 0.05) {
     coef_summary[["_name"]] <- rownames(coef_summary)
     rownames(coef_summary) <- seq_len(nrow(coef_summary))
     
-    # merge coef_df and coef_summary
-    merged <- merge(coef_summary, coef_df, by = "_name")
-    return(merged)
+    return(coef_summary)
 }
