@@ -109,10 +109,21 @@ function(
         stop("'data' is not a 'data.frame' or 'survey.design' object")
     }
     
-    coef_summary <- get_coef_summary(mod = mod, data = data, by_var = by_var, id = id, alpha = alpha)
+    # get model terms as rich data frame
+    terms_df <- get_terms_df(mod = mod, data = data, by_var = by_var)
+    # get contrasts
+    con <- contrasts(data[[by_var]])
+    # drop lowest level of '_by_level' to leave only differences
+    terms_df <- terms_df[!terms_df[["_by_level"]] == rownames(con)[1L], , drop = FALSE]
+    
+    # get coefficients as data frame (correct, if needed, for clustering)
+    coef_summary <- get_coef_summary(mod = mod, data = data, id = id, alpha = alpha)
+    # merge coef_df and coef_summary
+    coef_summary <- merge(coef_summary, terms_df, by = "_name")
+    
     coef_summary[["outcome"]] <- outcome
-    coef_summary[["BY"]] <- "Difference"
-    coef_summary[["statistic"]] <- "amce_differences"
+    coef_summary[["BY"]] <- coef_summary[["_by_level"]]
+    coef_summary[["statistic"]] <- "amce_difference"
     
     # return
     out <- structure(coef_summary[, c("BY", "outcome", "statistic", "_base_var", "_base_level", "_by_level", names(coef_summary)[c(2:7)])],
