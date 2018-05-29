@@ -197,8 +197,8 @@ get_terms_df <- function(mod, data, by_var) {
         } else {
             # use utility function to split coefficient names
             tmp <- split_coef_name_by_term(as.character(terms_df[["_name"]][i]), as.character(terms_df[["_term"]][i]))
-            terms_df[["_base_level"]][i] <- tmp[1L]
-            terms_df[["_by_level"]][i] <- paste0(tmp[2L], " - ", rownames(con)[1L])
+            terms_df[["_base_level"]][i] <- tmp[names(tmp) != by_var]
+            terms_df[["_by_level"]][i] <- paste0(tmp[names(tmp) != by_var], " - ", rownames(con)[1L])
         }
     }
     

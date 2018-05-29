@@ -7,6 +7,7 @@
 #' @template id
 #' @template weights
 #' @template constraints
+#' @param variables A character vector specifying the subset of RHS terms to estimate effects for. This is used internally during a recursive call, but can also be useful in speeding up estimation.
 #' @template feature_order
 #' @template feature_labels
 #' @template level_order
@@ -51,6 +52,7 @@ function(
   id = NULL,
   weights = NULL,
   constraints = NULL,
+  variables = NULL,
   feature_order = NULL,
   feature_labels = NULL,
   level_order = c("ascending", "descending"),
@@ -110,7 +112,33 @@ function(
     }
     
     # handle constraints if, present
-    if (!is.null(constraints)) {
+    if (is.null(constraints)) {
+        ## without constraints AMCEs are simple marginal effects
+        ## this section is also called recursively when `!is.null(constraints)`
+        if (is.null(svydesign)) {
+            out <- summary(margins::margins(mod, data = data, vcov = vc, variables = variables), level = 1-alpha)
+        } else {
+            out <- summary(margins::margins(mod, data = data, design = svydesign, vcov = vc, variables = variables), level = 1-alpha)
+        }
+        # cleanup output from summary(margins())
+        names(out) <- c("factor", "estimate", "std.error", "z", "p", "lower", "upper")
+        
+        # cleanup term names
+        out <- cbind(clean_term_names(out[["factor"]], RHS), out[-1L])
+        
+        # fill in missing base levels with 0s
+        out <- merge(out[!out$feature %in% c("", "(Intercept)"),], 
+                          term_labels_df, 
+                          by = c("feature", "level"), all = TRUE)
+        out[["estimate"]][is.na(out[["estimate"]])] <- 0
+        out[["outcome"]] <- outcome
+        out[["statistic"]] <- "amce"
+        
+        # label features and levels
+        out[["feature"]] <- factor(out[["feature"]],
+                                   levels = feature_order,
+                                   labels = feature_labels[feature_order])
+    } else {
         # with constraints, we need averaging of multiple AMEs over subsets of data
         # but the key thing is it is averaging over possible feature combinations (unweighted by their actual frequency)
         
@@ -129,6 +157,9 @@ function(
         # vector of unconstrained variables
         unconstrained_vars <- RHS[!RHS %in% constrained_vars]
         
+        # get coefficients as data frame (correct, if needed, for clustering)
+        coef_summary <- get_coef_summary(mod = mod, data = data, id = id, alpha = alpha)
+        
         # first estimate unconstrained terms
         if (length(unconstrained_vars)) {
             # estimate 'unconstrained_vars', by calling `amce()` without constraints
@@ -137,6 +168,7 @@ function(
                                         id = id,
                                         weights = weights,
                                         constraints = NULL,
+                                        variables = uncontrained_vars,
                                         feature_order = feature_order,
                                         feature_labels = feature_labels,
                                         level_order = level_order,
@@ -160,8 +192,6 @@ function(
                                stringsAsFactors = FALSE)
         }
         
-        # then estimate constrained terms over appropriate subsets of data
-        
         ## NEED TO CHECK CONSTRAINTS FOR REPETITION OF TERMS
         
         ## for each constrained term, we need to:
@@ -169,11 +199,6 @@ function(
         ## > estimate its marginal effect on the subset of data where the two (or more) features co-occur
         ## > handle that different levels of a given feature may have different constraints
         constrained_amces <- lapply(constraints, function(one) {
-            # subset the data for this constraint
-            proportions <- props(data = data, formula = one)
-            proportions_allowed <- subset(proportions, Proportion != 0)
-            proportions_disallowed <- subset(proportions, Proportion == 0)
-            
             # identify variables
             variables_in_this_constraint <- setdiff(unlist(lapply(one, all.vars)), "~")
             var1 <- variables_in_this_constraint[1L]
@@ -181,41 +206,61 @@ function(
             
             # function to calculate AMCEs by averaging across MM differences
             calculate_amce <- function(to_average) {
-                # calculate AMCE etc
-                est <- mean(to_average[["estimate"]], na.rm = TRUE)
-                se <- sqrt(mean(na.omit(to_average[["std.error"]]^2), na.rm = TRUE))
-                to_average[1, "outcome"] <- outcome
-                to_average[1, "statistic"] <- "amce"
-                to_average[1, "estimate"] <- est
-                to_average[1, "std.error"] <- se
-                to_average[1, "z"] <- est/se
-                to_average[1, "p"] <- 2L*(1L-stats::pnorm(abs(to_average[1, "z"])))
-                to_average[1, "lower"] <- est - (stats::qnorm(1-alpha) * se)
-                to_average[1, "upper"] <- est + (stats::qnorm(1-alpha) * se)
-                # cleanup return
-                if (var1 %in% names(to_average)) {
-                    to_average[1, "feature"] <- feature_labels[[var1]]
-                    to_average[, "level"] <- to_average[[var1]]
-                    to_average[[var1]] <- NULL
-                } else {
-                    to_average[1, "feature"] <- feature_labels[[var2]]
-                    to_average[, "level"] <- to_average[[var2]]
-                    to_average[[var2]] <- NULL
-                }
-                return(to_average[1, , drop = FALSE])
+                
+                # subset
+                to_average_subset <- to_average[!is.na(to_average[["Estimate"]]), , drop = FALSE]
+                
+                # calculate weights, giving uniform weight to features
+                wts <- c(1, rep(1/(nrow(to_average_subset) - 1L), nrow(to_average_subset)-1L))
+                
+                # linear combination of estimates
+                this_lin <- to_average_subset[["Estimate"]] * wts
+                
+                # var-cov matrix of these estimates
+                this_varcov <- vcov(mod)[to_average_subset[["_name"]], to_average_subset[["_name"]]]
+                
+                # calculate AMCE, giving uniform weight to features; and variance thereof
+                est <- mean(to_average_subset[["Estimate"]] * wts)
+                variance <- (this_lin %*% this_varcov %*% this_lin)[1L,1L,drop = TRUE]
+                
+                # populate output
+                averaged <- data.frame(outcome = outcome,
+                                       statistic = "amce",
+                                       feature = to_average[to_average[["_order"]] == 1L, "_base_var", drop = TRUE],
+                                       level = to_average[to_average[["_order"]] == 1L, "_base_level", drop = TRUE],
+                                       estimate = est,
+                                       std.error = sqrt(variance),
+                                       z = est/sqrt(variance),
+                                       p = 2L*(1L-stats::pnorm(abs(est/sqrt(variance)))),
+                                       check.names = FALSE,
+                                       stringsAsFactors = FALSE
+                                       )
+                averaged[["lower"]] <- est - (stats::qnorm(1-alpha) * sqrt(variance))
+                averaged[["upper"]] <- est + (stats::qnorm(1-alpha) * sqrt(variance))
+                return(averaged)
             }
             
             # calculate MEs for first variable, constraining second
-            one_out1 <- cj(data = data, formula = update(formula, one), id = id, estimate = "mm_diff", alpha = alpha, by = formula(paste("~", var1)))
-            ## average over differences to get AMCEs, dropping base levels
-            one_out1_subset <- one_out1[one_out1[["feature"]] == feature_labels[[var2]], ]
-            one_out1 <- do.call("rbind", lapply(split(one_out1_subset, one_out1_subset[[var1]], drop = TRUE), calculate_amce))
+            ## get terms_df
+            terms_df1 <- get_terms_df(mod, data = data, by_var = var2)
+            ## subset terms_df to terms with 'var1' as base variable
+            terms_df1 <- terms_df1[terms_df1[["_base_var"]] %in% var1, , drop = FALSE]
+            ## merge terms_df with `coef_summary`
+            terms_df1 <- merge(coef_summary, terms_df1, by = "_name")
+            ## split merged object by 'var1' levels, calculating
+            one_out1_list <- lapply(split(terms_df1, terms_df1[["_base_level"]], drop = TRUE), calculate_amce)
+            one_out1 <- do.call("rbind", one_out1_list)
             
             # calculate MEs for second variable, constraining first
-            one_out2 <- cj(data = data, formula = update(formula, one), id = id, estimate = "mm_diff", alpha = alpha, by = formula(paste("~", var2)))
-            ## average over differences to get AMCEs, dropping base levels
-            one_out2_subset <- one_out2[one_out2[["feature"]] == feature_labels[[var1]], ]
-            one_out2 <- do.call("rbind", lapply(split(one_out2_subset, one_out2_subset[[var2]], drop = TRUE), calculate_amce))
+            ## get terms_df
+            terms_df2 <- get_terms_df(mod, data = data, by_var = var1)
+            ## subset terms_df to terms with 'var2' as base variable
+            terms_df2 <- terms_df2[terms_df2[["_base_var"]] %in% var2, , drop = FALSE]
+            ## merge terms_df with `coef_summary`
+            terms_df2 <- merge(coef_summary, terms_df2, by = "_name")
+            ## split merged object by 'var2' levels, calculating
+            one_out2_list <- lapply(split(terms_df2, terms_df2[["_base_level"]], drop = TRUE), calculate_amce)
+            one_out2 <- do.call("rbind", one_out2_list)
             
             # combine both sets of AMCEs
             one_out <- rbind(one_out1, one_out2)
@@ -225,9 +270,9 @@ function(
             one_out <- rbind(one_out,
                              data.frame(statistic = rep("amce", 2L),
                                         outcome = rep(outcome, 2L),
-                                        feature = unlist(unname(feature_labels[c(var1, var2)])),
+                                        feature = c(var1,var2),
                                         level = c(levels(data[[var1]])[1L], levels(data[[var2]])[1L]),
-                                        estimate = NA_real_,
+                                        estimate = c(0L, 0L),
                                         std.error = NA_real_,
                                         z = NA_real_,
                                         p = NA_real_,
@@ -239,37 +284,16 @@ function(
         
         # update out with constrained AMCEs
         out <- rbind(unconstrained_amces, do.call("rbind", constrained_amces))
-    } else {
-        ## without constraints AMCEs are simple marginal effects
-        ## this section is also called recursively when `!is.null(constraints)`
-        if (is.null(svydesign)) {
-            out <- summary(margins::margins(mod, data = data, vcov = vc), level = 1-alpha)
-        } else {
-            out <- summary(margins::margins(mod, data = data, design = svydesign, vcov = vc), level = 1-alpha)
-        }
-        # cleanup output from summary(margins())
-        names(out) <- c("factor", "estimate", "std.error", "z", "p", "lower", "upper")
-        
-        # cleanup term names
-        out <- cbind(clean_term_names(out[["factor"]], RHS), out[-1L])
-        
-        # fill in missing base levels with 0s
-        out <- merge(out[!out$feature %in% c("", "(Intercept)"),], 
-                          term_labels_df, 
-                          by = c("feature", "level"), all = TRUE)
-        out[["estimate"]][is.na(out[["estimate"]])] <- 0
         
         # label features and levels
         out[["feature"]] <- factor(out[["feature"]],
                                    levels = feature_order,
                                    labels = feature_labels[feature_order])
-        out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
-        out[["outcome"]] <- outcome
-        out[["statistic"]] <- "amce"
     }
     
     # return
     out <- out[c("outcome", "statistic", "feature", "level", "estimate", "std.error", "z", "p", "lower", "upper")]
+    out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
     out <- out[order(out$level),]
     rownames(out) <- seq_len(nrow(out))
     return(structure(out, class = c("cj_amce", "data.frame")))

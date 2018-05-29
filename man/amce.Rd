@@ -6,7 +6,7 @@
 \title{Tidy estimation of AMCEs}
 \usage{
 amce(data, formula, id = NULL, weights = NULL, constraints = NULL,
-  feature_order = NULL, feature_labels = NULL,
+  variables = NULL, feature_order = NULL, feature_labels = NULL,
   level_order = c("ascending", "descending"), alpha = 0.05, ...)
 
 amce_by_reference(data, formula, variable, ...)
@@ -19,6 +19,8 @@ amce_by_reference(data, formula, variable, ...)
 \item{id}{An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.}
 
 \item{weights}{An (optional) RHS formula specifying a variable holding survey weights.}
+
+\item{variables}{A character vector specifying the subset of RHS terms to estimate effects for. This is used internally during a recursive call, but can also be useful in speeding up estimation.}
 
 \item{feature_order}{An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.}
 
