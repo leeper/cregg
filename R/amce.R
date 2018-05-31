@@ -164,7 +164,7 @@ function(
     # then calculate constrained terms
     if (!is.null(constraints)) {
         ## for each constraint, we need to:
-        ## > figure out what estimated coefficients go with each of the two terms (using `get_terms_df()` to identify terms and `get_coef_summary()` to get a clean model summary)
+        ## > figure out what estimated coefficients go with each of the two terms (using `get_coef_df()` to identify terms and `get_coef_summary()` to get a clean model summary)
         ## > average effects of first constrained variable across levels of second variable
         ## > average effects of second constrained variable across levels of first variable
         ## > if we were to generalize this to higher-order constraints, the code would simply have to be made more complex
@@ -187,7 +187,7 @@ function(
                 wts <- c(nrow(to_average), rep(1, nrow(to_average) - 1L))
                 
                 # var-cov matrix of these estimates
-                this_varcov <- vcov(mod)[to_average[["_name"]], to_average[["_name"]]]
+                this_varcov <- vcov(mod)[to_average[["_coef"]], to_average[["_coef"]]]
                 
                 # calculate AMCE, giving uniform weight to features; and variance thereof
                 this_lin <- to_average[["Estimate"]] * wts
@@ -211,14 +211,14 @@ function(
                 return(averaged)
             }
             
-            terms_df <- get_terms_df(mod)
+            terms_df <- get_coef_df(mod)
             # calculate MEs for first variable, constraining second
             ## subset terms_df to terms with 'var1' and/or 'var2'
             terms_df1 <- terms_df[terms_df[[var1]] | terms_df[[var2]], , drop = FALSE]
             # add term levels to 'term_df1'
             terms_df1 <- identify_term_levels(terms_df1, data, base_var = var1, by_var = var2)
             ## merge terms_df with `coef_summary`
-            terms_df1 <- merge(coef_summary, terms_df1, by = "_name")
+            terms_df1 <- merge(coef_summary, terms_df1, by = "_coef")
             ## split merged object by 'var1' levels, excluding base level, calculating AMCE
             terms_df1 <- terms_df1[terms_df1[["_base_level"]] != levels(data[[var1]])[1L], , drop = FALSE]
             one_out1_list <- lapply(split(terms_df1, terms_df1[["_base_level"]], drop = TRUE), calculate_amce, feature = var1)
@@ -230,7 +230,7 @@ function(
             # add term levels to 'term_df1'
             terms_df2 <- identify_term_levels(terms_df2, data, base_var = var2, by_var = var1)
             ## merge terms_df with `coef_summary`
-            terms_df2 <- merge(coef_summary, terms_df2, by = "_name")
+            terms_df2 <- merge(coef_summary, terms_df2, by = "_coef")
             ## split merged object by 'var1' levels, excluding base level, calculating AMCE
             terms_df2 <- terms_df2[terms_df2[["_base_level"]] != levels(data[[var2]])[1L], , drop = FALSE]
             one_out2_list <- lapply(split(terms_df2, terms_df2[["_base_level"]], drop = TRUE), calculate_amce, feature = var2)

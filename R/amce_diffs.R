@@ -110,16 +110,16 @@ function(
     }
     
     # get model terms as rich data frame
-    terms_df <- get_terms_df(mod = mod)
+    terms_df <- get_coef_df(mod = mod)
     # keep only interactions between 'by_var'
-    terms_df <- terms_df[terms_df[[by_var]] & terms_df[["_interaction"]], , drop = FALSE]
+    terms_df <- terms_df[terms_df[[by_var]] & terms_df[["_order"]] != 1, , drop = FALSE]
     
     # NEED TO GENERALIZE TO GET THIS WORKING WITH CONSTRAINED DESIGNS
     
     # get coefficients as data frame (correct, if needed, for clustering)
     coef_summary <- get_coef_summary(mod = mod, data = data, id = id, alpha = alpha)
     # merge coef_df and coef_summary
-    coef_summary <- merge(coef_summary, terms_df, by = "_name")
+    coef_summary <- merge(coef_summary, terms_df, by = "_coef")
     
     coef_summary[["outcome"]] <- outcome
     coef_summary[["BY"]] <- coef_summary[["_by_level"]]
