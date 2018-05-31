@@ -5,22 +5,20 @@
 \alias{amce_by_reference}
 \title{Tidy estimation of AMCEs}
 \usage{
-amce(data, formula, id = NULL, weights = NULL, constraints = NULL,
-  variables = NULL, feature_order = NULL, feature_labels = NULL,
-  level_order = c("ascending", "descending"), alpha = 0.05, ...)
+amce(data, formula, id = NULL, weights = NULL, feature_order = NULL,
+  feature_labels = NULL, level_order = c("ascending", "descending"),
+  alpha = 0.05, ...)
 
 amce_by_reference(data, formula, variable, ...)
 }
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and its reported AMCE will be NA (for printing). Optionally, this can instead be an object of class \dQuote{survey.design} returned by \code{\link[survey]{svydesign}}.}
 
-\item{formula}{A formula specifying an AMCE model to be estimated. All variables should be factors.}
+\item{formula}{A formula specifying an AMCE model to be estimated. All variables should be factors. Two-way interactions can be specified to handle constraints between factors in the design. These are detected automatically. Higher-order constraints are not allowed.}
 
 \item{id}{An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.}
 
 \item{weights}{An (optional) RHS formula specifying a variable holding survey weights.}
-
-\item{variables}{A character vector specifying the subset of RHS terms to estimate effects for. This is used internally during a recursive call, but can also be useful in speeding up estimation.}
 
 \item{feature_order}{An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.}
 
@@ -33,8 +31,6 @@ amce_by_reference(data, formula, variable, ...)
 \item{\dots}{For \code{amce}: additional arguments to \code{\link[stats]{glm}} or \code{\link[survey]{svyglm}}, the latter being used if \code{weights} is non-NULL. For \code{amce_by_reference}: additional arguments passed to \code{amce}.}
 
 \item{variable}{An RHS formula containing a single factor variable from \code{formula}. This will be used by \code{amce_by_reference} to estimate AMCEs relative to each possible factor level as a reference category. If more than one RHS variables are specified, the first will be used.}
-
-\item{contraints}{Optionally, a list of RHS-only two-variable formulae specifying constraints between factors in \code{formula}, like \code{list(~x1 + x2, ~ x3 + x4)}. More complex constraints (three or more way) are not allowed.}
 }
 \value{
 A data frame

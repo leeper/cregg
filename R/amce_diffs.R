@@ -110,11 +110,11 @@ function(
     }
     
     # get model terms as rich data frame
-    terms_df <- get_terms_df(mod = mod, data = data, by_var = by_var)
-    # get contrasts
-    con <- contrasts(data[[by_var]])
-    # drop lowest level of '_by_level' to leave only differences
-    terms_df <- terms_df[!terms_df[["_by_level"]] == rownames(con)[1L], , drop = FALSE]
+    terms_df <- get_terms_df(mod = mod)
+    # keep only interactions between 'by_var'
+    terms_df <- terms_df[terms_df[[by_var]] & terms_df[["_interaction"]], , drop = FALSE]
+    
+    # NEED TO GENERALIZE TO GET THIS WORKING WITH CONSTRAINED DESIGNS
     
     # get coefficients as data frame (correct, if needed, for clustering)
     coef_summary <- get_coef_summary(mod = mod, data = data, id = id, alpha = alpha)

@@ -91,40 +91,14 @@ check_feature_order <- function(feature_order, RHS) {
     return(feature_order)
 }
 
-# function to figure out term levels of terms_df "_name" column
-## used in `get_terms_df()` (below; which is used within `amce_diffs()`)
-split_coef_name_by_term <- function(coefficient, term_label) {
-    # this strictly only works with two-way interactions
-    term_vec <- strsplit(term_label, ":")[[1L]]
-    if (length(term_vec) != 2L) {
-        return(rep(NA_character_, 2))
-    }
-    
-    ## extract level of term 1
-    # regular expression using positive lookbehind and positive lookahead on term names
-    m1 <- regexpr(paste0("(?<=", term_vec[1L], ").+(?=:", term_vec[2L], ")"), coefficient, perl = TRUE)
-    term1_level <- regmatches(coefficient, m1)
-    
-    ## extract level of term 2
-    m2 <- regexpr(paste0("(?<=:", term_vec[2L], ").+"), coefficient, perl = TRUE)
-    term2_level <- regmatches(coefficient, m2)
-    
-    out <- c(term1_level, term2_level)
-    names(out) <- c(term_vec)
-    out
-}
-
 # function to get model terms converted into data frame
-## used in `amce_diffs()`
-get_terms_df <- function(mod, data, by_var) {
+## used in `amce()` and `amce_diffs()`
+get_terms_df <- function(mod) {
     # extract coefficient names
     coefs <- coef(mod)
     
     # extract terms
     model_terms <- terms(mod)
-    if (any(attr(model_terms, "order")) > 2L) {
-        stop("Function behavior with higher-order interaction terms is undefined.")
-    }
     
     # is there an intercept?
     intercept <- if (attr(model_terms, "intercept") == 1L) TRUE else FALSE
@@ -142,6 +116,9 @@ get_terms_df <- function(mod, data, by_var) {
     # extract 'factor' attribute, which is a variable-by-term matrix
     model_factors <- attr(model_terms, "factors")
     
+    # extract `dataClasses` attribute
+    data_classes <- attr(model_terms, "dataClasses")
+    
     ## identify terms for each coefficient (using 'assign_vec' to extract)
     ## any column (a coef) with more than one non-zero entry mean involves two or more variables
     ## Note: it has to be non-zero because the matrix can contain 1s and 2s, which have different substantive meanings
@@ -156,20 +133,71 @@ get_terms_df <- function(mod, data, by_var) {
       # identify 'term' names
       "_term" = colnames(model_factors)[assign_vec],
       # identify interaction terms
-      "_order" = attr(model_terms, "order")[assign_vec],
-      # identify coefficients involving 'by_var'
-      "_by" = model_factors_df[[by_var]]
+      "_order" = attr(model_terms, "order")[assign_vec]
     )
-    # cleanup rownames
-    rownames(terms_df) <- seq_len(nrow(terms_df))
     # convenience step to identify interactions
     terms_df[["_interaction"]] <- terms_df[["_order"]] > 1L
+    # cbind() the logical indicating which column has which variables in it
+    terms_df <- cbind(terms_df, model_factors_df)
+    # cleanup rownames
+    rownames(terms_df) <- seq_len(nrow(terms_df))
     
-    # determine the variable that 'by_var' is interacted with
-    terms_df[["_base_var"]] <- NA_character_
-    base_term_list <- lapply(model_factors_df[setdiff(names(model_factors_df), by_var)], which)
-    for (i in seq_along(base_term_list)) {
-        terms_df[["_base_var"]][base_term_list[[i]]] <- names(base_term_list)[i]
+    # return
+    return(terms_df)
+}
+
+# function to figure out term levels of terms_df "_name" column
+## used in `get_terms_df()` (below; which is used within `amce_diffs()`)
+get_term_level_from_coef_name <- function(coefficient, term) {
+    coefficient <- as.character(coefficient)
+    term <- as.character(term)
+    
+    term_list <- strsplit(term, ":")
+    term_lengths <- lengths(term_list)
+    
+    # setup output
+    out <- rep(list(list()), length(term_list))
+    
+    # this strictly only works with one- and two-way interactions
+    for (i in which(term_lengths %in% 1:2)) {
+        
+        if (term_lengths[i] == 1L) {
+            # first order term
+            m1 <- regexpr(paste0("(?<=", term_list[[i]][1L], ").+"), coefficient[[i]], perl = TRUE)
+            out[[i]] <- regmatches(coefficient[[i]], m1)
+            names(out[[i]]) <- term_list[[i]][1L]
+            next
+        } else if (term_lengths[i] == 2L) {
+            # second order term
+            
+            ## extract level of term 1
+            # regular expression using positive lookbehind and positive lookahead on term names
+            m1 <- regexpr(paste0("(?<=", term_list[[i]][1L], ").+(?=:", term_list[[i]][2L], ")"), coefficient[[i]], perl = TRUE)
+            
+            ## extract level of term 2
+            m2 <- regexpr(paste0("(?<=:", term_list[[i]][2L], ").+"), coefficient[[i]], perl = TRUE)
+            
+            out[[i]] <- c(regmatches(coefficient[[i]], m1),
+                          regmatches(coefficient[[i]], m2))
+            names(out[[i]]) <- c(term_list[[i]][1L],
+                                 term_list[[i]][2L])
+        }
+        
+        # generalize to higher-order terms?
+        
+    }
+    
+    names(out) <- term
+    return(out)
+}
+
+
+# function to modify output of `get_terms_df()` to something that is constraint-specific
+## this is used in `amce()` on the subset of `terms_df` that contains 'base_var' and 'by_var' terms
+identify_term_levels <- function(terms_df, data, base_var, by_var) {
+    
+    if (any(terms_df[["_order"]] > 2L)) {
+        stop("Function behavior with higher-order interaction terms is undefined.")
     }
     
     # add factor levels for 'by_var' to 'terms_df'
@@ -177,35 +205,41 @@ get_terms_df <- function(mod, data, by_var) {
     terms_df[["_base_level"]] <- NA_character_
         
     # get contrasts
-    con <- contrasts(data[[by_var]])
+    base_var_first_level <- levels(factor(data[[base_var]]))[1L]
+    by_var_first_level <- levels(factor(data[[by_var]]))[1L]
     
-    # apply function to data
+    # get term levels from term labels and coefficient names
+    term_levels <- get_term_level_from_coef_name(terms_df[["_name"]], terms_df[["_term"]])
+    
+    # loop over rows, identify level of 'base_var' and 'by_var'
     for (i in seq_len(nrow(terms_df))) {
         # if first-order term, don't apply function instead figure out base and by level manually
         if (terms_df[["_order"]][i] == 1L) {
             if (terms_df[["_term"]][i] == by_var) {
-                # do nothing, because we'll just delete these rows later
-                terms_df[["_by_level"]][i] <- rownames(con)[1L]
+                # variable is first-order term for by variable
+                terms_df[["_base_level"]][i] <- base_var_first_level
+                terms_df[["_by_level"]][i] <- regmatches(terms_df[["_name"]][i], 
+                                                          regexpr(paste0("(?<=", terms_df[["_term"]][i], ").+"),
+                                                                  terms_df[["_name"]][i],
+                                                                  perl = TRUE))
             } else {
                 # variable is first-order term for base variable
-                terms_df[["_by_level"]][i] <- rownames(con)[1L]
+                terms_df[["_by_level"]][i] <- by_var_first_level
                 terms_df[["_base_level"]][i] <- regmatches(terms_df[["_name"]][i], 
                                                           regexpr(paste0("(?<=", terms_df[["_term"]][i], ").+"),
                                                                   terms_df[["_name"]][i],
                                                                   perl = TRUE))
             }
         } else {
-            # use utility function to split coefficient names
-            tmp <- split_coef_name_by_term(as.character(terms_df[["_name"]][i]), as.character(terms_df[["_term"]][i]))
-            terms_df[["_base_level"]][i] <- tmp[names(tmp) != by_var]
-            terms_df[["_by_level"]][i] <- paste0(tmp[names(tmp) != by_var], " - ", rownames(con)[1L])
+            # figure out base_var and by_var levels form `term_levels` list
+            terms_df[["_base_level"]][i] <- unname(term_levels[[i]][names(term_levels[[i]]) == base_var])
+            terms_df[["_by_level"]][i] <- unname(term_levels[[i]][names(term_levels[[i]]) == by_var])
         }
     }
     
     # return terms_df
     return(terms_df)
 }
-
 
 # function to convert model estimates (possibly corrected for clustering) into a data frame
 ## used in `amce_diffs()`

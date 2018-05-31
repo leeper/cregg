@@ -90,7 +90,7 @@ function(
     # calculate MMs, SEs, etc.
     out <- survey::svyby(~ OUTCOME, ~ Level, FUN = survey::svymean, design = svylong, na.rm = TRUE)
     out[["z"]] <- (out[["OUTCOME"]] - h0)/out[["se"]]
-    out[["p"]] <- 2*stats::pnorm(-out[["z"]])
+    out[["p"]] <- (2*stats::pnorm(-abs(out[["z"]])))
     out[["lower"]] <- out[["OUTCOME"]] - stats::qnorm((1-alpha) + (alpha/2)) * out[["se"]]
     out[["upper"]] <- out[["OUTCOME"]] + stats::qnorm((1-alpha) + (alpha/2)) * out[["se"]]
     names(out) <- c("level", "estimate", "std.error", "z", "p", "lower", "upper")
