@@ -5,7 +5,7 @@
 \alias{props}
 \title{Conjoint feature frequencies}
 \usage{
-freqs(data, formula, id, weights = NULL, feature_order = NULL,
+freqs(data, formula, id = NULL, weights = NULL, feature_order = NULL,
   feature_labels = NULL, level_order = c("ascending", "descending"), ...)
 
 props(data, formula, id, weights = NULL, margin = NULL, ...)

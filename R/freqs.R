@@ -33,7 +33,7 @@ freqs <-
 function(
   data,
   formula,
-  id,
+  id = NULL,
   weights = NULL,
   feature_order = NULL,
   feature_labels = NULL,
@@ -48,7 +48,11 @@ function(
     feature_order <- check_feature_order(feature_order, RHS)
     
     # get `id` as character string
-    idvar <- all.vars(update(id, 0 ~ . ))
+    if (!is.null(id)) {
+        idvar <- all.vars(update(id, 0 ~ . ))
+    } else {
+        idvar <- NULL
+    }
     
     # get `weights` as character string
     if (!is.null(weights)) {

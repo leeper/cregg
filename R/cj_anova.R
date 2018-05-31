@@ -22,9 +22,6 @@ function(
     formula_reduced <- formula
     formula_full <- update(formula, reformulate(paste0("(.) * ", by_vars)))
     
-    # get `id` as character string
-    #idvar <- all.vars(update(id, 0 ~ . ))
-    
     # estimate model
     if (inherits(data, "data.frame") && is.null(weights)) {
         svy_design <- NULL

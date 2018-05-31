@@ -35,9 +35,6 @@ function(
     # process feature_order argument
     feature_order <- check_feature_order(feature_order, RHS)
     
-    # get `id` as character string
-    idvar <- all.vars(update(id, 0 ~ . ))
-    
     # set level_order (within features) to ascending or descending
     level_order <- match.arg(level_order)
     

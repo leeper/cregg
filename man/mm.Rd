@@ -4,7 +4,7 @@
 \alias{mm}
 \title{Marginal Means}
 \usage{
-mm(data, formula, id, weights = NULL, feature_order = NULL,
+mm(data, formula, id = NULL, weights = NULL, feature_order = NULL,
   feature_labels = NULL, level_order = c("ascending", "descending"),
   h0 = 0, alpha = 0.05, ...)
 }
