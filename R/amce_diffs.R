@@ -108,26 +108,31 @@ function(
     
     # get model terms as rich data frame
     terms_df <- get_coef_metadata(mod = mod)
+    
     # keep only interactions between 'by_var'
     terms_df <- terms_df[terms_df[[by_var]] & terms_df[["_order"]] != 1, , drop = FALSE]
     
-    # NEED TO GENERALIZE TO GET THIS WORKING WITH CONSTRAINED DESIGNS
-    
-    # get coefficients as data frame (correct, if needed, for clustering)
-    coef_summary <- get_coef_summary(mod = mod, data = data, id = id, alpha = alpha)
-    # merge coef_df and coef_summary
-    coef_summary <- merge(coef_summary, terms_df, by = "_coef")
-    
-    coef_summary[["outcome"]] <- outcome
-    coef_summary[["BY"]] <- coef_summary[["_by_level"]]
-    coef_summary[["statistic"]] <- "amce_difference"
+    # if the design is not constrained, then differences are simply interaction terms:
+    if (all(terms_df[["_order"]] == 2L)) {
+        # get coefficients as data frame (correct, if needed, for clustering)
+        coef_summary <- get_coef_summary(mod = mod, data = data, id = id, alpha = alpha)
+        # merge coef_df and coef_summary
+        coef_summary <- merge(coef_summary, terms_df, by = "_coef")
+        
+        coef_summary[["outcome"]] <- outcome
+        coef_summary[["BY"]] <- coef_summary[[paste0("_level_", by_var)]]
+        coef_summary[["statistic"]] <- "amce_difference"
+    } else {
+        stop("amce_diffs() currently does not support constrained designs")
+    }
     
     # return
-    out <- structure(coef_summary[, c("BY", "outcome", "statistic", "_base_var", "_base_level", "_by_level", names(coef_summary)[c(2:7)])],
-                     names = c("BY", "outcome", "statistic", "feature", "level", by_var, "estimate", "std.error", "z", "p", "lower", "upper"),
+    ## NEED TO RESTORE 'feature' & 'level' columns
+    out <- structure(coef_summary[, c("BY", "outcome", "statistic", paste0("_level_", by_var), names(coef_summary)[c(2:7)])],
+                     names = c("BY", "outcome", "statistic", by_var, "estimate", "std.error", "z", "p", "lower", "upper"),
                      by = by_var,
                      class = c("cj_diffs", "data.frame"))
-    out[["feature"]] <- factor(out[["feature"]], levels = feature_order, labels = feature_labels[feature_order])
-    out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
+    #out[["feature"]] <- factor(out[["feature"]], levels = feature_order, labels = feature_labels[feature_order])
+    #out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
     return(out)
 }
