@@ -1,6 +1,6 @@
 # function to get model terms converted into data frame where rows are coefficients and columns explain those coefficients
 ## used in `amce()` and `amce_diffs()`
-get_coef_df <- function(mod, data = model.frame(mod)) {
+get_coef_metadata <- function(mod, data = model.frame(mod)) {
     # extract coefficient names
     coefs <- coef(mod)
     
@@ -74,7 +74,7 @@ get_coef_df <- function(mod, data = model.frame(mod)) {
 }
 
 # function to figure out term levels of terms_df "_coef" column
-## used in `get_coef_df()` (below; which is used within `amce_diffs()`)
+## used in `get_coef_metadata()` (below; which is used within `amce_diffs()`)
 get_term_level_from_coef_name <- function(coefficient, term) {
     # ensure we're working with character vectors
     coefficient <- as.character(coefficient)

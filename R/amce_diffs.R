@@ -107,7 +107,7 @@ function(
     }
     
     # get model terms as rich data frame
-    terms_df <- get_coef_df(mod = mod)
+    terms_df <- get_coef_metadata(mod = mod)
     # keep only interactions between 'by_var'
     terms_df <- terms_df[terms_df[[by_var]] & terms_df[["_order"]] != 1, , drop = FALSE]
     

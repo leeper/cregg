@@ -39,8 +39,8 @@ test_that("mm_diffs() returns correct differences", {
     est <- mm_diffs(dat, y ~ x1 + x2, id = ~ id, by = ~ group)
     expect_true(all(c("BY", "outcome", "statistic", "feature", "level", "estimate", "std.error", "lower", "upper", "group") %in% names(est)),
                 label = "mm_diffs() returns correct column names")
-    expect_true(all(est$group == "High - Low"),
-                label = "mm_diffs() returns correct number of estimates")
+    expect_true(all(est$group == "High") & all(est$BY == "High - Low"),
+                label = "mm_diffs() returns correct comparisons")
     expect_true(identical(nrow(est), 6L),
                 label = "mm_diffs() returns correct number of estimates")
     expect_true(all(est$level %in% c(levels(dat$x1), levels(dat$x2))),

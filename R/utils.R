@@ -91,7 +91,7 @@ check_feature_order <- function(feature_order, RHS) {
     return(feature_order)
 }
 
-# function to modify output of `get_coef_df()` to something that is constraint-specific
+# function to modify output of `get_coef_metadata()` to something that is constraint-specific
 ## this is used in `amce()` on the subset of `terms_df` that contains 'base_var' and 'by_var' terms
 identify_term_levels <- function(terms_df, data, base_var, by_var) {
     
@@ -138,61 +138,4 @@ identify_term_levels <- function(terms_df, data, base_var, by_var) {
     
     # return terms_df
     return(terms_df)
-}
-
-# function to convert model estimates (possibly corrected for clustering) into a data frame
-## used in `amce_diffs()`
-get_coef_summary <- function(mod, data, id = NULL, alpha = 0.05) {
-    
-    # is there an intercept?
-    intercept <- if (attr(terms(mod), "intercept") == 1L) TRUE else FALSE
-    
-    # setup standard errors and create `coef_summary`
-    if (is.null(id) || !length(all.vars(id))) {
-        # get `coef_summary` matrix
-        coef_summary <- unclass(lmtest::coeftest(mod))
-        
-        # calculate confidence intervals
-        confints <- confint(mod, level = 1-alpha)
-        colnames(confints) <- c("lower", "upper")
-        coef_summary <- cbind(coef_summary, confints)
-        
-    } else {
-        # get clustered var-cov matrix
-        if (inherits(data, "data.frame")) {
-            cluster_vector <- stats::get_all_vars(id, data)[[1L]]
-        } else if (inherits(data, "survey.design")) {
-            cluster_vector <- stats::get_all_vars(id, data[["variables"]])[[1L]]
-        }
-        vc <- sandwich::vcovCL(mod, cluster_vector)
-        
-        # get `coef_summary` matrix
-        coef_summary <- unclass(lmtest::coeftest(mod, vc))
-        
-        # calculate confidence intervals
-        coef_summary <- cbind(coef_summary,
-                              "lower" = coef_summary[,"Estimate"] - stats::qnorm((1-alpha) + (alpha/2)) * coef_summary[, "Std. Error"],
-                              "upper" = coef_summary[,"Estimate"] + stats::qnorm((1-alpha) + (alpha/2)) * coef_summary[, "Std. Error"])
-    }
-    
-    # setup full coef summary (only includes subset of coefficients that are estimable)
-    estimate_summary <- summary(mod)
-    
-    # populate 'coef_summary' with non-estimable coefficients ("aliased")
-    if (any(aliased <- estimate_summary$aliased)) {
-        cn <- names(aliased)
-        coefs_tmp <- matrix(NA, length(aliased), 6, dimnames = list(cn, colnames(coef_summary)))
-        coefs_tmp[!aliased, ] <- coef_summary
-        coef_summary <- coefs_tmp
-        rm(coefs_tmp)
-    }
-    # drop intercept if present
-    if (intercept) {
-        coef_summary <- coef_summary[-1L, , drop = FALSE]
-    }
-    coef_summary <- as.data.frame(coef_summary)
-    coef_summary[["_coef"]] <- rownames(coef_summary)
-    rownames(coef_summary) <- seq_len(nrow(coef_summary))
-    
-    return(coef_summary)
 }

@@ -161,7 +161,7 @@ function(
     # then calculate constrained terms
     if (!is.null(constraints)) {
         ## for each constraint, we need to:
-        ## > figure out what estimated coefficients go with each of the two terms (using `get_coef_df()` to identify terms and `get_coef_summary()` to get a clean model summary)
+        ## > figure out what estimated coefficients go with each of the two terms (using `get_coef_metadata()` to identify terms and `get_coef_summary()` to get a clean model summary)
         ## > average effects of first constrained variable across levels of second variable
         ## > average effects of second constrained variable across levels of first variable
         ## > if we were to generalize this to higher-order constraints, the code would simply have to be made more complex
@@ -208,7 +208,7 @@ function(
                 return(averaged)
             }
             
-            terms_df <- get_coef_df(mod)
+            terms_df <- get_coef_metadata(mod)
             # calculate MEs for first variable, constraining second
             ## subset terms_df to terms with 'var1' and/or 'var2'
             terms_df1 <- terms_df[terms_df[[var1]] | terms_df[[var2]], , drop = FALSE]
