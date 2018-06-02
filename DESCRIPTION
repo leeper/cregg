@@ -6,7 +6,7 @@ Date: 2018-06-02
 Authors@R: c(person("Thomas J.", "Leeper", role = c("aut", "cre"),
                     email = "thosjleeper@gmail.com",
                     comment = c(ORCID = "0000-0003-4097-6326")))
-Description: Simple analyses of fully randomized conjoint (factorial) experiments, including estimation and visualization of average marginal component effects ('AMCEs') and marginal means ('MMs') for weighted and unweighted survey data, reference category diagnostics, and statistical tests.
+Description: Simple analyses of fully randomized conjoint (factorial) experiments, including estimation and visualization of average marginal component effects ('AMCEs') and marginal means ('MMs') for weighted and un-weighted survey data, reference category diagnostics, and statistical tests.
 License: MIT + file LICENSE
 URL: https://github.com/leeper/cregg
 BugReports: https://github.com/leeper/cregg/issues

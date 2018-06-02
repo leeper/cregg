@@ -9,11 +9,11 @@
 ^README_files/.+$
 ^CONTRIBUTING\.md$
 ^inst/standarderrors\.pdf$
-^figure$
-^figure/.+$
 ^cache/.+$
 ^docs$
 ^docs/.+$
+^figure$
+^figure/.+$
 ^ignore$
 ^man-roxygen$
 ^inst/doc/.+\.log$

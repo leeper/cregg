@@ -1,4 +1,10 @@
-# Simple Conjoint Analyses and Visualization
+---
+title: "Simple Conjoint Analyses and Visualization"
+author: "Thomas J. Leeper"
+output:
+  md_document:
+    variant: markdown_github
+---
 
 **cregg** is a package for analyzing and visualizing the results of conjoint ("cj") factorial experiments using methods described by Hainmueller, Hopkins, and Yamamoto (2014). It provides functionality that is useful for analyzing and otherwise examining conjoint experimental data through a main function - `cj()` - that simply wraps around a number of analytic tools:
 
@@ -55,7 +61,7 @@ f1 <- ChosenImmigrant ~ Gender + Education + LanguageSkills + CountryOfOrigin + 
 plot(mm(immigration, f1, id = ~CaseID), vline = 0.5)
 ```
 
-![plot of chunk mmplot](figure/mmplot-1.png)
+![plot of chunk mmplot](https://i.imgur.com/kMoHlnK.png)
 
 cregg functions uses `attr(data$feature, "label")` to provide pretty printing of feature labels, so that variable names can be arbitrary. These can be overwritten using the `feature_labels` argument to override these settings. Feature levels are always deduced from the `levels()` of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in `feature_order`.
 
@@ -100,7 +106,7 @@ This makes it very easy to modify, combine, print, etc. the resulting output. It
 plot(amces)
 ```
 
-![plot of chunk plot_amce](figure/plot_amce-1.png)
+![plot of chunk plot_amce](https://i.imgur.com/njIoF90.png)
 
 To provide simple subgroup analyses, the `cj()` function provides a `by` argument to iterate over subsets of `data` and calculate AMCEs or MMs on each subgroup. For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:
 
@@ -110,7 +116,7 @@ mm_by <- cj(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills, 
 plot(mm_by, group = "contest_no", vline = 0.5)
 ```
 
-![plot of chunk mm_by](figure/mm_by-1.png)
+![plot of chunk mm_by](https://i.imgur.com/npkTkaH.png)
 
 A more formal test of these differences is provided by a nested model comparison test:
 

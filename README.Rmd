@@ -1,4 +1,10 @@
-# Simple Conjoint Analyses and Visualization
+---
+title: "Simple Conjoint Analyses and Visualization"
+author: "Thomas J. Leeper"
+output:
+  md_document:
+    variant: markdown_github
+---
 
 **cregg** is a package for analyzing and visualizing the results of conjoint ("cj") factorial experiments using methods described by Hainmueller, Hopkins, and Yamamoto (2014). It provides functionality that is useful for analyzing and otherwise examining conjoint experimental data through a main function - `cj()` - that simply wraps around a number of analytic tools:
 
@@ -36,6 +42,7 @@ The package, whose primary point of contact is `cj()`, takes its name from the s
 
 ```{r opts, echo=FALSE}
 options(width = 120)
+knitr::opts_knit$set(upload.fun = knitr::imgur_upload, base.url = NULL)
 knitr::opts_chunk$set(comment = "", warning = FALSE, message = FALSE, echo = TRUE, tidy = TRUE, size="small", fig.width = 10, fig.height = 10)
 ```
 
