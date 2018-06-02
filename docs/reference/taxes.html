@@ -30,7 +30,7 @@
 
 <meta property="og:title" content="Tax Preference Conjoint Experiment Dataset from Ballard-Rosa et al. (2016) — taxes" />
 
-<meta property="og:description" content="A dataset containing the results of a conjoint survey of a representative sample of 2000 American adults who were asked to choose between alternative tax rate policies. Variables taxrate1-taxrate6 refer to tax rates for different income brackets and taxrev refers to levels of total tax revenue." />
+<meta property="og:description" content="A dataset containing the results of a fully randomized conjoint survey of a representative sample of 2000 American adults who were asked to choose between alternative tax rate policies. Variables taxrate1-taxrate6 refer to tax rates for different income brackets and taxrev refers to levels of total tax revenue." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.13</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.0</span>
       </span>
     </div>
 
@@ -116,7 +116,7 @@
 
     <div class="ref-description">
     
-    <p>A dataset containing the results of a conjoint survey of a representative sample of 2000 American adults who were asked to choose between alternative tax rate policies. Variables <samp>taxrate1</samp>-<samp>taxrate6</samp> refer to tax rates for different income brackets and <samp>taxrev</samp> refers to levels of total tax revenue.</p>
+    <p>A dataset containing the results of a fully randomized conjoint survey of a representative sample of 2000 American adults who were asked to choose between alternative tax rate policies. Variables <samp>taxrate1</samp>-<samp>taxrate6</samp> refer to tax rates for different income brackets and <samp>taxrev</samp> refers to levels of total tax revenue.</p>
     
     </div>
 
@@ -154,7 +154,7 @@
 <span class='fu'>data</span>(<span class='st'>"taxes"</span>)
 <span class='no'>f1</span> <span class='kw'>&lt;-</span> <span class='no'>chose_plan</span> ~ <span class='no'>taxrate1</span> + <span class='no'>taxrate2</span> + <span class='no'>taxrate3</span> +
         <span class='no'>taxrate4</span> + <span class='no'>taxrate5</span> + <span class='no'>taxrate6</span> + <span class='no'>taxrev</span>
-<span class='fu'><a href='cregg.html'>cj</a></span>(<span class='no'>taxes</span>, <span class='no'>f1</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>ID</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='no'>weight</span>)
+<span class='fu'><a href='cregg.html'>cj</a></span>(<span class='no'>taxes</span>, <span class='no'>f1</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>ID</span>, <span class='kw'>weights</span> <span class='kw'>=</span> ~     <span class='no'>weight</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

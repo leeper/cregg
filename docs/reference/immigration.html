@@ -30,7 +30,7 @@
 
 <meta property="og:title" content="Immigration Conjoint Experiment Dataset from Hainmueller et. al. (2014) — immigration" />
 
-<meta property="og:description" content="A dataset containing the results of a conjoint survey of a representative sample of American adults who were asked to choose which hypothetical immigrants they think should be admitted into the United States. Each row corresponds to a single profile presented to the respondent." />
+<meta property="og:description" content="A dataset containing the results of a conjoint survey of a representative sample of American adults who were asked to choose which hypothetical immigrants they think should be admitted into the United States. Each row corresponds to a single profile presented to the respondent. The dataset results from a mostly full factorial design with restrictions on two combinations of features. (1) Profile immigrants from CountryOfOrigin &#8220;India&#8221;, &#8220;Germany&#8221;, &#8220;France&#8221;, &#8220;Mexico&#8221;, &#8220;Philippines&#8221;, and &#8220;Poland&#8221; could be paired only with ReasonForApplication &#8220;Seek better job&#8221; or &#8220;Reunite with family&#8221;; profiles from the remaining countries could be paired with any ReasonForApplication. (2) Profile immigrants with Job &#8220;Financial Analyst&#8221;, &#8220;Computer Programmer&#8221;, &#8220;Research Scientist&#8221;, or &#8220;Doctor&#8221; could not be paired with Education levels &#8220;No Formal&#8221;, &#8220;4th Grade&#8221;, &#8220;8th Grade&#8221;, or &#8220;High School&#8221;. All other features were fully randomized against all other features." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.13</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.0</span>
       </span>
     </div>
 
@@ -116,7 +116,7 @@
 
     <div class="ref-description">
     
-    <p>A dataset containing the results of a conjoint survey of a representative sample of American adults who were asked to choose which hypothetical immigrants they think should be admitted into the United States. Each row corresponds to a single profile presented to the respondent.</p>
+    <p>A dataset containing the results of a conjoint survey of a representative sample of American adults who were asked to choose which hypothetical immigrants they think should be admitted into the United States. Each row corresponds to a single profile presented to the respondent. The dataset results from a mostly full factorial design with restrictions on two combinations of features. (1) Profile immigrants from <samp>CountryOfOrigin</samp> &#8220;India&#8221;, &#8220;Germany&#8221;, &#8220;France&#8221;, &#8220;Mexico&#8221;, &#8220;Philippines&#8221;, and &#8220;Poland&#8221; could be paired only with <samp>ReasonForApplication</samp> &#8220;Seek better job&#8221; or &#8220;Reunite with family&#8221;; profiles from the remaining countries could be paired with any <samp>ReasonForApplication</samp>. (2) Profile immigrants with <samp>Job</samp> &#8220;Financial Analyst&#8221;, &#8220;Computer Programmer&#8221;, &#8220;Research Scientist&#8221;, or &#8220;Doctor&#8221; could not be paired with <samp>Education</samp> levels &#8220;No Formal&#8221;, &#8220;4th Grade&#8221;, &#8220;8th Grade&#8221;, or &#8220;High School&#8221;. All other features were fully randomized against all other features.</p>
     
     </div>
 
@@ -149,7 +149,7 @@
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>This is a modified version of the dataset available from the <a href='https://cran.r-project.org/package=cjoint'>cjoint</a> package.</p>
+    <p>This is a modified version of the <samp>hainmueller</samp> dataset available from the <a href='https://cran.r-project.org/package=cjoint'>cjoint</a> package.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -159,7 +159,17 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='fu'>data</span>(<span class='st'>"immigration"</span>)
-<span class='fu'><a href='cregg.html'>cj</a></span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
+
+<span class='co'># view constraints between features</span>
+<span class='fu'>subset</span>(<span class='fu'><a href='freqs.html'>props</a></span>(<span class='no'>immigration</span>, ~ <span class='no'>Job</span> + <span class='no'>Education</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>), <span class='no'>Proportion</span> <span class='kw'>==</span> <span class='fl'>0</span>)
+<span class='fu'>subset</span>(<span class='fu'><a href='freqs.html'>props</a></span>(<span class='no'>immigration</span>, ~ <span class='no'>ReasonForApplication</span> + <span class='no'>CountryOfOrigin</span>,
+             <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>), <span class='no'>Proportion</span> <span class='kw'>==</span> <span class='fl'>0</span>)
+
+<span class='co'># AMCEs with interactions for constraints</span>
+<span class='no'>f1</span> <span class='kw'>&lt;-</span> <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span> * <span class='no'>Job</span> +
+         <span class='no'>LanguageSkills</span> + <span class='no'>CountryOfOrigin</span> * <span class='no'>ReasonForApplication</span> +
+         <span class='no'>JobExperience</span> + <span class='no'>JobPlans</span> + <span class='no'>PriorEntry</span>
+<span class='fu'><a href='cregg.html'>cj</a></span>(<span class='no'>immigration</span>, <span class='no'>f1</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

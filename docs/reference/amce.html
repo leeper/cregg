@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.13</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.0</span>
       </span>
     </div>
 
@@ -135,7 +135,7 @@
     </tr>
     <tr>
       <th>formula</th>
-      <td><p>A formula specifying an AMCE model to be estimated. All variables should be factors.</p></td>
+      <td><p>A formula specifying an AMCE model to be estimated. All variables should be factors. Two-way interactions can be specified to handle constraints between factors in the design. These are detected automatically. Higher-order constraints are not allowed.</p></td>
     </tr>
     <tr>
       <th>id</th>
@@ -187,38 +187,114 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>immigration</span>)
+    <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='st'>"taxes"</span>)
 <span class='co'># estimating AMCEs</span>
-<span class='fu'>amce</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span> + <span class='no'>LanguageSkills</span>,
-     <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>, <span class='kw'>feature_order</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"LanguageSkills"</span>, <span class='st'>"Gender"</span>, <span class='st'>"Education"</span>))</div><div class='output co'>#&gt;            outcome statistic                feature                    level
-#&gt; 1  ChosenImmigrant      amce        Language Skills           Fluent English
-#&gt; 2  ChosenImmigrant      amce        Language Skills           Broken English
-#&gt; 3  ChosenImmigrant      amce        Language Skills Tried English but Unable
-#&gt; 4  ChosenImmigrant      amce        Language Skills         Used Interpreter
-#&gt; 5  ChosenImmigrant      amce                 Gender                   Female
-#&gt; 6  ChosenImmigrant      amce                 Gender                     Male
-#&gt; 7  ChosenImmigrant      amce Educational Attainment                No Formal
-#&gt; 8  ChosenImmigrant      amce Educational Attainment                4th Grade
-#&gt; 9  ChosenImmigrant      amce Educational Attainment                8th Grade
-#&gt; 10 ChosenImmigrant      amce Educational Attainment              High School
-#&gt; 11 ChosenImmigrant      amce Educational Attainment         Two-Year College
-#&gt; 12 ChosenImmigrant      amce Educational Attainment           College Degree
-#&gt; 13 ChosenImmigrant      amce Educational Attainment          Graduate Degree
-#&gt;       estimate   std.error          z            p        lower       upper
-#&gt; 1   0.00000000          NA         NA           NA           NA          NA
-#&gt; 2  -0.05933832 0.011803743  -5.027076 4.980141e-07 -0.082473226 -0.03620341
-#&gt; 3  -0.12746827 0.011855107 -10.752182 5.787623e-27 -0.150703848 -0.10423268
-#&gt; 4  -0.16199396 0.011996863 -13.503027 1.500807e-41 -0.185507378 -0.13848054
-#&gt; 5   0.00000000          NA         NA           NA           NA          NA
-#&gt; 6  -0.02726620 0.008355089  -3.263424 1.100748e-03 -0.043641869 -0.01089052
-#&gt; 7   0.00000000          NA         NA           NA           NA          NA
-#&gt; 8   0.03139746 0.015401407   2.038610 4.148899e-02  0.001211256  0.06158366
-#&gt; 9   0.05694292 0.015430629   3.690253 2.240315e-04  0.026699440  0.08718639
-#&gt; 10  0.11825338 0.015606298   7.577285 3.528603e-14  0.087665593  0.14884116
-#&gt; 11  0.17622493 0.015604750  11.293032 1.420507e-29  0.145640187  0.20680968
-#&gt; 12  0.19676219 0.015948173  12.337600 5.682440e-35  0.165504342  0.22802003
-#&gt; 13  0.19290717 0.015744658  12.252230 1.634391e-34  0.162048209  0.22376613</div><div class='input'>
+<span class='fu'>amce</span>(<span class='no'>taxes</span>, <span class='no'>chose_plan</span> ~ <span class='no'>taxrate1</span> + <span class='no'>taxrate2</span> + <span class='no'>taxrate3</span> +
+     <span class='no'>taxrate4</span> + <span class='no'>taxrate5</span> + <span class='no'>taxrate6</span> + <span class='no'>taxrev</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>ID</span>)</div><div class='output co'>#&gt;       outcome statistic                        feature         level
+#&gt; 1  chose_plan      amce          Tax rate for &lt;$10,000      &lt;10k: 0%
+#&gt; 2  chose_plan      amce          Tax rate for &lt;$10,000      &lt;10k: 5%
+#&gt; 3  chose_plan      amce          Tax rate for &lt;$10,000     &lt;10k: 15%
+#&gt; 4  chose_plan      amce          Tax rate for &lt;$10,000     &lt;10k: 25%
+#&gt; 5  chose_plan      amce   Tax rate for $10,000-$35,000    10-35k: 5%
+#&gt; 6  chose_plan      amce   Tax rate for $10,000-$35,000   10-35k: 15%
+#&gt; 7  chose_plan      amce   Tax rate for $10,000-$35,000   10-35k: 25%
+#&gt; 8  chose_plan      amce   Tax rate for $10,000-$35,000   10-35k: 35%
+#&gt; 9  chose_plan      amce   Tax rate for $25,000-$85,000    35-85k: 5%
+#&gt; 10 chose_plan      amce   Tax rate for $25,000-$85,000   35-85k: 15%
+#&gt; 11 chose_plan      amce   Tax rate for $25,000-$85,000   35-85k: 25%
+#&gt; 12 chose_plan      amce   Tax rate for $25,000-$85,000   35-85k: 35%
+#&gt; 13 chose_plan      amce  Tax rate for $85,000-$175,000   85-175k: 5%
+#&gt; 14 chose_plan      amce  Tax rate for $85,000-$175,000  85-175k: 15%
+#&gt; 15 chose_plan      amce  Tax rate for $85,000-$175,000  85-175k: 25%
+#&gt; 16 chose_plan      amce  Tax rate for $85,000-$175,000  85-175k: 35%
+#&gt; 17 chose_plan      amce Tax rate for $175,000-$375,000  175-375k: 5%
+#&gt; 18 chose_plan      amce Tax rate for $175,000-$375,000 175-375k: 15%
+#&gt; 19 chose_plan      amce Tax rate for $175,000-$375,000 175-375k: 25%
+#&gt; 20 chose_plan      amce Tax rate for $175,000-$375,000 175-375k: 35%
+#&gt; 21 chose_plan      amce Tax rate for $175,000-$375,000 175-375k: 45%
+#&gt; 22 chose_plan      amce         Tax rate for &gt;$375,000     &gt;375k: 5%
+#&gt; 23 chose_plan      amce         Tax rate for &gt;$375,000    &gt;375k: 15%
+#&gt; 24 chose_plan      amce         Tax rate for &gt;$375,000    &gt;375k: 25%
+#&gt; 25 chose_plan      amce         Tax rate for &gt;$375,000    &gt;375k: 35%
+#&gt; 26 chose_plan      amce         Tax rate for &gt;$375,000    &gt;375k: 45%
+#&gt; 27 chose_plan      amce         Tax rate for &gt;$375,000    &gt;375k: 55%
+#&gt; 28 chose_plan      amce                    Tax revenue          &lt;75%
+#&gt; 29 chose_plan      amce                    Tax revenue        75-95%
+#&gt; 30 chose_plan      amce                    Tax revenue       95-105%
+#&gt; 31 chose_plan      amce                    Tax revenue      105-125%
+#&gt; 32 chose_plan      amce                    Tax revenue         &gt;125%
+#&gt;         estimate   std.error            z            p        lower
+#&gt; 1   0.0000000000          NA           NA           NA           NA
+#&gt; 2  -0.0139987267 0.008367718  -1.67294431 9.433826e-02 -0.030399153
+#&gt; 3  -0.0897702241 0.009883554  -9.08278760 1.058290e-19 -0.109141634
+#&gt; 4  -0.2215066470 0.012497932 -17.72346405 2.763584e-70 -0.246002143
+#&gt; 5   0.0000000000          NA           NA           NA           NA
+#&gt; 6  -0.0161677383 0.010015769  -1.61422834 1.064779e-01 -0.035798285
+#&gt; 7  -0.0849079259 0.015824370  -5.36564325 8.066123e-08 -0.115923122
+#&gt; 8  -0.1868125806 0.021074682  -8.86431331 7.697701e-19 -0.228118198
+#&gt; 9   0.0000000000          NA           NA           NA           NA
+#&gt; 10  0.0005356495 0.008242105   0.06498941 9.481824e-01 -0.015618579
+#&gt; 11 -0.0533364485 0.009713809  -5.49078620 4.001485e-08 -0.072375164
+#&gt; 12 -0.1083416179 0.011917151  -9.09123502 9.792035e-20 -0.131698804
+#&gt; 13  0.0000000000          NA           NA           NA           NA
+#&gt; 14  0.0194226595 0.007719126   2.51617354 1.186368e-02  0.004293451
+#&gt; 15  0.0108897506 0.008078966   1.34791393 1.776861e-01 -0.004944732
+#&gt; 16 -0.0015463277 0.008431674  -0.18339509 8.544880e-01 -0.018072106
+#&gt; 17  0.0000000000          NA           NA           NA           NA
+#&gt; 18  0.0384042184 0.008581007   4.47549088 7.623595e-06  0.021585754
+#&gt; 19  0.0504838117 0.008867028   5.69343070 1.245118e-08  0.033104755
+#&gt; 20  0.0716090284 0.009162901   7.81510419 5.491758e-15  0.053650072
+#&gt; 21  0.0441842455 0.009601062   4.60201624 4.184206e-06  0.025366509
+#&gt; 22  0.0000000000          NA           NA           NA           NA
+#&gt; 23  0.0729290882 0.009630408   7.57279301 3.652841e-14  0.054053835
+#&gt; 24  0.1023481041 0.010525057   9.72423245 2.376912e-22  0.081719371
+#&gt; 25  0.1342706760 0.011342675  11.83765516 2.493265e-32  0.112039441
+#&gt; 26  0.1456934759 0.012358893  11.78855405 4.471520e-32  0.121470491
+#&gt; 27  0.1190155301 0.013344593   8.91863335 4.720775e-19  0.092860609
+#&gt; 28  0.0000000000          NA           NA           NA           NA
+#&gt; 29  0.0155562019 0.011532459   1.34890584 1.773672e-01 -0.007047003
+#&gt; 30  0.0433356897 0.016694623   2.59578726 9.437448e-03  0.010614830
+#&gt; 31  0.0613870891 0.020195352   3.03966418 2.368421e-03  0.021804926
+#&gt; 32  0.0866358183 0.027742084   3.12290235 1.790772e-03  0.032262333
+#&gt;           upper
+#&gt; 1            NA
+#&gt; 2   0.002401700
+#&gt; 3  -0.070398814
+#&gt; 4  -0.197011151
+#&gt; 5            NA
+#&gt; 6   0.003462808
+#&gt; 7  -0.053892730
+#&gt; 8  -0.145506964
+#&gt; 9            NA
+#&gt; 10  0.016689878
+#&gt; 11 -0.034297733
+#&gt; 12 -0.084984432
+#&gt; 13           NA
+#&gt; 14  0.034551868
+#&gt; 15  0.026724233
+#&gt; 16  0.014979450
+#&gt; 17           NA
+#&gt; 18  0.055222683
+#&gt; 19  0.067862868
+#&gt; 20  0.089567985
+#&gt; 21  0.063001982
+#&gt; 22           NA
+#&gt; 23  0.091804341
+#&gt; 24  0.122976837
+#&gt; 25  0.156501911
+#&gt; 26  0.169916461
+#&gt; 27  0.145170451
+#&gt; 28           NA
+#&gt; 29  0.038159407
+#&gt; 30  0.076056550
+#&gt; 31  0.100969252
+#&gt; 32  0.141009303</div><div class='input'>
 </div># NOT RUN {
+data("immigration")
+# estimating AMCEs with constraints
+amce(immigration, ChosenImmigrant ~ Gender + ReasonForApplication * CountryOfOrigin,
+     id = ~CaseID, constraints = list(~ReasonForApplication + CountryOfOrigin))
+
 # balance testing example
 plot(amce(immigration[!is.na(immigration$ethnocentrism),
      ethnocentrism ~ Gender + Education + LanguageSkills, id = ~ CaseID))
@@ -228,7 +304,6 @@ x <- amce_by_reference(immigration, ChosenImmigrant ~ LanguageSkills + Education
        variable = ~ LanguageSkills, id = ~ CaseID)
 # plot
 plot(x, group = "BY")
-
 # }
 </pre>
   </div>

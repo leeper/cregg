@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.13</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.0</span>
       </span>
     </div>
 
@@ -251,10 +251,14 @@
 <span class='co'>## plot with facetting</span>
 <span class='fu'>plot</span>(<span class='no'>stacked</span>) + <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a></span>(~<span class='no'>contest_no</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>1L</span>)
 
-<span class='co'># estimate AMCEs</span>
-<span class='no'>d2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cregg.html'>cj</a></span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span> +
-         <span class='no'>LanguageSkills</span> + <span class='no'>CountryOfOrigin</span> + <span class='no'>Job</span> + <span class='no'>JobExperience</span> +
-         <span class='no'>JobPlans</span> + <span class='no'>ReasonForApplication</span> + <span class='no'>PriorEntry</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
+<span class='co'># estimate AMCEs over different subsets of data</span>
+<span class='no'>reasons12</span> <span class='kw'>&lt;-</span> <span class='fu'>subset</span>(<span class='no'>immigration</span>, <span class='no'>ReasonForApplication</span> <span class='kw'>%in%</span> <span class='fu'>levels</span>(<span class='no'>ReasonForApplication</span>)[<span class='fl'>1</span>:<span class='fl'>2</span>])
+<span class='no'>d2_1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cregg.html'>cj</a></span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>CountryOfOrigin</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
+<span class='no'>d2_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cregg.html'>cj</a></span>(<span class='no'>reasons12</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>CountryOfOrigin</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>,
+           <span class='kw'>feature_labels</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>CountryOfOrigin</span> <span class='kw'>=</span> <span class='st'>"Country Of Origin"</span>))
+<span class='no'>d2_1</span>$<span class='no'>reasons</span> <span class='kw'>&lt;-</span> <span class='st'>"1,2,3"</span>
+<span class='no'>d2_2</span>$<span class='no'>reasons</span> <span class='kw'>&lt;-</span> <span class='st'>"1,2"</span>
+<span class='fu'>plot</span>(<span class='fu'>rbind</span>(<span class='no'>d2_1</span>, <span class='no'>d2_2</span>), <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"reasons"</span>)
 
 <span class='co'># plot AMCEs</span>
 <span class='fu'>plot</span>(<span class='no'>d2</span>)

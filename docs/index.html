@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.13</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.0</span>
       </span>
     </div>
 
@@ -85,9 +85,9 @@
 <div id="simple-conjoint-analyses-and-visualization" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#simple-conjoint-analyses-and-visualization" class="anchor"></a>Simple Conjoint Analyses and Visualization</h1></div>
-<p><strong>cregg</strong> is a package for analyzing and visualizing the results of conjoint (“cj”) factorial experiments. It provides functionality that is useful for analyzing and otherwise examining conjoint experimental data:</p>
+<p><strong>cregg</strong> is a package for analyzing and visualizing the results of conjoint (“cj”) factorial experiments using methods described by Hainmueller, Hopkins, and Yamamoto (2014). It provides functionality that is useful for analyzing and otherwise examining conjoint experimental data through a main function - <code><a href="reference/cregg.html">cj()</a></code> - that simply wraps around a number of analytic tools:</p>
 <ul>
-<li>Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs and munging of AMCE estimates into tidy data frames, via <code><a href="reference/amce.html">amce()</a></code>
+<li>Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs (as well as designs involving an unlimited number of two-way constraints between features) and munging of AMCE estimates into tidy data frames, via <code><a href="reference/amce.html">amce()</a></code>
 </li>
 <li>Calculation of marginal means (MMs) for conjoint designs and munging them into tidy data frames via <code><a href="reference/mm.html">mm()</a></code>
 </li>
@@ -99,21 +99,35 @@
 <li>
 <strong>ggplot2</strong>-based visualizations of AMCEs and MMs, via <code>plot()</code> methods for all of the above</li>
 </ul>
-<p>The package takes its name from the surname of a famous White House Press Secretary.</p>
-<p>The main selling point of cregg is simplicity of implementation and - unlike the <a href="https://cran.r-project.org/package=cjoint">cjoint</a> package - cregg tries to follow tidy data principles throughout and provides a formula-based interface that meshes well with the underlying <a href="https://cran.r-project.org/package=survey"><strong>survey</strong></a>-based effect estimation API. Thus the response from any function is a tidy data frame that can easily be stacked with others (e.g., for computing AMCEs for subsets of respondents and then producing a facetted or grouped visualization). It also tries to take better advantage of data preprocessing steps by:</p>
+<p>To demonstrate package functionality, the package includes two example datasets:</p>
 <ul>
-<li>Using factor base levels rather than trying to set baseline levels atomically</li>
-<li>Using “label” attributes on variables to provide pretty printing</li>
+<li>
+<code>taxes</code>, a full randomized choice task conjoint experiment conducted by Ballard-Rosa et al. (2016)</li>
+<li>
+<code>immigration</code>, a partial factorial conjoint experiment with several restrictions between features conducted by Hainmueller, Hopkins, and Yamamoto (2014)</li>
 </ul>
-<p>Additionally all functions have arguments in data-formula order, making it simple to pipe into them via <code>%&gt;%</code>.</p>
-<p>A detailed website showcasing package functionality is available at: <a href="https://thomasleeper.com/cregg/" class="uri">https://thomasleeper.com/cregg/</a></p>
-<p>Contributions and feedback are welcome on <a href="https://github.com/leeper/cregg/issues">GitHub</a>.</p>
+<p>The design of cregg follows a few key princples:</p>
+<ul>
+<li>Following tidy data principles throughout, so that all of the main functions produce consistently structured, metadata-rich data frames. Thus the response from any function is a tidy data frame that can easily be stacked with others (e.g., for computing AMCEs for subsets of respondents) and then producing ggplot2 visualizations.</li>
+<li>A formula-based interface that meshes well with the underlying <a href="https://cran.r-project.org/package=survey"><strong>survey</strong></a>-based effect estimation API.</li>
+<li>A consistent interface for both unconstrained and two-way constrained designs that relies only on formula notation without any package-specific “design” specification. Conjoint designs involving two-way constraints between features are easily supported using simple formula notation: <code>Y ~ A + B + C</code> implies an unconstrained design, while <code>Y ~ A * B + C</code> implies a constraint between levels of features A and B. cregg figures out the constraints automatically without needing to further specify them explicitly.</li>
+</ul>
+<p>cregg also provides some sugar:</p>
+<ul>
+<li>Using “label” attributes on variables to provide pretty printing, with options to relabel features or plots on the fly</li>
+<li>Using factor base levels rather than trying to set baseline levels atomically</li>
+<li>A convenient API (via the <code><a href="reference/cregg.html">cj(..., by = ~ group)</a></code> idiom) for repeated, subgroup operations without the need for <code>lapply()</code> or <code>for</code> loops</li>
+<li>All functions have arguments in data-formula order, making it simple to pipe into them via the magrittr pipe (<code>%&gt;%</code>).</li>
+</ul>
+<p>A detailed website showcasing package functionality is available at: <a href="https://thomasleeper.com/cregg/" class="uri">https://thomasleeper.com/cregg/</a>. Contributions and feedback are welcome on <a href="https://github.com/leeper/cregg/issues">GitHub</a>.</p>
+<p>The package, whose primary point of contact is <code><a href="reference/cregg.html">cj()</a></code>, takes its name from the surname of a famous White House Press Secretary.</p>
 <div id="basic-code-examples" class="section level2">
 <h2 class="hasAnchor">
 <a href="#basic-code-examples" class="anchor"></a>Basic Code Examples</h2>
 <p>The package includes an example conjoint dataset (borrowed and lightly modified from the <a href="https://cran.r-project.org/package=cjoint">cjoint</a> package), which is used here and and in examples:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"cregg"</span>)
-<span class="kw">data</span>(<span class="st">"immigration"</span>)</code></pre></div>
+<span class="kw">data</span>(<span class="st">"immigration"</span>)
+<span class="kw">data</span>(<span class="st">"taxes"</span>)</code></pre></div>
 <p>The package provides straightforward calculation and visualization of descriptive marginal means (MMs). These represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, MMs can take any value in the full range of the outcome. Calculation of MMs entail no modelling assumptions are simply descriptive quantities of interest:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># descriptive plotting</span>
 f1 &lt;-<span class="st"> </span>ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills <span class="op">+</span><span class="st"> </span>CountryOfOrigin <span class="op">+</span><span class="st"> </span>Job <span class="op">+</span><span class="st"> </span>JobExperience <span class="op">+</span><span class="st"> </span>JobPlans <span class="op">+</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>
@@ -123,29 +137,29 @@ f1 &lt;-<span class="st"> </span>ChosenImmigrant <span class="op">~</span><span 
 <p>cregg functions uses <code>attr(data$feature, "label")</code> to provide pretty printing of feature labels, so that variable names can be arbitrary. These can be overwritten using the <code>feature_labels</code> argument to override these settings. Feature levels are always deduced from the <code>levels()</code> of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in <code>feature_order</code>.</p>
 <p>A more common analytic approach for conjoints is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses <code>glm()</code> and <code>svyglm()</code> to perform estimation and <a href="https://cran.r-project.org/package=margins">margins</a> to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. (No functionality is provided at the moment for explict estimation of feature interaction effects.) Just like for <code><a href="reference/mm.html">mm()</a></code>, the output of <code><a href="reference/cregg.html">cj()</a></code> (or its alias, <code><a href="reference/amce.html">amce()</a></code>) is a tidy data frame:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># estimation</span>
-amces &lt;-<span class="st"> </span><span class="kw"><a href="reference/cregg.html">cj</a></span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID)
+amces &lt;-<span class="st"> </span><span class="kw"><a href="reference/cregg.html">cj</a></span>(taxes, chose_plan <span class="op">~</span><span class="st"> </span>taxrate1 <span class="op">+</span><span class="st"> </span>taxrate2 <span class="op">+</span><span class="st"> </span>taxrate3 <span class="op">+</span><span class="st"> </span>taxrate4 <span class="op">+</span><span class="st"> </span>taxrate5 <span class="op">+</span><span class="st"> </span>taxrate6 <span class="op">+</span><span class="st"> </span>taxrev, <span class="dt">id =</span> <span class="op">~</span>ID)
 <span class="kw">head</span>(amces[<span class="kw">c</span>(<span class="st">"feature"</span>, <span class="st">"level"</span>, <span class="st">"estimate"</span>, <span class="st">"std.error"</span>)], 20L)</code></pre></div>
-<pre><code>                  feature                    level     estimate   std.error
-1                  Gender                   Female  0.000000000          NA
-2                  Gender                     Male -0.024978435 0.007983009
-3  Educational Attainment                No Formal  0.000000000          NA
-4  Educational Attainment                4th Grade  0.033367996 0.014971357
-5  Educational Attainment                8th Grade  0.057600734 0.015021063
-6  Educational Attainment              High School  0.119492095 0.015118761
-7  Educational Attainment         Two-Year College  0.154588453 0.015840268
-8  Educational Attainment           College Degree  0.180948898 0.016183493
-9  Educational Attainment          Graduate Degree  0.169440741 0.015809304
-10        Language Skills           Fluent English  0.000000000          NA
-11        Language Skills           Broken English -0.056822717 0.011265303
-12        Language Skills Tried English but Unable -0.127357585 0.011321142
-13        Language Skills         Used Interpreter -0.159808492 0.011553933
-14      Country of Origin                    India  0.000000000          NA
-15      Country of Origin                  Germany  0.047646243 0.016667948
-16      Country of Origin                   France  0.026564521 0.017327948
-17      Country of Origin                   Mexico  0.009818758 0.017530373
-18      Country of Origin              Philippines  0.034102011 0.017412416
-19      Country of Origin                   Poland  0.032666819 0.017640451
-20      Country of Origin                    China -0.020128816 0.017843819</code></pre>
+<pre><code>                          feature         level      estimate   std.error
+1           Tax rate for &lt;$10,000      &lt;10k: 0%  0.0000000000          NA
+2           Tax rate for &lt;$10,000      &lt;10k: 5% -0.0139987267 0.008367718
+3           Tax rate for &lt;$10,000     &lt;10k: 15% -0.0897702241 0.009883554
+4           Tax rate for &lt;$10,000     &lt;10k: 25% -0.2215066470 0.012497932
+5    Tax rate for $10,000-$35,000    10-35k: 5%  0.0000000000          NA
+6    Tax rate for $10,000-$35,000   10-35k: 15% -0.0161677383 0.010015769
+7    Tax rate for $10,000-$35,000   10-35k: 25% -0.0849079259 0.015824370
+8    Tax rate for $10,000-$35,000   10-35k: 35% -0.1868125806 0.021074682
+9    Tax rate for $25,000-$85,000    35-85k: 5%  0.0000000000          NA
+10   Tax rate for $25,000-$85,000   35-85k: 15%  0.0005356495 0.008242105
+11   Tax rate for $25,000-$85,000   35-85k: 25% -0.0533364485 0.009713809
+12   Tax rate for $25,000-$85,000   35-85k: 35% -0.1083416179 0.011917151
+13  Tax rate for $85,000-$175,000   85-175k: 5%  0.0000000000          NA
+14  Tax rate for $85,000-$175,000  85-175k: 15%  0.0194226595 0.007719126
+15  Tax rate for $85,000-$175,000  85-175k: 25%  0.0108897506 0.008078966
+16  Tax rate for $85,000-$175,000  85-175k: 35% -0.0015463277 0.008431674
+17 Tax rate for $175,000-$375,000  175-375k: 5%  0.0000000000          NA
+18 Tax rate for $175,000-$375,000 175-375k: 15%  0.0384042184 0.008581007
+19 Tax rate for $175,000-$375,000 175-375k: 25%  0.0504838117 0.008867028
+20 Tax rate for $175,000-$375,000 175-375k: 35%  0.0716090284 0.009162901</code></pre>
 <p>This makes it very easy to modify, combine, print, etc. the resulting output. It also makes it easy to visualize using ggplot2. A convenience visualization function is provided:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># plotting of AMCEs</span>
 <span class="kw">plot</span>(amces)</code></pre></div>
