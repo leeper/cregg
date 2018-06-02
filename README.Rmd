@@ -1,8 +1,8 @@
 # Simple Conjoint Analyses and Visualization
 
-**cregg** is a package for analyzing and visualizing the results of conjoint ("cj") factorial experiments using methods described by Hainmueller, Hopkins, and Yamamoto (2014). It provides functionality that is useful for analyzing and otherwise examining conjoint experimental data:
+**cregg** is a package for analyzing and visualizing the results of conjoint ("cj") factorial experiments using methods described by Hainmueller, Hopkins, and Yamamoto (2014). It provides functionality that is useful for analyzing and otherwise examining conjoint experimental data through a main function - `cj()` - that simply wraps around a number of analytic tools:
 
- - Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs and munging of AMCE estimates into tidy data frames, via `amce()`
+ - Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs (as well as designs involving an unlimited number of two-way constraints between features) and munging of AMCE estimates into tidy data frames, via `amce()`
  - Calculation of marginal means (MMs) for conjoint designs and munging them into tidy data frames via `mm()`
  - Tabulation of display frequencies of feature attributes via `freqs()` and cross-tabulation of feature restrictions using `props()`
  - Diagnostics to assess preference heterogeneity, including an omnibus statstical test (`cj_anova()`) and tidying of differences in MMs (`mm_diffs()`) and AMCEs (`amce_diffs()`) across subgroups
@@ -14,18 +14,22 @@ To demonstrate package functionality, the package includes two example datasets:
  - `taxes`, a full randomized choice task conjoint experiment conducted by Ballard-Rosa et al. (2016)
  - `immigration`, a partial factorial conjoint experiment with several restrictions between features conducted by Hainmueller, Hopkins, and Yamamoto (2014)
 
-The main selling point of cregg is simplicity of implementation and a consistent attempt to follow tidy data principles throughout. The package also provides a formula-based interface that meshes well with the underlying [**survey**](https://cran.r-project.org/package=survey)-based effect estimation API. Thus the response from any function is a tidy data frame that can easily be stacked with others (e.g., for computing AMCEs for subsets of respondents) and then producing ggplot2 visualizations.
+The design of cregg follows a few key princples:
 
-It also provides some sugar:
+ - Following tidy data principles throughout, so that all of the main functions produce consistently structured, metadata-rich data frames. Thus the response from any function is a tidy data frame that can easily be stacked with others (e.g., for computing AMCEs for subsets of respondents) and then producing ggplot2 visualizations. 
+ - A formula-based interface that meshes well with the underlying [**survey**](https://cran.r-project.org/package=survey)-based effect estimation API.
+ - A consistent interface for both unconstrained and two-way constrained designs that relies only on formula notation without any package-specific "design" specification. Conjoint designs involving two-way constraints between features are easily supported using simple formula notation: `Y ~ A + B + C` implies an unconstrained design, while `Y ~ A * B + C` implies a constraint between levels of features A and B. cregg figures out the constraints automatically without needing to further specify them explicitly.
 
+cregg also provides some sugar:
+
+ - Using "label" attributes on variables to provide pretty printing, with options to relabel features or plots on the fly
  - Using factor base levels rather than trying to set baseline levels atomically
- - Using "label" attributes on variables to provide pretty printing, with options to relabel features on the fly
- - A convenient API (via the `cj(..., by = ~ group)` statement) for repeated, subgroup operations without the need for `lapply()` or `for` loops
+ - A convenient API (via the `cj(..., by = ~ group)` idiom) for repeated, subgroup operations without the need for `lapply()` or `for` loops
  - All functions have arguments in data-formula order, making it simple to pipe into them via the magrittr pipe (`%>%`).
 
 A detailed website showcasing package functionality is available at: https://thomasleeper.com/cregg/. Contributions and feedback are welcome on [GitHub](https://github.com/leeper/cregg/issues).
 
-The package takes its name from the surname of a famous White House Press Secretary.
+The package, whose primary point of contact is `cj()`, takes its name from the surname of a famous White House Press Secretary.
 
 ## Basic Code Examples
 

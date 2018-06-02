@@ -17,21 +17,32 @@ vignette: >
 
 This vignette provides an introduction to **cregg** a package for analyzing and visualizing the results of conjoint experiments, which are factorial discrete choice experiments that are increasingly popular in the political and social sciences for studying decision making and preferences over multidimensional issues. cregg provides functionality that is useful for analyzing and otherwise examining data from these designs, namely:
 
- - Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs and munging of AMCE estimates into tidy data frames, via `amce()`
+ - Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs (as well as designs involving an unlimited number of two-way constraints between features) and munging of AMCE estimates into tidy data frames, via `amce()`
  - Calculation of marginal means (MMs) for conjoint designs and munging them into tidy data frames via `mm()`
  - Tabulation of display frequencies of feature attributes via `freqs()` and cross-tabulation of feature restrictions using `props()`
  - Diagnostics to assess preference heterogeneity, including an omnibus statstical test (`cj_anova()`) and tidying of differences in MMs (`mm_diffs()`) and AMCEs (`amce_diffs()`) across subgroups
  - Diagnostics to choose feature reference categories, via `amce_by_reference()`
  - **ggplot2**-based visualizations of AMCEs and MMs, via `plot()` methods for all of the above
 
-The package takes its name from the surname of a famous White House Press Secretary.
+To demonstrate package functionality, the package includes two example datasets:
 
-The main selling point of cregg is simplicity of implementation and - unlike the [cjoint](https://cran.r-project.org/package=cjoint) package - cregg tries to follow tidy data principles throughout and provides a formula-based interface that meshes well with the underlying [**survey**](https://cran.r-project.org/package=survey)-based effect estimation API. Thus the response from any function is a tidy data frame that can easily be stacked with others (e.g., for computing AMCEs for subsets of respondents and then producing a facetted or grouped visualization). It also tries to take better advantage of data preprocessing steps by:
+ - `taxes`, a full randomized choice task conjoint experiment conducted by Ballard-Rosa et al. (2016)
+ - `immigration`, a partial factorial conjoint experiment with several restrictions between features conducted by Hainmueller, Hopkins, and Yamamoto (2014)
 
+The design of cregg follows a few key princples:
+
+ - Following tidy data principles throughout, so that all of the main functions produce consistently structured, metadata-rich data frames. Thus the response from any function is a tidy data frame that can easily be stacked with others (e.g., for computing AMCEs for subsets of respondents) and then producing ggplot2 visualizations. 
+ - A formula-based interface that meshes well with the underlying [**survey**](https://cran.r-project.org/package=survey)-based effect estimation API.
+ - A consistent interface for both unconstrained and two-way constrained designs that relies only on formula notation without any package-specific "design" specification. Conjoint designs involving two-way constraints between features are easily supported using simple formula notation: `Y ~ A + B + C` implies an unconstrained design, while `Y ~ A * B + C` implies a constraint between levels of features A and B. cregg figures out the constraints automatically without needing to further specify them explicitly.
+
+cregg also provides some sugar:
+
+ - Using "label" attributes on variables to provide pretty printing, with options to relabel features or plots on the fly
  - Using factor base levels rather than trying to set baseline levels atomically
- - Using "label" attributes on variables to provide pretty printing
+ - A convenient API (via the `cj(..., by = ~ group)` idiom) for repeated, subgroup operations without the need for `lapply()` or `for` loops
+ - All functions have arguments in data-formula order, making it simple to pipe into them via the magrittr pipe (`%>%`).
 
-Additionally all functions have arguments in `data`-then-`formula` order, making it simple to pipe into them via `%>%`.
+The package, whose primary point of contact is `cj()`, takes its name from the surname of a famous White House Press Secretary.
 
 Contributions and feedback are welcome on [GitHub](https://github.com/leeper/cregg/issues).
 
@@ -56,9 +67,9 @@ The package provides straightforward calculation and visualization of descriptiv
 
 ```{r mmplot}
 # descriptive plotting
-f1 <- ChosenImmigrant ~ Gender + Education + LanguageSkills + 
-       CountryOfOrigin + Job + JobExperience + JobPlans + 
-       ReasonForApplication + PriorEntry
+f1 <- ChosenImmigrant ~ Gender + LanguageSkills + PriorEntry +
+       Education * Job + CountryOfOrigin * ReasonForApplication +
+       JobExperience + JobPlans
 plot(mm(immigration, f1, id = ~ CaseID), vline = 0.5)
 ```
 
@@ -66,7 +77,7 @@ cregg functions uses `attr(data$feature, "label")` to provide pretty printing of
 
 ### Marginal Effects
 
-A more common analytic approach for conjoints is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses `glm()` and `svyglm()` to perform estimation and [margins](https://cran.r-project.org/package=margins) to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. (No functionality is provided at the moment for explict estimation of feature interaction effects.) Just like for `mm()`, the output of `cj()` (or its alias, `amce()`) is a tidy data frame:
+A more common analytic approach for conjoints is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses `glm()` and `svyglm()` to perform estimation and [margins](https://cran.r-project.org/package=margins) to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. Any terms that linked by a `*` in the formula are treated as design constraints and AMCEs are estimated cognizant of these constraints; only two-way interactions are supported, however. Just like for `mm()`, the output of `cj()` (or its alias, `amce()`) is a tidy data frame:
 
 ```{r amce}
 # estimation

@@ -1,3 +1,9 @@
+# cregg 0.2.0
+
+* First stable release.
+* Completed functionality of `amce_diffs()`, limiting it to work with unconstrained designs. (#6)
+* Added tests for accuracy of AMCEs in constrained and unconstrained designs.
+
 # cregg 0.1.14
 
 * Added support for constrained designs (when two-way constraints are present). (#6)

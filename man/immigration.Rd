@@ -44,8 +44,11 @@ subset(props(immigration, ~ Job + Education, id = ~ CaseID), Proportion == 0)
 subset(props(immigration, ~ ReasonForApplication + CountryOfOrigin, 
              id = ~ CaseID), Proportion == 0)
 
-# AMCEs for subset of fully randomized features
-cj(immigration, ChosenImmigrant ~ Gender + LanguageSkills, id = ~ CaseID)
+# AMCEs with interactions for constraints
+f1 <- ChosenImmigrant ~ Gender + Education * Job +
+         LanguageSkills + CountryOfOrigin * ReasonForApplication + 
+         JobExperience + JobPlans + PriorEntry
+cj(immigration, f1, id = ~ CaseID)
 }
 }
 \seealso{
