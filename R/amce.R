@@ -164,7 +164,7 @@ function(
         ## > figure out what estimated coefficients go with each of the two terms (using `get_coef_metadata()` to identify terms and `get_coef_summary()` to get a clean model summary)
         ## > average effects of first constrained variable across levels of second variable
         ## > average effects of second constrained variable across levels of first variable
-        ## > if we were to generalize this to higher-order constraints, the code would simply have to be made more complex
+        ##     > if we were to generalize this to higher-order constraints, the code would simply have to be made more complex
         ## > `rbind()` the two sets of results back together
         constrained_amces <- lapply(constraints, function(one) {
             # identify variables
@@ -180,16 +180,15 @@ function(
                 # make sure estimates are sorted in correct order
                 to_average <- to_average[order(to_average[["_order"]]),]
                 
-                # calculate weights, giving uniform weight to features
-                wts <- c(nrow(to_average), rep(1, nrow(to_average) - 1L))
-                
                 # var-cov matrix of these estimates
                 this_varcov <- vcov(mod)[to_average[["_coef"]], to_average[["_coef"]]]
                 
-                # calculate AMCE, giving uniform weight to features; and variance thereof
-                this_lin <- to_average[["Estimate"]] * wts
-                est <- mean(this_lin)
-                variance <- (this_lin %*% this_varcov %*% this_lin)[1L,1L,drop = TRUE]
+                # calculate AMCE, giving uniform weight to features
+                ## calculate weights (base term is weighted 1; other alters equally)
+                wts <- c(1L, rep(1L/nrow(to_average), nrow(to_average) - 1L))
+                est <- sum(to_average[["Estimate"]] * wts)
+                ## variance is weights %*% vcov %*% weights
+                variance <- (wts %*% this_varcov %*% wts)[1L,1L,drop = TRUE]
                 
                 # populate output
                 averaged <- data.frame(outcome = outcome,

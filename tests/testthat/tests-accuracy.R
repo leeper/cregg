@@ -53,7 +53,7 @@ test_that("mm_diffs() returns correct differences", {
                 label = "mm_diffs() returns correct differences")
 })
 
-test_that("amce() returns correct marginal effects", {
+test_that("amce() returns correct marginal effects for unconstrained designs", {
     reg <- glm(y~x1+x2, data = dat)
     est <- amce(dat, y ~ x1 + x2, id = ~ id)
     expect_true(all(c("outcome", "statistic", "feature", "level", "estimate", "std.error", "lower", "upper") %in% names(est)),
@@ -66,6 +66,11 @@ test_that("amce() returns correct marginal effects", {
                 label = "amce() returns correct outcome label")
     expect_true(all(est$feature %in% c("x1", "x2")),
                 label = "amce() returns correct feature names")
+    expect_true(all.equal(est$estimate,
+                          unname(c(0, coef(reg)["x1B"], coef(reg)["x1C"], 0, coef(reg)["x2E"], coef(reg)["x2F"])),
+                          tolerance = tol),
+                label = "amce() returns correct effects for unconstrained design")
+    ## should probably have a test of variances
     expect_true(all.equal(est$estimate, 
                          c(0, 
                            est[est$feature == "x1" & est$level == "B", "estimate"],
@@ -74,7 +79,42 @@ test_that("amce() returns correct marginal effects", {
                            est[est$feature == "x2" & est$level == "E", "estimate"],
                            est[est$feature == "x2" & est$level == "F", "estimate"]
                          ), tolerance = tol),
-                label = "amce() returns correct marginal effects")
+                label = "amce() returns effects in correct order")
+})
+
+test_that("amce() returns correct marginal effects for constrained designs", {
+    reg <- glm(y~x1*x2, data = subset(dat, !(x1 == "C" & x2 == "F")))
+    reg_coef <- coef(reg)
+    est <- amce(subset(dat, !(x1 == "C" & x2 == "F")), y ~ x1 * x2, id = ~ id)
+    expect_true(all(c("outcome", "statistic", "feature", "level", "estimate", "std.error", "lower", "upper") %in% names(est)),
+                label = "amce() returns correct column names")
+    expect_true(identical(nrow(est), 6L),
+                label = "amce() returns correct number of estimates")
+    expect_true(all(est$level %in% c(levels(dat$x1), levels(dat$x2))),
+                label = "amce() returns correct levels of factors")
+    expect_true(all(est$outcome == "y"),
+                label = "amce() returns correct outcome label")
+    expect_true(all(est$feature %in% c("x1", "x2")),
+                label = "amce() returns correct feature names")
+    expect_true(all.equal(est$estimate,
+                          c(0,
+                            mean(c(reg_coef["x1B"], reg_coef["x1B"] + reg_coef["x1B:x2E"], reg_coef["x1B"] + reg_coef["x1B:x2F"])),
+                            mean(c(reg_coef["x1C"], reg_coef["x1C"] + reg_coef["x1C:x2E"])),
+                            0,
+                            mean(c(reg_coef["x2E"], reg_coef["x2E"] + reg_coef["x1B:x2E"], reg_coef["x2E"] + reg_coef["x1C:x2E"])),
+                            mean(c(reg_coef["x2F"], reg_coef["x2F"] + reg_coef["x1B:x2F"]))),
+                          tolerance = tol),
+                label = "amce() returns correct effects for constrained design")
+    ## should probably have a test of variances
+    expect_true(all.equal(est$estimate, 
+                         c(0, 
+                           est[est$feature == "x1" & est$level == "B", "estimate"],
+                           est[est$feature == "x1" & est$level == "C", "estimate"],
+                           0, 
+                           est[est$feature == "x2" & est$level == "E", "estimate"],
+                           est[est$feature == "x2" & est$level == "F", "estimate"]
+                         ), tolerance = tol),
+                label = "amce() returns effects in correct order")
 })
 
 test_that("cj() by group returns correct marginal effects", {
@@ -116,7 +156,7 @@ test_that("amce_diffs() returns correct differences", {
                 label = "amce_diffs() returns correct outcome label")
     expect_true(all(est$feature %in% c("x1", "x2")),
                 label = "amce_diffs() returns correct feature names")
-    expect_true(all(est$group == "High - Low"),
+    expect_true(all(est$group == "High"),
                 label = "amce_diffs() returns correct group labels")
     expect_true(all.equal(est$estimate,
                           (coef(reg_high) - coef(reg_low))[2:5],

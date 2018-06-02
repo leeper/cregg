@@ -51,6 +51,8 @@ Tests for preference heterogeneity in conjoint experiments
 \code{mm_diffs} provides a data frame of differences in marginal means (literally differencing the results from \code{\link{mm}} across levels of \code{by}. This provides the clearest direct measure of preference differences from a conjoint design. \code{by} must
 
 \code{amce_diffs} provides a data frame of differences in AMCEs (the coefficient on an interaction by each RHS factor and the variable in \code{by}). This provides an estimate of the difference in causal effects of each factor level relative to the baseline level (i.e., the difference in conditional AMCEs). This quantity is easily misinterpreted as the difference in preferences, which it is not. If preferences in the reference category differ across levels of \code{by}, the the difference in conditional AMCEs will have an unpredictable sign and significance. See \code{\link{amce_by_reference}} for a diagnostic.
+
+Note: \code{amce_diffs} does not work with constrained designs. To obtain such differences, subset the design by constraints and calculate differences within each subset.
 }
 \examples{
 data("immigration")
@@ -69,12 +71,15 @@ amce_diffs(immigration, ChosenImmigrant ~ LanguageSkills + Education, ~ Gender, 
 }
 
 # preferences differ for Male and Female immigrants with 'Broken English' ability
-mm_diffs(immigration, ChosenImmigrant ~ LanguageSkills, ~ Gender, id = ~ CaseID)
+(m1 <- mm_diffs(immigration, ChosenImmigrant ~ LanguageSkills, ~ Gender, id = ~ CaseID))
 
 # yet differences in conditional AMCEs  depend on the reference category
 amce_diffs(immigration, ChosenImmigrant ~ LanguageSkills, ~ Gender, id = ~ CaseID)
 immigration$LanguageSkills2 <- relevel(immigration$LanguageSkills, "Used Interpreter")
 amce_diffs(immigration, ChosenImmigrant ~ LanguageSkills2, ~ Gender, id = ~ CaseID)
+
+# while differences in MMs do not depend on the reference cateory
+(m2 <- mm_diffs(immigration, ChosenImmigrant ~ LanguageSkills2, ~ Gender, id = ~ CaseID))
 
 }
 \seealso{

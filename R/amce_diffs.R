@@ -22,6 +22,8 @@
 #' 
 #' \code{amce_diffs} provides a data frame of differences in AMCEs (the coefficient on an interaction by each RHS factor and the variable in \code{by}). This provides an estimate of the difference in causal effects of each factor level relative to the baseline level (i.e., the difference in conditional AMCEs). This quantity is easily misinterpreted as the difference in preferences, which it is not. If preferences in the reference category differ across levels of \code{by}, the the difference in conditional AMCEs will have an unpredictable sign and significance. See \code{\link{amce_by_reference}} for a diagnostic.
 #' 
+#' Note: \code{amce_diffs} does not work with constrained designs. To obtain such differences, subset the design by constraints and calculate differences within each subset.
+#' 
 #' @examples
 #' data("immigration")
 #' # Test for heterogeneity by profile order
@@ -39,13 +41,16 @@
 #' }
 #'
 #' # preferences differ for Male and Female immigrants with 'Broken English' ability
-#' mm_diffs(immigration, ChosenImmigrant ~ LanguageSkills, ~ Gender, id = ~ CaseID)
+#' (m1 <- mm_diffs(immigration, ChosenImmigrant ~ LanguageSkills, ~ Gender, id = ~ CaseID))
 #' 
 #' # yet differences in conditional AMCEs  depend on the reference category
 #' amce_diffs(immigration, ChosenImmigrant ~ LanguageSkills, ~ Gender, id = ~ CaseID)
 #' immigration$LanguageSkills2 <- relevel(immigration$LanguageSkills, "Used Interpreter")
 #' amce_diffs(immigration, ChosenImmigrant ~ LanguageSkills2, ~ Gender, id = ~ CaseID)
 #'
+#' # while differences in MMs do not depend on the reference cateory
+#' (m2 <- mm_diffs(immigration, ChosenImmigrant ~ LanguageSkills2, ~ Gender, id = ~ CaseID))
+#' 
 #' @seealso \code{\link{amce}} \code{\link{mm}} \code{\link{freqs}} \code{\link{plot.cj_amce}}
 #' @importFrom lmtest coeftest
 #' @export
@@ -109,30 +114,38 @@ function(
     # get model terms as rich data frame
     terms_df <- get_coef_metadata(mod = mod)
     
-    # keep only interactions between 'by_var'
-    terms_df <- terms_df[terms_df[[by_var]] & terms_df[["_order"]] != 1, , drop = FALSE]
-    
     # if the design is not constrained, then differences are simply interaction terms:
-    if (all(terms_df[["_order"]] == 2L)) {
+    if (all(terms_df[["_order"]] <= 2L)) {
+        # keep only interactions between 'by_var'
+        terms_df <- terms_df[terms_df[[by_var]] & terms_df[["_order"]] != 1, , drop = FALSE]
+        
         # get coefficients as data frame (correct, if needed, for clustering)
         coef_summary <- get_coef_summary(mod = mod, data = data, id = id, alpha = alpha)
         # merge coef_df and coef_summary
         coef_summary <- merge(coef_summary, terms_df, by = "_coef")
         
+        # add feature and level based upon named columns from `terms_df`
+        coef_summary[["feature"]] <- NA_character_
+        coef_summary[["level"]] <- NA_character_
+        for (i in seq_along(RHS)) {
+            coef_summary[["feature"]][coef_summary[[RHS[i]]]] <- RHS[i]
+            coef_summary[["level"]][coef_summary[[RHS[i]]]] <- coef_summary[[paste0("_level_", RHS[i])]][coef_summary[[RHS[i]]]]
+        }
+        
+        # add other metadata columns
         coef_summary[["outcome"]] <- outcome
-        coef_summary[["BY"]] <- coef_summary[[paste0("_level_", by_var)]]
+        coef_summary[["BY"]] <- paste0(coef_summary[[paste0("_level_", by_var)]], " - ", levels(data[[by_var]])[1L])
         coef_summary[["statistic"]] <- "amce_difference"
     } else {
         stop("amce_diffs() currently does not support constrained designs")
     }
     
     # return
-    ## NEED TO RESTORE 'feature' & 'level' columns
-    out <- structure(coef_summary[, c("BY", "outcome", "statistic", paste0("_level_", by_var), names(coef_summary)[c(2:7)])],
-                     names = c("BY", "outcome", "statistic", by_var, "estimate", "std.error", "z", "p", "lower", "upper"),
+    out <- structure(coef_summary[, c("BY", "outcome", "statistic", "feature", "level", paste0("_level_", by_var), names(coef_summary)[c(2:7)])],
+                     names = c("BY", "outcome", "statistic", "feature", "level", by_var, "estimate", "std.error", "z", "p", "lower", "upper"),
                      by = by_var,
                      class = c("cj_diffs", "data.frame"))
-    #out[["feature"]] <- factor(out[["feature"]], levels = feature_order, labels = feature_labels[feature_order])
-    #out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
+    out[["feature"]] <- factor(out[["feature"]], levels = feature_order, labels = feature_labels[feature_order])
+    out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
     return(out)
 }
