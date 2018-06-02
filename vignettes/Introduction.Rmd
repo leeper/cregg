@@ -105,7 +105,7 @@ plot(amce_diagnostic, group = "BY")
 
 While the reference category has no meaningful bearing on estimation, it can affect inferences especially when subgroups are compared. For this reason, it can be useful to assess the substantive inferences from difference reference categories alongside any subgroup analysis. To provide simple subgroup analyses, the `cj()` function provides a `by` argument to iterate over subsets of `data` and calculate AMCEs or MMs on each subgroup.
 
-### Subgroup Marignal Means
+### Subgroup Marginal Means
 
 For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:
 
