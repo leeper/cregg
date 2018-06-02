@@ -10,7 +10,7 @@ Description: Simple analyses of fully randomized conjoint (factorial) experiment
 License: MIT + file LICENSE
 URL: https://github.com/leeper/cregg
 BugReports: https://github.com/leeper/cregg/issues
-Depends: R (>= 2.10)
+Depends: R (>= 3.5.0)
 Imports:
     stats,
     sandwich (>= 2.4-0),
