@@ -68,9 +68,6 @@ A ggplot2 object
 \description{
 ggplot2-based plotting of conjoint AMCEs estimates and MMs
 }
-\details{
-Two \code{plot} methods are implemented: one for \dQuote{amce} data frames of conjoint AMCE estimates (returned by \code{\link{amce}}), and another for \dQuote{mm} data frames as returned by \code{\link{mm}}. Both functions are basically identical but vary slightly in their superficial features (axis labels, etc.).
-}
 \examples{
 \dontrun{
 # load data

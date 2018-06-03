@@ -16,7 +16,6 @@
 #' @param vline_color A character string specifying a color for the \code{vline}.
 #' @param theme A ggplot2 theme object
 #' @param \dots Ignored.
-#' @details Two \code{plot} methods are implemented: one for \dQuote{amce} data frames of conjoint AMCE estimates (returned by \code{\link{amce}}), and another for \dQuote{mm} data frames as returned by \code{\link{mm}}. Both functions are basically identical but vary slightly in their superficial features (axis labels, etc.).
 #' @return A ggplot2 object
 #' @examples
 #' \dontrun{

@@ -10,12 +10,17 @@ test_that("cj() works", {
     expect_true(inherits(x <- cj(immigration, ChosenImmigrant ~ LanguageSkills, estimate = "mm", id = ~ CaseID, by = ~ Gender), "cj_mm"),
                 label = "cj() works w/ 'by'")
     expect_true(inherits(plot(x, group = "BY"), "ggplot"), label = "plot.cj_amce() works w/ 'by' argument")
-    expect_true(!identical(cj(immigration, ChosenImmigrant ~ LanguageSkills, estimate = "mm", id = ~ CaseID, by = ~ Gender, level_order = "ascending")$level,
-                           cj(immigration, ChosenImmigrant ~ LanguageSkills, estimate = "mm", id = ~ CaseID, by = ~ Gender, level_order = "descending")$level),
+    expect_true(!identical(cj(immigration, ChosenImmigrant ~ LanguageSkills, estimate = "mm", id = ~ CaseID,
+                              by = ~ Gender, level_order = "ascending")$level,
+                           cj(immigration, ChosenImmigrant ~ LanguageSkills, estimate = "mm", id = ~ CaseID,
+                              by = ~ Gender, level_order = "descending")$level),
                 label = "cj() respects 'level_order'")
-    expect_true(identical(levels(cj(immigration, ChosenImmigrant ~ Education + Gender, id = ~CaseID, feature_order = c("Gender", "Education"), estimate = "mm")$feature),
+    expect_true(identical(levels(cj(immigration, ChosenImmigrant ~ Education + Gender, id = ~CaseID,
+                                    feature_order = c("Gender", "Education"), estimate = "mm")$feature),
                           c("Gender", "Educational Attainment")),
                 label = "cj() respects 'feature_order'")
+    
+    # expected errors
     expect_error(cj(immigration, ChosenImmigrant ~ Education + Gender, id = ~CaseID, feature_order = "Education", estimate = "mm"),
                    label = "cj() fails for missing feature names in 'feature_order'")
     expect_error(cj(immigration, ChosenImmigrant ~ Education + Gender, id = ~CaseID, feature_order = c("Education", "Gender", "foo"), estimate = "mm"),

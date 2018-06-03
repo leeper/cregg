@@ -5,21 +5,30 @@
 \alias{cj}
 \alias{cregg-package}
 \alias{cregg}
+\alias{cj}
 \title{Simple Conjoint Analyses and Visualization}
 \usage{
 cj(data, formula, id = NULL, weights = NULL, estimate = c("amce",
-  "frequencies", "mm", "amce_differences", "mm_differences"), by = NULL, ...)
+  "frequencies", "mm", "amce_differences", "mm_differences"),
+  feature_order = NULL, feature_labels = NULL,
+  level_order = c("ascending", "descending"), by = NULL, ...)
 }
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be zero. Optionally, this can instead be an object of class \dQuote{survey.design} returned by \code{\link[survey]{svydesign}}.}
 
-\item{formula}{A formula specifying a model to be estimated. All variables should be factors.}
+\item{formula}{A formula specifying a model to be estimated. All variables should be factors. For \code{estimate = "amce"} in a constrained conjoint design, two-way interactions can be specified to handle constraints between factors in the design. These are detected automatically. Higher-order constraints are not allowed and interactions are ignored for all other values of \code{estimate} as constraints are irrelevant to those statistics.}
 
 \item{id}{An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.}
 
 \item{weights}{An (optional) RHS formula specifying a variable holding survey weights.}
 
 \item{estimate}{A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, \dQuote{amce}, estimated via \code{\link{amce}}), display frequencies (\dQuote{frequncies}, estimated via \code{\link{freqs}}), marginal means (or AMMs, \dQuote{mm}, estimated via \code{\link{mm}}), differences in MMs (\dQuote{mm_differences}, via \code{\link{mm_diffs}}), or differences in AMCEs (\dQuote{amce_differences}, via \code{\link{amce_diffs}}). Additional options may be made available in the future. Non-ambiguous abbreviations are allowed.}
+
+\item{feature_order}{An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.}
+
+\item{feature_labels}{A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables on the righthand side of \code{formula} and character string values; arguments passed here override variable attributes.}
+
+\item{level_order}{A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via \code{\link{plot.cj_mm}}, etc.}
 
 \item{by}{A formula containing only RHS variables, specifying grouping factors over which to perform estimation.}
 
@@ -29,11 +38,11 @@ cj(data, formula, id = NULL, weights = NULL, estimate = c("amce",
 Simple analyses of conjoint (factorial) experiments and visualization of results.
 }
 \details{
-The main function \code{cj} is a convenience function wrapper around the underlying estimation functions that provide for average marginal component effects (AMCEs), by default, via the \code{\link{amce}} function, marginal means (MMs) via the \code{\link{mm}} function, and display frequencies via \code{\link{freqs}} and \code{\link{props}}. Additional estimands may be supported in the future through their own functions and through the \code{cj} interface. Plotting is provided via ggplot2 for both types of estimates.
+The main function \code{cj} is a convenience function wrapper around the underlying estimation functions that provide for average marginal component effects (AMCEs), by default, via the \code{\link{amce}} function, marginal means (MMs) via the \code{\link{mm}} function, and display frequencies via \code{\link{freqs}} and \code{\link{props}}. Additional estimands may be supported in the future through their own functions and through the \code{cj} interface. Plotting is provided via ggplot2 for all types of estimates.
 
-The only additional functionality provided by \code{cj} over the underlying functions is the \code{by} argument, which will perform operations on subsets of \code{data}, returning a single data frame. This can be useful, for example, for evaluating profile spillover effects and subgroup results.
+The only additional functionality provided by \code{cj} over the underlying functions is the \code{by} argument, which will perform operations on subsets of \code{data}, returning a single data frame. This can be useful, for example, for evaluating profile spillover effects and subgroup results, or in any situation where one might be inclined to use a \code{for} loop or \code{lapply}, calling \code{cj} repeatedly on subgroups.
 
-Note: cregg currently only works with full factorial conjoint experiments. Designs involving constraints between features may be supported in the future.
+Note: Some features of cregg (namely, the \code{\link{amce_diffs}}) function, or \code{estimate = "amce_diff"} here) only work with full factorial conjoint experiments. Designs involving two-way constraints between features are supported simply by expressing interactions between constrained terms in \code{formula} (again, except for \code{amce_diffs}). Higher-order constraints may be supported in the future.
 }
 \examples{
 \dontrun{

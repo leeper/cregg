@@ -7,6 +7,9 @@ function(
   id = NULL,
   weights = NULL,
   estimate = c("amce", "frequencies", "mm", "amce_differences", "mm_differences"),
+  feature_order = NULL,
+  feature_labels = NULL,
+  level_order = c("ascending", "descending"),
   by = NULL,
   ...
 ) {
@@ -14,8 +17,24 @@ function(
     
     if (!is.null(by)) {
         # get RHS variables, variable labels, and factor levels
+        RHS <- all.vars(stats::update(formula, 0 ~ . ))
+        
+        # get RHS variables, variable labels, and factor levels
         by_vars <- all.vars(stats::update(by, 0 ~ . ))
         
+        # process feature_order argument
+        feature_order <- check_feature_order(feature_order, RHS)
+        
+        # set level_order (within features) to ascending or descending
+        level_order <- match.arg(level_order)
+        
+        # function to produce "fancy" feature labels
+        ## we need to handle this here, otherwise `split()` will drop feature labels from variable attributes
+        feature_labels <- clean_feature_labels(data = data, RHS = RHS, feature_labels = feature_labels)
+        
+        # convert feature labels and levels to data frame
+        term_labels_df <- make_term_labels_df(data, feature_order, level_order = level_order)
+    
         # amce_diffs handles `by` internally
         if (estimate == "mm_differences") {
             return(mm_diffs(data = data, formula = formula, by = by, id = id, weights = weights, ...))
@@ -28,7 +47,8 @@ function(
         # get results for subsets
         BY <- list()
         for(i in seq_along(split_df)) {
-            BY[[i]] <- switch(estimate, amce = amce, freqs = freqs, mm = mm)(data = split_df[[i]], formula = formula, id = id, weights = weights, ...)
+            # execute function on subset of data
+            BY[[i]] <- switch(estimate, amce = amce, freq = freqs, mm = mm)(data = split_df[[i]], formula = formula, id = id, weights = weights, ...)
             BY[[i]][["BY"]] <- i
         }
         ## get names of subsets
@@ -43,6 +63,15 @@ function(
         )
         out[["BY"]] <- factor(names(split_df)[out$BY])
         out[["statistic"]] <- estimate
+        
+        # label features and levels
+        out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
+        out[["feature"]] <- factor(out[["feature"]],
+                                   levels = feature_order,
+                                   labels = feature_labels[feature_order])
+        out <- out[c("BY", "outcome", "statistic", "feature", "level", "estimate", "std.error", "z", "p", "lower", "upper", by_vars)]
+        rownames(out) <- seq_len(nrow(out))
+        
     } else {
         if (estimate %in% c("mm_differences", "amce_differences")) {
             stop("Argument 'by' is required when estimate %in% c('mm_differences', 'amce_differences')")

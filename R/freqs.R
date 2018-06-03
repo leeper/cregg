@@ -92,10 +92,10 @@ function(
     
     # attach feature labels
     out <- merge(coef_dat, make_term_labels_df(data, RHS), by = c("level"), all = TRUE)
+    out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
     out[["feature"]] <- factor(out[["feature"]],
                                levels = feature_order,
                                labels = feature_labels[feature_order])
-    out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
     
     # return organized data frame
     out[["statistic"]] <- "frequencies"

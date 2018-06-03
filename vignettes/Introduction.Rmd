@@ -112,7 +112,7 @@ For example, we may want to ensure that there are no substantial variations in p
 ```{r mm_by, fig.height=8}
 mm_by <- cj(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills,
             id = ~ CaseID, estimate = "mm", by = ~ contest_no)
-plot(mm_by, group = "contest_no", vline = 0.5)
+plot(mm_by, group = "BY", vline = 0.5)
 ```
 
 ### Tests of Preference Heterogeneity

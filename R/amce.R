@@ -14,9 +14,10 @@
 #' @return A data frame
 #' @details \code{amce} provides estimates of AMCEs (or rather, average marginal effects for each feature level). It does not calculate AMCEs for constrained conjoint designs. The function can also be used for balance testing by specifying a covariate rather outcome on the left-hand side of \code{formula}. See examples.
 #' 
-#' \code{amce_by_reference} provides a tool for quick sensitivity analysis. AMCEs are defined relative to an arbitrary reference category (i.e., feature level). This function will loop over all feature levels (for a specified feature) to show how interpretation will be affected by choice of reference category. The resulting data frame will be a stacked result from \code{amce}, containing an additional \code{.reference} column specifying which level of \code{variable} was used as the reference category.
+#' \code{amce_by_reference} provides a tool for quick sensitivity analysis. AMCEs are defined relative to an arbitrary reference category (i.e., feature level). This function will loop over all feature levels (for a specified feature) to show how interpretation will be affected by choice of reference category. The resulting data frame will be a stacked result from \code{amce}, containing an additional \code{BY} column specifying which level of \code{variable} was used as the reference category. In unconstrained conjoint designs, only AMCEs for \code{variable} will vary by reference category; in constrained designs, AMCEs for any factor constrained by \code{variable} may also vary.
 #' 
-#' Users may desire to specify a \code{family} argument via \code{\dots}, which should be a \dQuote{family} object such as \code{gaussian}. Sensible alternatives are \code{binomial} (for binary outcomes) and quasibinomial (for weighted survey data). See \code{\link[stats]{family}} for details.
+#' Users may desire to specify a \code{family} argument via \code{\dots}, which should be a \dQuote{family} object such as \code{gaussian}. Sensible alternatives are \code{binomial} (for binary outcomes) and quasibinomial (for weighted survey data). See \code{\link[stats]{family}} for details. In such cases, effects are always reported on the link (not outcome) scale.
+#'
 #' @examples
 #' data("taxes")
 #' # estimating AMCEs
@@ -266,11 +267,11 @@ function(
     out <- rbind(unconstrained_amces, constrained_amces)
     
     # label features and levels
+    out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
     out[["feature"]] <- factor(out[["feature"]],
                                levels = feature_order,
                                labels = feature_labels[feature_order])
     out <- out[c("outcome", "statistic", "feature", "level", "estimate", "std.error", "z", "p", "lower", "upper")]
-    out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
     out <- out[order(out$level),]
     rownames(out) <- seq_len(nrow(out))
     
