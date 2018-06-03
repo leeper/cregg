@@ -10,7 +10,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="jquery.sticky-kit.min.js"></script><script src="pkgdown.js"></script><meta property="og:title" content="Simple Conjoint Analyses and Visualization">
-<meta property="og:description" content="Simple analyses of fully randomized conjoint (factorial) experiments, including estimation and visualization of average marginal component effects ('AMCEs') and marginal means ('MMs') for weighted and unweighted survey data, reference category diagnostics, and statistical tests.">
+<meta property="og:description" content="Simple analyses of fully randomized conjoint (factorial) experiments, including estimation and visualization of average marginal component effects ('AMCEs') and marginal means ('MMs') for weighted and un-weighted survey data, reference category diagnostics, and statistical tests.">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -82,10 +82,7 @@
 
     
     
-<div id="simple-conjoint-analyses-and-visualization" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#simple-conjoint-analyses-and-visualization" class="anchor"></a>Simple Conjoint Analyses and Visualization</h1></div>
-<p><strong>cregg</strong> is a package for analyzing and visualizing the results of conjoint (“cj”) factorial experiments using methods described by Hainmueller, Hopkins, and Yamamoto (2014). It provides functionality that is useful for analyzing and otherwise examining conjoint experimental data through a main function - <code><a href="reference/cregg.html">cj()</a></code> - that simply wraps around a number of analytic tools:</p>
+<p><strong>cregg</strong> is a package for analyzing and visualizing the results of conjoint (“cj”) factorial experiments using methods described by Hainmueller, Hopkins, and Yamamoto (2014). It provides functionality that is useful for analyzing and otherwise examining conjoint experimental data through a main function - <code>cj()</code> - that simply wraps around a number of analytic tools:</p>
 <ul>
 <li>Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs (as well as designs involving an unlimited number of two-way constraints between features) and munging of AMCE estimates into tidy data frames, via <code><a href="reference/amce.html">amce()</a></code>
 </li>
@@ -116,11 +113,11 @@
 <ul>
 <li>Using “label” attributes on variables to provide pretty printing, with options to relabel features or plots on the fly</li>
 <li>Using factor base levels rather than trying to set baseline levels atomically</li>
-<li>A convenient API (via the <code><a href="reference/cregg.html">cj(..., by = ~ group)</a></code> idiom) for repeated, subgroup operations without the need for <code>lapply()</code> or <code>for</code> loops</li>
+<li>A convenient API (via the <code>cj(..., by = ~ group)</code> idiom) for repeated, subgroup operations without the need for <code>lapply()</code> or <code>for</code> loops</li>
 <li>All functions have arguments in data-formula order, making it simple to pipe into them via the magrittr pipe (<code>%&gt;%</code>).</li>
 </ul>
 <p>A detailed website showcasing package functionality is available at: <a href="https://thomasleeper.com/cregg/" class="uri">https://thomasleeper.com/cregg/</a>. Contributions and feedback are welcome on <a href="https://github.com/leeper/cregg/issues">GitHub</a>.</p>
-<p>The package, whose primary point of contact is <code><a href="reference/cregg.html">cj()</a></code>, takes its name from the surname of a famous White House Press Secretary.</p>
+<p>The package, whose primary point of contact is <code>cj()</code>, takes its name from the surname of a famous White House Press Secretary.</p>
 <div id="basic-code-examples" class="section level2">
 <h2 class="hasAnchor">
 <a href="#basic-code-examples" class="anchor"></a>Basic Code Examples</h2>
@@ -133,11 +130,11 @@
 f1 &lt;-<span class="st"> </span>ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills <span class="op">+</span><span class="st"> </span>CountryOfOrigin <span class="op">+</span><span class="st"> </span>Job <span class="op">+</span><span class="st"> </span>JobExperience <span class="op">+</span><span class="st"> </span>JobPlans <span class="op">+</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>
 <span class="st">    </span>PriorEntry
 <span class="kw">plot</span>(<span class="kw"><a href="reference/mm.html">mm</a></span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID), <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
-<p><img src="index_files/figure-html/mmplot-1.png" width="960"></p>
+<p><img src="https://i.imgur.com/lCYcVsq.png" width="960"></p>
 <p>cregg functions uses <code>attr(data$feature, "label")</code> to provide pretty printing of feature labels, so that variable names can be arbitrary. These can be overwritten using the <code>feature_labels</code> argument to override these settings. Feature levels are always deduced from the <code>levels()</code> of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in <code>feature_order</code>.</p>
-<p>A more common analytic approach for conjoints is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses <code>glm()</code> and <code>svyglm()</code> to perform estimation and <a href="https://cran.r-project.org/package=margins">margins</a> to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. (No functionality is provided at the moment for explict estimation of feature interaction effects.) Just like for <code><a href="reference/mm.html">mm()</a></code>, the output of <code><a href="reference/cregg.html">cj()</a></code> (or its alias, <code><a href="reference/amce.html">amce()</a></code>) is a tidy data frame:</p>
+<p>A more common analytic approach for conjoints is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses <code>glm()</code> and <code>svyglm()</code> to perform estimation and <a href="https://cran.r-project.org/package=margins">margins</a> to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. (No functionality is provided at the moment for explict estimation of feature interaction effects.) Just like for <code><a href="reference/mm.html">mm()</a></code>, the output of <code>cj()</code> (or its alias, <code><a href="reference/amce.html">amce()</a></code>) is a tidy data frame:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># estimation</span>
-amces &lt;-<span class="st"> </span><span class="kw"><a href="reference/cregg.html">cj</a></span>(taxes, chose_plan <span class="op">~</span><span class="st"> </span>taxrate1 <span class="op">+</span><span class="st"> </span>taxrate2 <span class="op">+</span><span class="st"> </span>taxrate3 <span class="op">+</span><span class="st"> </span>taxrate4 <span class="op">+</span><span class="st"> </span>taxrate5 <span class="op">+</span><span class="st"> </span>taxrate6 <span class="op">+</span><span class="st"> </span>taxrev, <span class="dt">id =</span> <span class="op">~</span>ID)
+amces &lt;-<span class="st"> </span><span class="kw">cj</span>(taxes, chose_plan <span class="op">~</span><span class="st"> </span>taxrate1 <span class="op">+</span><span class="st"> </span>taxrate2 <span class="op">+</span><span class="st"> </span>taxrate3 <span class="op">+</span><span class="st"> </span>taxrate4 <span class="op">+</span><span class="st"> </span>taxrate5 <span class="op">+</span><span class="st"> </span>taxrate6 <span class="op">+</span><span class="st"> </span>taxrev, <span class="dt">id =</span> <span class="op">~</span>ID)
 <span class="kw">head</span>(amces[<span class="kw">c</span>(<span class="st">"feature"</span>, <span class="st">"level"</span>, <span class="st">"estimate"</span>, <span class="st">"std.error"</span>)], 20L)</code></pre></div>
 <pre><code>                          feature         level      estimate   std.error
 1           Tax rate for &lt;$10,000      &lt;10k: 0%  0.0000000000          NA
@@ -163,11 +160,96 @@ amces &lt;-<span class="st"> </span><span class="kw"><a href="reference/cregg.ht
 <p>This makes it very easy to modify, combine, print, etc. the resulting output. It also makes it easy to visualize using ggplot2. A convenience visualization function is provided:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># plotting of AMCEs</span>
 <span class="kw">plot</span>(amces)</code></pre></div>
-<p><img src="index_files/figure-html/plot_amce-1.png" width="960"></p>
-<p>To provide simple subgroup analyses, the <code><a href="reference/cregg.html">cj()</a></code> function provides a <code>by</code> argument to iterate over subsets of <code>data</code> and calculate AMCEs or MMs on each subgroup. For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mm_by &lt;-<span class="st"> </span><span class="kw"><a href="reference/cregg.html">cj</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>contest_no)
-<span class="kw">plot</span>(mm_by, <span class="dt">group =</span> <span class="st">"contest_no"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
-<p><img src="index_files/figure-html/mm_by-1.png" width="960"></p>
+<p><img src="https://i.imgur.com/XVRm641.png" width="960"></p>
+<p>To provide simple subgroup analyses, the <code>cj()</code> function provides a <code>by</code> argument to iterate over subsets of <code>data</code> and calculate AMCEs or MMs on each subgroup. For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mm_by &lt;-<span class="st"> </span><span class="kw">cj</span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>contest_no)</code></pre></div>
+<pre><code>Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)
+Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)
+Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)
+Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)
+Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(mm_by, <span class="dt">group =</span> <span class="st">"contest_no"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
+<p><img src="https://i.imgur.com/BoJNp8s.png" width="960"></p>
 <p>A more formal test of these differences is provided by a nested model comparison test:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/diffs.html">cj_anova</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">by =</span> <span class="op">~</span>contest_no)</code></pre></div>
 <pre><code>Analysis of Deviance Table
@@ -190,7 +272,6 @@ Model 2: ChosenImmigrant ~ Gender + Education + LanguageSkills + contest_no +
     <span class="kw">install.packages</span>(<span class="st">"remotes"</span>)
 }
 remotes<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"leeper/cregg"</span>)</code></pre></div>
-</div>
 </div>
   </div>
 

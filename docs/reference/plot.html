@@ -152,7 +152,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>A data frame returned from <code><a href='cregg.html'>cj</a></code> or <code><a href='mm.html'>mm</a></code>.</p></td>
+      <td><p>A data frame returned from <code>cj</code> or <code><a href='mm.html'>mm</a></code>.</p></td>
     </tr>
     <tr>
       <th>group</th>
@@ -212,10 +212,6 @@
 
     <p>A ggplot2 object</p>
     
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Two <code>plot</code> methods are implemented: one for &#8220;amce&#8221; data frames of conjoint AMCE estimates (returned by <code><a href='amce.html'>amce</a></code>), and another for &#8220;mm&#8221; data frames as returned by <code><a href='mm.html'>mm</a></code>. Both functions are basically identical but vary slightly in their superficial features (axis labels, etc.).</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='amce.html'>amce</a></code>, <code><a href='mm.html'>mm</a></code></p></div>
@@ -240,7 +236,7 @@
                       <span class='kw'>scales</span> <span class='kw'>=</span> <span class='st'>"free_y"</span>, <span class='kw'>strip.position</span> <span class='kw'>=</span> <span class='st'>"right"</span>)
 
 <span class='co'># MMs split by profile number</span>
-<span class='no'>stacked</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cregg.html'>cj</a></span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> +
+<span class='no'>stacked</span> <span class='kw'>&lt;-</span> <span class='fu'>cj</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> +
               <span class='no'>Education</span> + <span class='no'>LanguageSkills</span> + <span class='no'>CountryOfOrigin</span> + <span class='no'>Job</span> + <span class='no'>JobExperience</span> +
               <span class='no'>JobPlans</span> + <span class='no'>ReasonForApplication</span> + <span class='no'>PriorEntry</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>,
               <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='st'>"mm"</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~ <span class='no'>contest_no</span>)
@@ -253,8 +249,8 @@
 
 <span class='co'># estimate AMCEs over different subsets of data</span>
 <span class='no'>reasons12</span> <span class='kw'>&lt;-</span> <span class='fu'>subset</span>(<span class='no'>immigration</span>, <span class='no'>ReasonForApplication</span> <span class='kw'>%in%</span> <span class='fu'>levels</span>(<span class='no'>ReasonForApplication</span>)[<span class='fl'>1</span>:<span class='fl'>2</span>])
-<span class='no'>d2_1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cregg.html'>cj</a></span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>CountryOfOrigin</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
-<span class='no'>d2_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cregg.html'>cj</a></span>(<span class='no'>reasons12</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>CountryOfOrigin</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>,
+<span class='no'>d2_1</span> <span class='kw'>&lt;-</span> <span class='fu'>cj</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>CountryOfOrigin</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
+<span class='no'>d2_2</span> <span class='kw'>&lt;-</span> <span class='fu'>cj</span>(<span class='no'>reasons12</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>CountryOfOrigin</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>,
            <span class='kw'>feature_labels</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>CountryOfOrigin</span> <span class='kw'>=</span> <span class='st'>"Country Of Origin"</span>))
 <span class='no'>d2_1</span>$<span class='no'>reasons</span> <span class='kw'>&lt;-</span> <span class='st'>"1,2,3"</span>
 <span class='no'>d2_2</span>$<span class='no'>reasons</span> <span class='kw'>&lt;-</span> <span class='st'>"1,2"</span>
@@ -270,8 +266,6 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
 
       <li><a href="#see-also">See also</a></li>
       

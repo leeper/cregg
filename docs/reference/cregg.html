@@ -121,7 +121,9 @@
     </div>
 
     <pre class="usage"><span class='fu'>cj</span>(<span class='no'>data</span>, <span class='no'>formula</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"amce"</span>,
-  <span class='st'>"frequencies"</span>, <span class='st'>"mm"</span>, <span class='st'>"amce_differences"</span>, <span class='st'>"mm_differences"</span>), <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+  <span class='st'>"frequencies"</span>, <span class='st'>"mm"</span>, <span class='st'>"amce_differences"</span>, <span class='st'>"mm_differences"</span>),
+  <span class='kw'>feature_order</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>feature_labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>level_order</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"ascending"</span>, <span class='st'>"descending"</span>), <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -132,7 +134,7 @@
     </tr>
     <tr>
       <th>formula</th>
-      <td><p>A formula specifying a model to be estimated. All variables should be factors.</p></td>
+      <td><p>A formula specifying a model to be estimated. All variables should be factors. For <code>estimate = "amce"</code> in a constrained conjoint design, two-way interactions can be specified to handle constraints between factors in the design. These are detected automatically. Higher-order constraints are not allowed and interactions are ignored for all other values of <code>estimate</code> as constraints are irrelevant to those statistics.</p></td>
     </tr>
     <tr>
       <th>id</th>
@@ -147,6 +149,18 @@
       <td><p>A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, &#8220;amce&#8221;, estimated via <code><a href='amce.html'>amce</a></code>), display frequencies (&#8220;frequncies&#8221;, estimated via <code><a href='freqs.html'>freqs</a></code>), marginal means (or AMMs, &#8220;mm&#8221;, estimated via <code><a href='mm.html'>mm</a></code>), differences in MMs (&#8220;mm_differences&#8221;, via <code><a href='diffs.html'>mm_diffs</a></code>), or differences in AMCEs (&#8220;amce_differences&#8221;, via <code><a href='diffs.html'>amce_diffs</a></code>). Additional options may be made available in the future. Non-ambiguous abbreviations are allowed.</p></td>
     </tr>
     <tr>
+      <th>feature_order</th>
+      <td><p>An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.</p></td>
+    </tr>
+    <tr>
+      <th>feature_labels</th>
+      <td><p>A named list of &#8220;fancy&#8221; feature labels to be used in output. By default, the function looks for a &#8220;label&#8221; attribute on each variable in <code>formula</code> and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables on the righthand side of <code>formula</code> and character string values; arguments passed here override variable attributes.</p></td>
+    </tr>
+    <tr>
+      <th>level_order</th>
+      <td><p>A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via <code>plot.cj_mm</code>, etc.</p></td>
+    </tr>
+    <tr>
       <th>by</th>
       <td><p>A formula containing only RHS variables, specifying grouping factors over which to perform estimation.</p></td>
     </tr>
@@ -158,9 +172,9 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The main function <code>cj</code> is a convenience function wrapper around the underlying estimation functions that provide for average marginal component effects (AMCEs), by default, via the <code><a href='amce.html'>amce</a></code> function, marginal means (MMs) via the <code><a href='mm.html'>mm</a></code> function, and display frequencies via <code><a href='freqs.html'>freqs</a></code> and <code><a href='freqs.html'>props</a></code>. Additional estimands may be supported in the future through their own functions and through the <code>cj</code> interface. Plotting is provided via ggplot2 for both types of estimates.</p>
-<p>The only additional functionality provided by <code>cj</code> over the underlying functions is the <code>by</code> argument, which will perform operations on subsets of <code>data</code>, returning a single data frame. This can be useful, for example, for evaluating profile spillover effects and subgroup results.</p>
-<p>Note: cregg currently only works with full factorial conjoint experiments. Designs involving constraints between features may be supported in the future.</p>
+    <p>The main function <code>cj</code> is a convenience function wrapper around the underlying estimation functions that provide for average marginal component effects (AMCEs), by default, via the <code><a href='amce.html'>amce</a></code> function, marginal means (MMs) via the <code><a href='mm.html'>mm</a></code> function, and display frequencies via <code><a href='freqs.html'>freqs</a></code> and <code><a href='freqs.html'>props</a></code>. Additional estimands may be supported in the future through their own functions and through the <code>cj</code> interface. Plotting is provided via ggplot2 for all types of estimates.</p>
+<p>The only additional functionality provided by <code>cj</code> over the underlying functions is the <code>by</code> argument, which will perform operations on subsets of <code>data</code>, returning a single data frame. This can be useful, for example, for evaluating profile spillover effects and subgroup results, or in any situation where one might be inclined to use a <code>for</code> loop or <code>lapply</code>, calling <code>cj</code> repeatedly on subgroups.</p>
+<p>Note: Some features of cregg (namely, the <code><a href='diffs.html'>amce_diffs</a></code>) function, or <code>estimate = "amce_diff"</code> here) only work with full factorial conjoint experiments. Designs involving two-way constraints between features are supported simply by expressing interactions between constrained terms in <code>formula</code> (again, except for <code>amce_diffs</code>). Higher-order constraints may be supported in the future.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 

@@ -177,14 +177,14 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>amce_diffs</code> and <code>mm_diffs</code> return a data frame similar to the one returned by <code><a href='cregg.html'>cj</a></code>, including a <code>BY</code> column (with the value &#8220;Difference&#8221;) for easy merging with results returned by that function.</p>
+    <p><code>amce_diffs</code> and <code>mm_diffs</code> return a data frame similar to the one returned by <code>cj</code>, including a <code>BY</code> column (with the value &#8220;Difference&#8221;) for easy merging with results returned by that function.</p>
 <p><code>cj_anova</code> returns an <code><a href='http://www.rdocumentation.org/packages/stats/topics/anova'>anova</a></code> object.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>cj_anova</code> takes a model formula (&#8220;reduced&#8221; model) and generates a &#8220;full&#8221; model with full saturated interactions between the variables specified in <code>by</code> and all RHS variables in <code>formula</code>, then computes an F-test comparing the two models, providing a test for whether preferences vary across levels of <code>by</code>. This is, in essence, a test of whether all such interaction coefficients are distinguishable from zero. Because the test depends on overall model fit, not the coefficient variances, clustering is irrelevant.</p>
-<p><code>mm_diffs</code> provides a data frame of differences in marginal means (literally differencing the results from <code><a href='mm.html'>mm</a></code> across levels of <code>by</code>. This provides the clearest direct measure of preference differences from a conjoint design. <code>by</code> must</p>
-<p><code>amce_diffs</code> provides a data frame of differences in AMCEs (the coefficient on an interaction by each RHS factor and the variable in <code>by</code>). This provides an estimate of the difference in causal effects of each factor level relative to the baseline level (i.e., the difference in conditional AMCEs). This quantity is easily misinterpreted as the difference in preferences, which it is not. If preferences in the reference category differ across levels of <code>by</code>, the the difference in conditional AMCEs will have an unpredictable sign and significance. See <code><a href='amce.html'>amce_by_reference</a></code> for a diagnostic.</p>
+    <p><code>cj_anova</code> takes a model formula (&#8220;reduced&#8221; model) and generates a &#8220;full&#8221; model with two-way interactions between the variables specified in <code>by</code> and all RHS variables in <code>formula</code>, then computes an F-test comparing the two models, providing a test for whether preferences vary across levels of <code>by</code>. This is, in essence, a test of whether all such interaction coefficients are distinguishable from zero. (Because the test depends on overall model fit, not the coefficient variances, clustering is irrelevant.)</p>
+<p><code>mm_diffs</code> provides a data frame of differences in marginal means (literally differencing the results from <code><a href='mm.html'>mm</a></code> across levels of <code>by</code>. This provides the clearest direct measure of preference differences from a conjoint design.</p>
+<p><code>amce_diffs</code> provides a data frame of differences in AMCEs (the coefficient on an interaction between each RHS factor and the variable in <code>by</code>). This provides an estimate of the difference in causal effects of each factor level relative to the baseline level (i.e., the difference in conditional AMCEs). This quantity is easily misinterpreted as the difference in preferences, which it is not. Rather it is a difference in the effect of the factor on preferences relative to the baseline/reference category of that feature. If preferences in the reference category differ across levels of <code>by</code>, the the difference in conditional AMCEs will have an unpredictable sign and significance, making differences in marginal means a more sensible quantity of interest. See <code><a href='amce.html'>amce_by_reference</a></code> for a diagnostic.</p>
 <p>Note: <code>amce_diffs</code> does not work with constrained designs. To obtain such differences, subset the design by constraints and calculate differences within each subset.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -222,7 +222,57 @@
 <span class='fu'>amce_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span> + <span class='no'>Education</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
 <span class='co'># }</span><div class='input'>
 <span class='co'># preferences differ for Male and Female immigrants with 'Broken English' ability</span>
-(<span class='no'>m1</span> <span class='kw'>&lt;-</span> <span class='fu'>mm_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>))</div><div class='output co'>#&gt;              BY     statistic         outcome         feature
+(<span class='no'>m1</span> <span class='kw'>&lt;-</span> <span class='fu'>mm_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>))</div><div class='output co'>#&gt; Called from: check_feature_order(feature_order, RHS)
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to be missing values")
+#&gt; } else if (length(RHS) &lt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to have excess values")
+#&gt; } else if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to have excess values")
+#&gt; } else if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#92: return(feature_order)
+#&gt; Called from: check_feature_order(feature_order, RHS)
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to be missing values")
+#&gt; } else if (length(RHS) &lt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to have excess values")
+#&gt; } else if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to have excess values")
+#&gt; } else if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#92: return(feature_order)
+#&gt; Called from: check_feature_order(feature_order, RHS)
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to be missing values")
+#&gt; } else if (length(RHS) &lt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to have excess values")
+#&gt; } else if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to have excess values")
+#&gt; } else if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#92: return(feature_order)</div><div class='output co'>#&gt;              BY     statistic         outcome         feature
 #&gt; 1 Male - Female mm_difference ChosenImmigrant Language Skills
 #&gt; 2 Male - Female mm_difference ChosenImmigrant Language Skills
 #&gt; 3 Male - Female mm_difference ChosenImmigrant Language Skills
@@ -263,7 +313,57 @@
 #&gt; 2 -0.03157629 0.06204548
 #&gt; 3 -0.02547605 0.06727776</div><div class='input'>
 <span class='co'># while differences in MMs do not depend on the reference cateory</span>
-(<span class='no'>m2</span> <span class='kw'>&lt;-</span> <span class='fu'>mm_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills2</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>))</div><div class='output co'>#&gt;              BY     statistic         outcome         feature
+(<span class='no'>m2</span> <span class='kw'>&lt;-</span> <span class='fu'>mm_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills2</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>))</div><div class='output co'>#&gt; Called from: check_feature_order(feature_order, RHS)
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to be missing values")
+#&gt; } else if (length(RHS) &lt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to have excess values")
+#&gt; } else if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to have excess values")
+#&gt; } else if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#92: return(feature_order)
+#&gt; Called from: check_feature_order(feature_order, RHS)
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to be missing values")
+#&gt; } else if (length(RHS) &lt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to have excess values")
+#&gt; } else if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to have excess values")
+#&gt; } else if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#92: return(feature_order)
+#&gt; Called from: check_feature_order(feature_order, RHS)
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to be missing values")
+#&gt; } else if (length(RHS) &lt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to have excess values")
+#&gt; } else if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+#&gt;     stop("'feature_order' appears to have excess values")
+#&gt; } else if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+#&gt;     stop("'feature_order' appears to contain erroneous values")
+#&gt; }
+#&gt; debug at C:\Users\THOMAS\Dropbox\Software\cregg/R/utils.R#92: return(feature_order)</div><div class='output co'>#&gt;              BY     statistic         outcome         feature
 #&gt; 1 Male - Female mm_difference ChosenImmigrant LanguageSkills2
 #&gt; 2 Male - Female mm_difference ChosenImmigrant LanguageSkills2
 #&gt; 3 Male - Female mm_difference ChosenImmigrant LanguageSkills2

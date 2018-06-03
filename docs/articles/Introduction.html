@@ -81,7 +81,7 @@
     <div class="page-header toc-ignore">
       <h1>Introduction to cregg</h1>
             
-            <h4 class="date">2018-06-02</h4>
+            <h4 class="date">2018-06-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/leeper/cregg/blob/master/vignettes/Introduction.Rmd"><code>vignettes/Introduction.Rmd</code></a></small>
       <div class="hidden name"><code>Introduction.Rmd</code></div>
@@ -121,10 +121,10 @@
 <ul>
 <li>Using “label” attributes on variables to provide pretty printing, with options to relabel features or plots on the fly</li>
 <li>Using factor base levels rather than trying to set baseline levels atomically</li>
-<li>A convenient API (via the <code><a href="../reference/cregg.html">cj(..., by = ~ group)</a></code> idiom) for repeated, subgroup operations without the need for <code>lapply()</code> or <code>for</code> loops</li>
+<li>A convenient API (via the <code>cj(..., by = ~ group)</code> idiom) for repeated, subgroup operations without the need for <code>lapply()</code> or <code>for</code> loops</li>
 <li>All functions have arguments in data-formula order, making it simple to pipe into them via the magrittr pipe (<code>%&gt;%</code>).</li>
 </ul>
-<p>The package, whose primary point of contact is <code><a href="../reference/cregg.html">cj()</a></code>, takes its name from the surname of a famous White House Press Secretary.</p>
+<p>The package, whose primary point of contact is <code>cj()</code>, takes its name from the surname of a famous White House Press Secretary.</p>
 <p>Contributions and feedback are welcome on <a href="https://github.com/leeper/cregg/issues">GitHub</a>.</p>
 <div id="code-examples" class="section level2">
 <h2 class="hasAnchor">
@@ -146,9 +146,9 @@ f1 &lt;-<span class="st"> </span>ChosenImmigrant <span class="op">~</span><span 
 <div id="marginal-effects" class="section level3">
 <h3 class="hasAnchor">
 <a href="#marginal-effects" class="anchor"></a>Marginal Effects</h3>
-<p>A more common analytic approach for conjoints is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses <code>glm()</code> and <code>svyglm()</code> to perform estimation and <a href="https://cran.r-project.org/package=margins">margins</a> to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. Any terms that linked by a <code>*</code> in the formula are treated as design constraints and AMCEs are estimated cognizant of these constraints; only two-way interactions are supported, however. Just like for <code><a href="../reference/mm.html">mm()</a></code>, the output of <code><a href="../reference/cregg.html">cj()</a></code> (or its alias, <code><a href="../reference/amce.html">amce()</a></code>) is a tidy data frame:</p>
+<p>A more common analytic approach for conjoints is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses <code>glm()</code> and <code>svyglm()</code> to perform estimation and <a href="https://cran.r-project.org/package=margins">margins</a> to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. Any terms that linked by a <code>*</code> in the formula are treated as design constraints and AMCEs are estimated cognizant of these constraints; only two-way interactions are supported, however. Just like for <code><a href="../reference/mm.html">mm()</a></code>, the output of <code>cj()</code> (or its alias, <code><a href="../reference/amce.html">amce()</a></code>) is a tidy data frame:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># estimation</span>
-amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID)
+amces &lt;-<span class="st"> </span><span class="kw">cj</span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID)
 <span class="kw">head</span>(amces[<span class="kw">c</span>(<span class="st">"feature"</span>, <span class="st">"level"</span>, <span class="st">"estimate"</span>, <span class="st">"std.error"</span>)], 20L)</code></pre></div>
 <pre><code>                  feature                    level     estimate   std.error
 1                  Gender                   Female  0.000000000          NA
@@ -188,13 +188,98 @@ amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg
 <div id="subgroup-analyis" class="section level2">
 <h2 class="hasAnchor">
 <a href="#subgroup-analyis" class="anchor"></a>Subgroup Analyis</h2>
-<p>While the reference category has no meaningful bearing on estimation, it can affect inferences especially when subgroups are compared. For this reason, it can be useful to assess the substantive inferences from difference reference categories alongside any subgroup analysis. To provide simple subgroup analyses, the <code><a href="../reference/cregg.html">cj()</a></code> function provides a <code>by</code> argument to iterate over subsets of <code>data</code> and calculate AMCEs or MMs on each subgroup.</p>
-<div id="subgroup-marignal-means" class="section level3">
+<p>While the reference category has no meaningful bearing on estimation, it can affect inferences especially when subgroups are compared. For this reason, it can be useful to assess the substantive inferences from difference reference categories alongside any subgroup analysis. To provide simple subgroup analyses, the <code>cj()</code> function provides a <code>by</code> argument to iterate over subsets of <code>data</code> and calculate AMCEs or MMs on each subgroup.</p>
+<div id="subgroup-marginal-means" class="section level3">
 <h3 class="hasAnchor">
-<a href="#subgroup-marignal-means" class="anchor"></a>Subgroup Marignal Means</h3>
+<a href="#subgroup-marginal-means" class="anchor"></a>Subgroup Marginal Means</h3>
 <p>For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mm_by &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>contest_no)
-<span class="kw">plot</span>(mm_by, <span class="dt">group =</span> <span class="st">"contest_no"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mm_by &lt;-<span class="st"> </span><span class="kw">cj</span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>contest_no)</code></pre></div>
+<pre><code>Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)
+Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)
+Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)
+Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)
+Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(mm_by, <span class="dt">group =</span> <span class="st">"BY"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
 <p><img src="Introduction_files/figure-html/mm_by-1.png" width="960"></p>
 </div>
 <div id="tests-of-preference-heterogeneity" class="section level3">
@@ -222,23 +307,210 @@ immigration<span class="op">$</span>ethnosplit &lt;-<span class="st"> </span><sp
 immigration<span class="op">$</span>ethnosplit[immigration<span class="op">$</span>ethnocentrism <span class="op">&lt;=</span><span class="st"> </span><span class="dv">10</span>] &lt;-<span class="st"> </span>1L
 immigration<span class="op">$</span>ethnosplit[immigration<span class="op">$</span>ethnocentrism <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>] &lt;-<span class="st"> </span>2L
 immigration<span class="op">$</span>ethnosplit &lt;-<span class="st"> </span><span class="kw">factor</span>(immigration<span class="op">$</span>ethnosplit, <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="kw">c</span>(<span class="st">"Low Ethnocentrism"</span>, <span class="st">"High Ethnocentrism"</span>))
-x &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw">na.omit</span>(immigration), f1, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>ethnosplit)
-<span class="kw">plot</span>(x, <span class="dt">group =</span> <span class="st">"ethnosplit"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
+x &lt;-<span class="st"> </span><span class="kw">cj</span>(<span class="kw">na.omit</span>(immigration), f1, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>ethnosplit)</code></pre></div>
+<pre><code>Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)
+Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(x, <span class="dt">group =</span> <span class="st">"ethnosplit"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
 <p><img src="Introduction_files/figure-html/conditional_mms-1.png" width="960"></p>
 <p>But if we want to interpret differences in the sizes of AMCEs (rather than descriptive differences in preferences), we might be inclined to design a similar visualization, replacing MMs with AMCEs. But in such cases, we cannot comment on the descriptive similarity in preferences across subgroups only the heterogeneity in causal effects of feature variations. To make (dis)similarity explicit, such visualizations should include an explicit test of differences in effect sizes. Facetting works well:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># calculate conditional AMCEs</span>
-amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw">na.omit</span>(immigration), ChosenImmigrant <span class="op">~</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"amce"</span>, 
-    <span class="dt">by =</span> <span class="op">~</span>ethnosplit)
-diff_amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw">na.omit</span>(immigration), ChosenImmigrant <span class="op">~</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"amce_diff"</span>, 
-    <span class="dt">by =</span> <span class="op">~</span>ethnosplit)
-<span class="kw">plot</span>(<span class="kw">rbind</span>(amces, diff_amces)) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="op">~</span>BY, <span class="dt">ncol =</span> 3L)</code></pre></div>
+amces &lt;-<span class="st"> </span><span class="kw">cj</span>(<span class="kw">na.omit</span>(immigration), ChosenImmigrant <span class="op">~</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"amce"</span>, 
+    <span class="dt">by =</span> <span class="op">~</span>ethnosplit)</code></pre></div>
+<pre><code>Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)
+Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_amces &lt;-<span class="st"> </span><span class="kw">cj</span>(<span class="kw">na.omit</span>(immigration), ChosenImmigrant <span class="op">~</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"amce_diff"</span>, 
+    <span class="dt">by =</span> <span class="op">~</span>ethnosplit)</code></pre></div>
+<pre><code>Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(<span class="kw">rbind</span>(amces, diff_amces)) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="op">~</span>BY, <span class="dt">ncol =</span> 3L)</code></pre></div>
 <p><img src="Introduction_files/figure-html/conditional_amces-1.png" width="960"></p>
 <p>But again, this plot showcases differences in conjoint effect sizes (AMCEs) not descriptive differences in underlying preferences. A plot of the differences in MMs might be clearer:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># calculate conditional AMCEs</span>
-mms &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw">na.omit</span>(immigration), ChosenImmigrant <span class="op">~</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>ethnosplit)
-diff_mms &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw">na.omit</span>(immigration), ChosenImmigrant <span class="op">~</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm_diff"</span>, 
-    <span class="dt">by =</span> <span class="op">~</span>ethnosplit)
-<span class="kw">plot</span>(<span class="kw">rbind</span>(mms, diff_mms)) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="op">~</span>BY, <span class="dt">ncol =</span> 3L)</code></pre></div>
+mms &lt;-<span class="st"> </span><span class="kw">cj</span>(<span class="kw">na.omit</span>(immigration), ChosenImmigrant <span class="op">~</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>ethnosplit)</code></pre></div>
+<pre><code>Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)
+Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_mms &lt;-<span class="st"> </span><span class="kw">cj</span>(<span class="kw">na.omit</span>(immigration), ChosenImmigrant <span class="op">~</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm_diff"</span>, 
+    <span class="dt">by =</span> <span class="op">~</span>ethnosplit)</code></pre></div>
+<pre><code>Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)
+Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)
+Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)
+Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(<span class="kw">rbind</span>(mms, diff_mms)) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="op">~</span>BY, <span class="dt">ncol =</span> 3L)</code></pre></div>
 <p><img src="Introduction_files/figure-html/conditional_differences-1.png" width="960"></p>
 <p>And while the inferential differences may be small, the risk of using differences in conditional AMCEs versus differences in MMs is that both the size and even the direction of subgroup differences can be misleading when presented as differences in AMCEs:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_amces<span class="op">$</span>Estimate &lt;-<span class="st"> "AMCE Difference"</span>
@@ -299,7 +571,41 @@ diff_mms<span class="op">$</span>Estimate &lt;-<span class="st"> "MM Difference"
 <h3 class="hasAnchor">
 <a href="#carryover-and-leftright-diagnostics" class="anchor"></a>Carryover and Left/Right Diagnostics</h3>
 <p>Subgroup diagnostics can be used to evaluate whether there is, for example, any preference for the lefthand or righthand profile (in a two-profile design):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(<span class="kw"><a href="../reference/cregg.html">cj</a></span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">by =</span> <span class="op">~</span>profile, <span class="dt">estimate =</span> <span class="st">"mm"</span>), <span class="dt">group =</span> <span class="st">"profile"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(<span class="kw">cj</span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">by =</span> <span class="op">~</span>profile, <span class="dt">estimate =</span> <span class="st">"mm"</span>), <span class="dt">group =</span> <span class="st">"profile"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
+<pre><code>Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)
+Called from: check_feature_order(feature_order, RHS)
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &gt; length(feature_order)) {
+    stop("'feature_order' appears to be missing values")
+} else if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (length(RHS) &lt; length(feature_order)) {
+    stop("'feature_order' appears to have excess values")
+} else if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#82: if (any(!names(feature_order) %in% RHS)) {
+    stop("'feature_order' appears to contain erroneous values")
+}
+debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)</code></pre>
 <p><img src="Introduction_files/figure-html/leftright-1.png" width="960"></p>
 <p>Again, in this example there are no obvious concerns generated from the diagnostic. The same approach can be used to perform other diagnostics, such as detecting carryover problems.</p>
 </div>
