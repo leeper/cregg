@@ -130,7 +130,7 @@
 f1 &lt;-<span class="st"> </span>ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills <span class="op">+</span><span class="st"> </span>CountryOfOrigin <span class="op">+</span><span class="st"> </span>Job <span class="op">+</span><span class="st"> </span>JobExperience <span class="op">+</span><span class="st"> </span>JobPlans <span class="op">+</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>
 <span class="st">    </span>PriorEntry
 <span class="kw">plot</span>(<span class="kw"><a href="reference/mm.html">mm</a></span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID), <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
-<p><img src="https://i.imgur.com/lCYcVsq.png" width="960"></p>
+<p><img src="https://i.imgur.com/68DlZQV.png" width="960"></p>
 <p>cregg functions uses <code>attr(data$feature, "label")</code> to provide pretty printing of feature labels, so that variable names can be arbitrary. These can be overwritten using the <code>feature_labels</code> argument to override these settings. Feature levels are always deduced from the <code>levels()</code> of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in <code>feature_order</code>.</p>
 <p>A more common analytic approach for conjoints is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses <code>glm()</code> and <code>svyglm()</code> to perform estimation and <a href="https://cran.r-project.org/package=margins">margins</a> to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. (No functionality is provided at the moment for explict estimation of feature interaction effects.) Just like for <code><a href="reference/mm.html">mm()</a></code>, the output of <code>cj()</code> (or its alias, <code><a href="reference/amce.html">amce()</a></code>) is a tidy data frame:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># estimation</span>
@@ -160,7 +160,7 @@ amces &lt;-<span class="st"> </span><span class="kw">cj</span>(taxes, chose_plan
 <p>This makes it very easy to modify, combine, print, etc. the resulting output. It also makes it easy to visualize using ggplot2. A convenience visualization function is provided:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># plotting of AMCEs</span>
 <span class="kw">plot</span>(amces)</code></pre></div>
-<p><img src="https://i.imgur.com/XVRm641.png" width="960"></p>
+<p><img src="https://i.imgur.com/IYRmI1C.png" width="960"></p>
 <p>To provide simple subgroup analyses, the <code>cj()</code> function provides a <code>by</code> argument to iterate over subsets of <code>data</code> and calculate AMCEs or MMs on each subgroup. For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mm_by &lt;-<span class="st"> </span><span class="kw">cj</span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>contest_no)</code></pre></div>
 <pre><code>Called from: check_feature_order(feature_order, RHS)
@@ -249,7 +249,7 @@ debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cre
 }
 debug at C:/Users/THOMAS/AppData/Local/Temp/RtmpM92ZjN/R.INSTALL215c278c5b3b/cregg/R/utils.R#92: return(feature_order)</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(mm_by, <span class="dt">group =</span> <span class="st">"contest_no"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
-<p><img src="https://i.imgur.com/BoJNp8s.png" width="960"></p>
+<p><img src="https://i.imgur.com/qpGWyah.png" width="960"></p>
 <p>A more formal test of these differences is provided by a nested model comparison test:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/diffs.html">cj_anova</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">by =</span> <span class="op">~</span>contest_no)</code></pre></div>
 <pre><code>Analysis of Deviance Table
