@@ -37,9 +37,11 @@ function(
     
         # amce_diffs handles `by` internally
         if (estimate == "mm_differences") {
-            return(mm_diffs(data = data, formula = formula, by = by, id = id, weights = weights, ...))
+            return(mm_diffs(data = data, formula = formula, by = by, id = id, weights = weights,
+                            feature_order = feature_order, feature_labels = feature_labels, level_order = level_order, ...))
         } else if (estimate == "amce_differences") {
-            return(amce_diffs(data = data, formula = formula, by = by, id = id, weights = weights, ...))
+            return(amce_diffs(data = data, formula = formula, by = by, id = id, weights = weights,
+                              feature_order = feature_order, feature_labels = feature_labels, level_order = level_order, ...))
         }
         
         # split
@@ -48,7 +50,14 @@ function(
         BY <- list()
         for(i in seq_along(split_df)) {
             # execute function on subset of data
-            BY[[i]] <- switch(estimate, amce = amce, freq = freqs, mm = mm)(data = split_df[[i]], formula = formula, id = id, weights = weights, ...)
+            BY[[i]] <- switch(estimate, amce = amce, freq = freqs, mm = mm)(data = split_df[[i]],
+                                                                            formula = formula,
+                                                                            id = id,
+                                                                            weights = weights,
+                                                                            feature_order = feature_order,
+                                                                            feature_labels = feature_labels,
+                                                                            level_order = level_order,
+                                                                            ...)
             BY[[i]][["BY"]] <- i
         }
         ## get names of subsets
@@ -65,10 +74,6 @@ function(
         out[["statistic"]] <- estimate
         
         # label features and levels
-        out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
-        out[["feature"]] <- factor(out[["feature"]],
-                                   levels = feature_order,
-                                   labels = feature_labels[feature_order])
         out <- out[c("BY", "outcome", "statistic", "feature", "level", "estimate", "std.error", "z", "p", "lower", "upper", by_vars)]
         rownames(out) <- seq_len(nrow(out))
         
@@ -78,9 +83,12 @@ function(
         }
         by_vars <- NULL
         out <- switch(estimate,
-                 amce = amce(data = data, formula = formula, id = id, weights = weights, ...),
-                 freqs = freqs(data = data, formula = formula, id = id, weights = weights, ...),
-                 mm = mm(data = data, formula = formula, id = id, weights = weights, ...)
+                 amce = amce(data = data, formula = formula, id = id, weights = weights,
+                             feature_order = feature_order, feature_labels = feature_labels, level_order = level_order, ...),
+                 freqs = freqs(data = data, formula = formula, id = id, weights = weights,
+                               feature_order = feature_order, feature_labels = feature_labels, level_order = level_order, ...),
+                 mm = mm(data = data, formula = formula, id = id, weights = weights,
+                         feature_order = feature_order, feature_labels = feature_labels, level_order = level_order, ...)
                )
     }
     # return value

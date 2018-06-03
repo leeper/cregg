@@ -78,6 +78,7 @@ make_feature_headers <- function(x, fmt = "(%s)") {
 # function used to check whether, if specified, the 'feature_order' argument is valid
 check_feature_order <- function(feature_order, RHS) {
     if (!is.null(feature_order)) {
+        browser()
         if (length(RHS) > length(feature_order)) {
             stop("'feature_order' appears to be missing values")
         } else if (length(RHS) < length(feature_order)) {

@@ -92,6 +92,10 @@ test_that("props() works", {
 
 test_that("cj_anova() works", {
     expect_true(inherits(cj_anova(immigration, ChosenImmigrant ~ Education, id = ~CaseID, by = ~Gender), "anova"), label = "cj_anova() works")
-    #expect_true(inherits(cj_anova(immigration, ChosenImmigrant ~ Education, id = ~CaseID, by = ~Gender, weights = ~wts), "anova"), label = "cj_anova() works w/ 'weights'")
+    # cj_anova() currently doesn't work with 'weights' due to issues in **survey**
+    #expect_true(inherits(cj_anova(immigration, ChosenImmigrant ~ Education, id = ~CaseID, by = ~Gender, weights = ~wts), "anova"),
+    #                     label = "cj_anova() works w/ 'weights'")
+    expect_error(cj_anova(immigration, ChosenImmigrant ~ Education, id = ~CaseID, by = ~Gender, weights = ~wts),
+                 label = "cj_anova() fails w/ 'weights', as expected at the moment")
     expect_error(cj_anova(immigration,  ~ Education, id = ~ CaseID, by = ~Gender), label = "cj_anova() fails w/o LHS variable in formula")
 })
