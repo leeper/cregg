@@ -1,0 +1,1 @@
+#' @param level_order A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via \code{\link{plot.cj_mm}}, etc.

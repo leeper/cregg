@@ -2,15 +2,19 @@
 % Please edit documentation in R/amce.R
 \name{amce}
 \alias{amce}
+\alias{amce_by_reference}
 \title{Tidy estimation of AMCEs}
 \usage{
 amce(data, formula, id = NULL, weights = NULL, feature_order = NULL,
-  feature_labels = NULL, level = 0.95, ...)
+  feature_labels = NULL, level_order = c("ascending", "descending"),
+  alpha = 0.05, ...)
+
+amce_by_reference(data, formula, variable, ...)
 }
 \arguments{
-\item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and its reported AMCE will be zero (for printing).}
+\item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and its reported AMCE will be NA (for printing). Optionally, this can instead be an object of class \dQuote{survey.design} returned by \code{\link[survey]{svydesign}}.}
 
-\item{formula}{A formula specifying an AMCE model to be estimated. All variables should be factors.}
+\item{formula}{A formula specifying an AMCE model to be estimated. All variables should be factors. Two-way interactions can be specified to handle constraints between factors in the design. These are detected automatically. Higher-order constraints are not allowed.}
 
 \item{id}{An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.}
 
@@ -18,11 +22,15 @@ amce(data, formula, id = NULL, weights = NULL, feature_order = NULL,
 
 \item{feature_order}{An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.}
 
-\item{feature_labels}{A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables in \code{formula} and character string values; arguments passed here override variable attributes.}
+\item{feature_labels}{A named list of \dQuote{fancy} feature labels to be used in output. By default, the function looks for a \dQuote{label} attribute on each variable in \code{formula} and uses that for pretty printing. This argument overrides those attributes or otherwise provides fancy labels for this purpose. This should be a list with names equal to variables on the righthand side of \code{formula} and character string values; arguments passed here override variable attributes.}
 
-\item{level}{A numeric value indicating the significance level at which to calculate confidence intervals for the AMCEs (by default 0.95, meaning 95-percent CIs are returned).}
+\item{level_order}{A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via \code{\link{plot.cj_mm}}, etc.}
 
-\item{\dots}{Additional arguments to \code{\link[stats]{glm}} or \code{\link[survey]{svyglm}}, the latter being used if \code{weights} is non-NULL.}
+\item{alpha}{A numeric value indicating the significance level at which to calculate confidence intervals for the MMs (by default 0.95, meaning 95-percent CIs are returned).}
+
+\item{\dots}{For \code{amce}: additional arguments to \code{\link[stats]{glm}} or \code{\link[survey]{svyglm}}, the latter being used if \code{weights} is non-NULL. For \code{amce_by_reference}: additional arguments passed to \code{amce}.}
+
+\item{variable}{An RHS formula containing a single factor variable from \code{formula}. This will be used by \code{amce_by_reference} to estimate AMCEs relative to each possible factor level as a reference category. If more than one RHS variables are specified, the first will be used.}
 }
 \value{
 A data frame
@@ -31,15 +39,35 @@ A data frame
 Estimate AMCEs for a conjoint analysis and return a tidy data frame of results
 }
 \details{
-Users may desire to specify a \code{family} argument via \code{\dots}, which should be a \dQuote{family} object such as \code{\link[stats]{gaussian}}. Sensible alternatives are \code{\link[stats]{binomial}} (for binary outcomes) and \code{\link[stats]{quasibinomial}} (for weighted survey data).
+\code{amce} provides estimates of AMCEs (or rather, average marginal effects for each feature level). It does not calculate AMCEs for constrained conjoint designs. The function can also be used for balance testing by specifying a covariate rather outcome on the left-hand side of \code{formula}. See examples.
+
+\code{amce_by_reference} provides a tool for quick sensitivity analysis. AMCEs are defined relative to an arbitrary reference category (i.e., feature level). This function will loop over all feature levels (for a specified feature) to show how interpretation will be affected by choice of reference category. The resulting data frame will be a stacked result from \code{amce}, containing an additional \code{BY} column specifying which level of \code{variable} was used as the reference category. In unconstrained conjoint designs, only AMCEs for \code{variable} will vary by reference category; in constrained designs, AMCEs for any factor constrained by \code{variable} may also vary.
+
+Users may desire to specify a \code{family} argument via \code{\dots}, which should be a \dQuote{family} object such as \code{gaussian}. Sensible alternatives are \code{binomial} (for binary outcomes) and quasibinomial (for weighted survey data). See \code{\link[stats]{family}} for details. In such cases, effects are always reported on the link (not outcome) scale.
 }
 \examples{
-data(hainmueller)
-set.seed(12345)
-cj(hainmueller, ChosenImmigrant ~ Gender + Education + LanguageSkills, 
-   id = ~ CaseID, feature_order = c("LanguageSkills", "Gender", "Education"))
- 
+data("taxes")
+# estimating AMCEs
+amce(taxes, chose_plan ~ taxrate1 + taxrate2 + taxrate3 + 
+     taxrate4 + taxrate5 + taxrate6 + taxrev, id = ~ ID)
+
+\dontrun{
+data("immigration")
+# estimating AMCEs with constraints
+amce(immigration, ChosenImmigrant ~ Gender + ReasonForApplication * CountryOfOrigin,
+     id = ~CaseID, constraints = list(~ReasonForApplication + CountryOfOrigin))
+
+# balance testing example
+plot(amce(immigration[!is.na(immigration$ethnocentrism),
+     ethnocentrism ~ Gender + Education + LanguageSkills, id = ~ CaseID))
+
+# reference category sensitivity
+x <- amce_by_reference(immigration, ChosenImmigrant ~ LanguageSkills + Education, 
+       variable = ~ LanguageSkills, id = ~ CaseID)
+# plot
+plot(x, group = "BY")
+}
 }
 \seealso{
-\code{\link{plot.cj_amce}}
+\code{\link{amce_diffs}} \code{\link{mm}} \code{\link{plot.cj_amce}}
 }

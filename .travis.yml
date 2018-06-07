@@ -1,11 +1,8 @@
 language: r
 sudo: false
 cache: packages
-r_github_packages:
-- leeper/prediction
-- leeper/margins
 r_packages:
 - knitr
 - covr
 after_success:
-- if [[ "${R_CODECOV}" ]]; then R -e 'covr::codecov()'; fi
+- R -q -e 'library("covr");codecov()'

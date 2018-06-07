@@ -43,7 +43,8 @@ clean_term_names <- function(x, RHS) {
 }
 
 # function used to produce a data frame of features and levels
-make_term_labels_df <- function(data, feature_names) {
+make_term_labels_df <- function(data, feature_names, level_order = c("ascending", "descending")) {
+    # setup data
     if (inherits(data, "data.frame")) {
         term_levels_list <- lapply(data[feature_names], levels)
     } else if (inherits(data, "survey.design")) {
@@ -51,7 +52,41 @@ make_term_labels_df <- function(data, feature_names) {
     } else {
         stop("'data' is not a 'data.frame' or 'survey.design' object")
     }
+    
+    # figure out level order
+    level_order <- match.arg(level_order)
+    if (level_order == "descending") {
+        term_levels_list[] <- lapply(term_levels_list, rev)
+    }
+    
+    # construct data frame
     term_levels <- rev(unlist(term_levels_list))
     term_labels <- stats::setNames(rep(feature_names, lengths(term_levels_list)), rev(term_levels))
     data.frame(feature = unlist(term_labels), level = unlist(names(term_labels)), stringsAsFactors = FALSE)
+}
+
+# function used in plot() methods to make pretty feature headers
+make_feature_headers <- function(x, fmt = "(%s)") {
+    feature_levels <- rev(split(x$level, x$feature))
+    for (i in seq_along(feature_levels)) {
+        feature_levels[[i]] <- levels(x$level)[match(feature_levels[[i]], levels(x$level))]
+        feature_levels[[i]] <- c(feature_levels[[i]], sprintf(fmt, names(feature_levels)[i]))
+    }
+    factor(as.character(x$level), levels = unique(unname(unlist(feature_levels))))
+}
+
+# function used to check whether, if specified, the 'feature_order' argument is valid
+check_feature_order <- function(feature_order, RHS) {
+    if (!is.null(feature_order)) {
+        if (length(RHS) > length(feature_order)) {
+            stop("'feature_order' appears to be missing values")
+        } else if (length(RHS) < length(feature_order)) {
+            stop("'feature_order' appears to have excess values")
+        } else if (any(!names(feature_order) %in% RHS)) {
+            stop("'feature_order' appears to contain erroneous values")
+        }
+    } else {
+        feature_order <- RHS
+    }
+    return(feature_order)
 }
