@@ -30,5 +30,6 @@
 ^vignettes/.+\.sty$
 ^vignettes/.+\.tex$
 ^data-raw$
+^data-raw/.+$
 ^.*\.Rproj$
 ^\.Rproj\.user$

@@ -1,3 +1,7 @@
+# cregg 0.2.1
+
+* Added function `cj_tidy()` to tidy a "wide" respondent-length conjoint dataset into a "long" respondent*task*alternative-length dataset. An example dataset, `wide_conjoint`, is provided for examples and testing.
+
 # cregg 0.2.0
 
 * First stable release.
