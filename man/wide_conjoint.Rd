@@ -4,7 +4,7 @@
 \name{wide_conjoint}
 \alias{wide_conjoint}
 \title{Example of a raw, \dQuote{wide} conjoint dataset to demonstrate functionality of \code{\link{cj_tidy}}}
-\format{A data frame with 100 observations on the following 16 variables.
+\format{A data frame with 100 observations on the following variables:
  \describe{
    \item{\samp{respondent}}{a numeric vector indicating the respondent identifier}
    \item{\samp{feature1a1}}{Feature 1 for task A left profile, a factor}
@@ -54,7 +54,7 @@
 wide_conjoint
 }
 \description{
-A simulated dataset containing 100 respondents' responses to four decision tasks (a,b,c,d) involving a forced choice between two alternative profiles, described by three features (1,2,3), as well as a secondary rating-scale outcome and a response time measure, along with two covariates.
+A simulated dataset containing 100 respondents' responses to four decision tasks (a,b,c,d) involving a forced choice between two alternative profiles, described by three features (1,2,3), as well as a secondary rating-scale outcome and a response time measure, along with two respondent-varying covariates. This is used in testing and examples within the package.
 }
 \examples{
 \dontrun{
