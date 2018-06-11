@@ -58,7 +58,7 @@ amce(immigration, ChosenImmigrant ~ Gender + ReasonForApplication * CountryOfOri
      id = ~CaseID, constraints = list(~ReasonForApplication + CountryOfOrigin))
 
 # balance testing example
-plot(amce(immigration[!is.na(immigration$ethnocentrism),
+plot(amce(immigration[!is.na(immigration$ethnocentrism),],
      ethnocentrism ~ Gender + Education + LanguageSkills, id = ~ CaseID))
 
 # reference category sensitivity
