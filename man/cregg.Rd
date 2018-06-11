@@ -90,8 +90,8 @@ plot(x, group = "ethnosplit", vline = 0.5)
 }
 }
 \seealso{
-Functions: \code{\link{amce}} \code{\link{mm}} \code{\link{freqs}} \code{\link{mm_diffs}} \code{\link{plot.cj_amce}}
- Data: \code{\link{immigration}} \code{\link{taxes}}
+Functions: \code{\link{amce}}, \code{\link{mm}}, \code{\link{freqs}}, \code{\link{mm_diffs}}, \code{\link{plot.cj_amce}}, \code{\link{cj_tidy}}
+ Data: \code{\link{immigration}}, \code{\link{taxes}}
 }
 \author{
 Thomas J. Leeper <thosjleeper@gmail.com>

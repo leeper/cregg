@@ -20,14 +20,19 @@ This vignette provides an introduction to **cregg** a package for analyzing and 
  - Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs (as well as designs involving an unlimited number of two-way constraints between features) and munging of AMCE estimates into tidy data frames, via `amce()`
  - Calculation of marginal means (MMs) for conjoint designs and munging them into tidy data frames via `mm()`
  - Tabulation of display frequencies of feature attributes via `freqs()` and cross-tabulation of feature restrictions using `props()`
- - Diagnostics to assess preference heterogeneity, including an omnibus statstical test (`cj_anova()`) and tidying of differences in MMs (`mm_diffs()`) and AMCEs (`amce_diffs()`) across subgroups
- - Diagnostics to choose feature reference categories, via `amce_by_reference()`
- - **ggplot2**-based visualizations of AMCEs and MMs, via `plot()` methods for all of the above
+ - Tidying of raw "wide"-format conjoint survey datasets into "long" or "tidy" datasets using `cj_tidy()`
 
-To demonstrate package functionality, the package includes two example datasets:
+In addition, the package provides a number of tools that are likely useful to conjoint analysts:
+
+ - **ggplot2**-based visualizations of AMCEs and MMs, via `plot()` methods for all of the above
+ - Tidying of raw "wide"-format conjoint survey datasets into "long" or "tidy" datasets using `cj_tidy()`
+ - Diagnostics to choose feature reference categories, via `amce_by_reference()`
+
+To demonstrate package functionality, the package includes three example datasets:
 
  - `taxes`, a full randomized choice task conjoint experiment conducted by Ballard-Rosa et al. (2016)
  - `immigration`, a partial factorial conjoint experiment with several restrictions between features conducted by Hainmueller, Hopkins, and Yamamoto (2014)
+ - `conjoint_wide`, a simulated "wide"-format conjoint dataset that is used to demonstrate functionality of `cj_tidy()`
 
 The design of cregg follows a few key princples:
 
@@ -54,7 +59,7 @@ options(width = 120)
 knitr::opts_chunk$set(comment = "", warning = FALSE, message = FALSE, echo = TRUE, tidy = TRUE, size="small", fig.width = 10, fig.height = 10)
 ```
 
-The package includes an example conjoint dataset (borrowed and lightly modified from the [cjoint](https://cran.r-project.org/package=cjoint) package), which is used here and and in examples:
+The package includes several example conjoint datasets, which is used here and and in examples:
 
 ```{r load}
 library("cregg")
