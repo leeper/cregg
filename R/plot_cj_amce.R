@@ -18,7 +18,7 @@
 #' @param \dots Ignored.
 #' @return A ggplot2 object
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # load data
 #' data("immigration")
 #' 

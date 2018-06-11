@@ -24,7 +24,7 @@
 #' @source Hainmueller, J., Hopkins, D., and Yamamoto T. 2014. \dQuote{Causal Inference in Conjoint Analysis: Understanding Multi-Dimensional Choices via Stated Preference Experiments.} \emph{Political Analysis} 22(1): 1-30. \url{http://doi.org/10.1093/pan/mpt024}
 #' @note This is a modified version of the \samp{hainmueller} dataset available from the \href{https://cran.r-project.org/package=cjoint}{cjoint} package.
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' data("immigration")
 #' 
 #' # view constraints between features

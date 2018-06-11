@@ -69,7 +69,7 @@ A ggplot2 object
 ggplot2-based plotting of conjoint AMCEs estimates and MMs
 }
 \examples{
-\dontrun{
+\donttest{
 # load data
 data("immigration")
 

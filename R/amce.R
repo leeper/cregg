@@ -24,7 +24,7 @@
 #' amce(taxes, chose_plan ~ taxrate1 + taxrate2 + taxrate3 + 
 #'      taxrate4 + taxrate5 + taxrate6 + taxrev, id = ~ ID)
 #' 
-#' \dontrun{
+#' \donttest{
 #' data("immigration")
 #' # estimating AMCEs with constraints
 #' amce(immigration, ChosenImmigrant ~ Gender + ReasonForApplication * CountryOfOrigin,

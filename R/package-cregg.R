@@ -22,7 +22,7 @@
 #' Note: Some features of cregg (namely, the \code{\link{amce_diffs}}) function, or \code{estimate = "amce_diff"} here) only work with full factorial conjoint experiments. Designs involving two-way constraints between features are supported simply by expressing interactions between constrained terms in \code{formula} (again, except for \code{amce_diffs}). Higher-order constraints may be supported in the future.
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # load data
 #' requireNamespace("ggplot2")
 #' data("immigration")

@@ -20,7 +20,7 @@
 #'  }
 #' @source Ballard-Rosa, Cameron, Lucy Martin, and Kenneth Scheve. 2016. \dQuote{The Structure of American Income Tax Policy Preferences.} \emph{The Journal of Politics} 79(1): 1-16. \url{http://doi.org/10.1086/687324}
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' data("taxes")
 #' f1 <- chose_plan ~ taxrate1 + taxrate2 + taxrate3 + 
 #'         taxrate4 + taxrate5 + taxrate6 + taxrev

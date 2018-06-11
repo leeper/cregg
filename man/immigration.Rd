@@ -36,7 +36,7 @@ A dataset containing the results of a conjoint survey of a representative sample
 This is a modified version of the \samp{hainmueller} dataset available from the \href{https://cran.r-project.org/package=cjoint}{cjoint} package.
 }
 \examples{
-\dontrun{
+\donttest{
 data("immigration")
 
 # view constraints between features

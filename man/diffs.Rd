@@ -62,7 +62,7 @@ cj_anova(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills, by 
 # Test for heterogeneity by CountryOfOrigin feature
 cj_anova(immigration, ChosenImmigrant ~ Gender + Education, by = ~ CountryOfOrigin)
 
-\dontrun{
+\donttest{
 # Differences in MMs by Gender feature
 mm_diffs(immigration, ChosenImmigrant ~ LanguageSkills + Education, ~ Gender, id = ~ CaseID)
 
