@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1</span>
       </span>
     </div>
 
@@ -292,23 +292,18 @@
 #&gt; 30  0.076056550
 #&gt; 31  0.100969252
 #&gt; 32  0.141009303</div><div class='input'>
-</div># NOT RUN {
-data("immigration")
-# estimating AMCEs with constraints
-amce(immigration, ChosenImmigrant ~ Gender + ReasonForApplication * CountryOfOrigin,
-     id = ~CaseID, constraints = list(~ReasonForApplication + CountryOfOrigin))
-
-# balance testing example
-plot(amce(immigration[!is.na(immigration$ethnocentrism),
-     ethnocentrism ~ Gender + Education + LanguageSkills, id = ~ CaseID))
-
-# reference category sensitivity
-x <- amce_by_reference(immigration, ChosenImmigrant ~ LanguageSkills + Education, 
-       variable = ~ LanguageSkills, id = ~ CaseID)
-# plot
-plot(x, group = "BY")
-# }
-</pre>
+</div><div class='input'><span class='fu'>data</span>(<span class='st'>"immigration"</span>)
+<span class='co'># estimating AMCEs with constraints</span>
+<span class='fu'>amce</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>ReasonForApplication</span> * <span class='no'>CountryOfOrigin</span>,
+     <span class='kw'>id</span> <span class='kw'>=</span> ~<span class='no'>CaseID</span>, <span class='kw'>constraints</span> <span class='kw'>=</span> <span class='fu'>list</span>(~<span class='no'>ReasonForApplication</span> + <span class='no'>CountryOfOrigin</span>))</div><div class='output co'>#&gt; <span class='error'>Error in glm.control(constraints = list(~ReasonForApplication + CountryOfOrigin)): unused argument (constraints = list(~ReasonForApplication + CountryOfOrigin))</span></div><div class='input'>
+<span class='co'># balance testing example</span>
+<span class='fu'>plot</span>(<span class='fu'>amce</span>(<span class='no'>immigration</span>[!<span class='fu'>is.na</span>(<span class='no'>immigration</span>$<span class='no'>ethnocentrism</span>),],
+     <span class='no'>ethnocentrism</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span> + <span class='no'>LanguageSkills</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>))</div><div class='img'><img src='amce-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># reference category sensitivity</span>
+<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>amce_by_reference</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span> + <span class='no'>Education</span>,
+       <span class='kw'>variable</span> <span class='kw'>=</span> ~ <span class='no'>LanguageSkills</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
+<span class='co'># plot</span>
+<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"BY"</span>)</div><div class='img'><img src='amce-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

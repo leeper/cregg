@@ -12,13 +12,18 @@ output:
  - Calculation of marginal means (MMs) for conjoint designs and munging them into tidy data frames via `mm()`
  - Tabulation of display frequencies of feature attributes via `freqs()` and cross-tabulation of feature restrictions using `props()`
  - Diagnostics to assess preference heterogeneity, including an omnibus statstical test (`cj_anova()`) and tidying of differences in MMs (`mm_diffs()`) and AMCEs (`amce_diffs()`) across subgroups
- - Diagnostics to choose feature reference categories, via `amce_by_reference()`
- - **ggplot2**-based visualizations of AMCEs and MMs, via `plot()` methods for all of the above
 
-To demonstrate package functionality, the package includes two example datasets:
+In addition, the package provides a number of tools that are likely useful to conjoint analysts:
+
+ - **ggplot2**-based visualizations of AMCEs and MMs, via `plot()` methods for all of the above
+ - Tidying of raw "wide"-format conjoint survey datasets into "long" or "tidy" datasets using `cj_tidy()`
+ - Diagnostics to choose feature reference categories, via `amce_by_reference()`
+
+To demonstrate package functionality, the package includes three example datasets:
 
  - `taxes`, a full randomized choice task conjoint experiment conducted by Ballard-Rosa et al. (2016)
  - `immigration`, a partial factorial conjoint experiment with several restrictions between features conducted by Hainmueller, Hopkins, and Yamamoto (2014)
+ - `conjoint_wide`, a simulated "wide"-format conjoint dataset that is used to demonstrate functionality of `cj_tidy()`
 
 The design of cregg follows a few key princples:
 
@@ -42,7 +47,7 @@ The package, whose primary point of contact is `cj()`, takes its name from the s
 
 
 
-The package includes an example conjoint dataset (borrowed and lightly modified from the [cjoint](https://cran.r-project.org/package=cjoint) package), which is used here and and in examples:
+The package includes several example conjoint datasets, which is used here and and in examples:
 
 
 ```r
@@ -61,7 +66,7 @@ f1 <- ChosenImmigrant ~ Gender + Education + LanguageSkills + CountryOfOrigin + 
 plot(mm(immigration, f1, id = ~CaseID), vline = 0.5)
 ```
 
-![plot of chunk mmplot](https://i.imgur.com/kMoHlnK.png)
+![plot of chunk mmplot](https://i.imgur.com/cUbSTLv.png)
 
 cregg functions uses `attr(data$feature, "label")` to provide pretty printing of feature labels, so that variable names can be arbitrary. These can be overwritten using the `feature_labels` argument to override these settings. Feature levels are always deduced from the `levels()` of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in `feature_order`.
 
@@ -106,7 +111,7 @@ This makes it very easy to modify, combine, print, etc. the resulting output. It
 plot(amces)
 ```
 
-![plot of chunk plot_amce](https://i.imgur.com/njIoF90.png)
+![plot of chunk plot_amce](https://i.imgur.com/g0w9pbf.png)
 
 To provide simple subgroup analyses, the `cj()` function provides a `by` argument to iterate over subsets of `data` and calculate AMCEs or MMs on each subgroup. For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:
 
@@ -116,7 +121,7 @@ mm_by <- cj(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills, 
 plot(mm_by, group = "contest_no", vline = 0.5)
 ```
 
-![plot of chunk mm_by](https://i.imgur.com/npkTkaH.png)
+![plot of chunk mm_by](https://i.imgur.com/lQ3HjEr.png)
 
 A more formal test of these differences is provided by a nested model comparison test:
 
@@ -147,7 +152,7 @@ Again, a detailed website showcasing package functionality is available at: http
 [![Travis Build Status](https://travis-ci.org/leeper/cregg.png?branch=master)](https://travis-ci.org/leeper/cregg)
 [![codecov.io](https://codecov.io/github/leeper/cregg/coverage.svg?branch=master)](https://codecov.io/github/leeper/cregg?branch=master)
 
-This package is not yet on CRAN. To install the latest development version you can pull a potentially unstable version directly from GitHub:
+This package can be installed directly from CRAN. To install the latest development version you can pull from GitHub:
 
 ```R
 if (!require("remotes")) {

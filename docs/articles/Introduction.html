@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@
     <div class="page-header toc-ignore">
       <h1>Introduction to cregg</h1>
             
-            <h4 class="date">2018-06-07</h4>
+            <h4 class="date">2018-06-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/leeper/cregg/blob/master/vignettes/Introduction.Rmd"><code>vignettes/Introduction.Rmd</code></a></small>
       <div class="hidden name"><code>Introduction.Rmd</code></div>
@@ -98,18 +98,27 @@
 </li>
 <li>Tabulation of display frequencies of feature attributes via <code><a href="../reference/freqs.html">freqs()</a></code> and cross-tabulation of feature restrictions using <code><a href="../reference/freqs.html">props()</a></code>
 </li>
-<li>Diagnostics to assess preference heterogeneity, including an omnibus statstical test (<code><a href="../reference/diffs.html">cj_anova()</a></code>) and tidying of differences in MMs (<code><a href="../reference/diffs.html">mm_diffs()</a></code>) and AMCEs (<code><a href="../reference/diffs.html">amce_diffs()</a></code>) across subgroups</li>
-<li>Diagnostics to choose feature reference categories, via <code><a href="../reference/amce.html">amce_by_reference()</a></code>
+<li>Tidying of raw “wide”-format conjoint survey datasets into “long” or “tidy” datasets using <code><a href="../reference/cj_tidy.html">cj_tidy()</a></code>
 </li>
+</ul>
+<p>In addition, the package provides a number of tools that are likely useful to conjoint analysts:</p>
+<ul>
 <li>
 <strong>ggplot2</strong>-based visualizations of AMCEs and MMs, via <code>plot()</code> methods for all of the above</li>
+<li>Tidying of raw “wide”-format conjoint survey datasets into “long” or “tidy” datasets using <code><a href="../reference/cj_tidy.html">cj_tidy()</a></code>
+</li>
+<li>Diagnostics to choose feature reference categories, via <code><a href="../reference/amce.html">amce_by_reference()</a></code>
+</li>
 </ul>
-<p>To demonstrate package functionality, the package includes two example datasets:</p>
+<p>To demonstrate package functionality, the package includes three example datasets:</p>
 <ul>
 <li>
 <code>taxes</code>, a full randomized choice task conjoint experiment conducted by Ballard-Rosa et al. (2016)</li>
 <li>
 <code>immigration</code>, a partial factorial conjoint experiment with several restrictions between features conducted by Hainmueller, Hopkins, and Yamamoto (2014)</li>
+<li>
+<code>conjoint_wide</code>, a simulated “wide”-format conjoint dataset that is used to demonstrate functionality of <code><a href="../reference/cj_tidy.html">cj_tidy()</a></code>
+</li>
 </ul>
 <p>The design of cregg follows a few key princples:</p>
 <ul>
@@ -129,7 +138,7 @@
 <div id="code-examples" class="section level2">
 <h2 class="hasAnchor">
 <a href="#code-examples" class="anchor"></a>Code Examples</h2>
-<p>The package includes an example conjoint dataset (borrowed and lightly modified from the <a href="https://cran.r-project.org/package=cjoint">cjoint</a> package), which is used here and and in examples:</p>
+<p>The package includes several example conjoint datasets, which is used here and and in examples:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"cregg"</span>)
 <span class="kw">data</span>(<span class="st">"immigration"</span>)</code></pre></div>
 <div id="marginal-means" class="section level3">

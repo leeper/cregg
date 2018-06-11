@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1</span>
       </span>
     </div>
 
@@ -160,20 +160,139 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>data</span>(<span class='st'>"immigration"</span>)
+    <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='st'>"immigration"</span>)
 
 <span class='co'># view constraints between features</span>
-<span class='fu'>subset</span>(<span class='fu'><a href='freqs.html'>props</a></span>(<span class='no'>immigration</span>, ~ <span class='no'>Job</span> + <span class='no'>Education</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>), <span class='no'>Proportion</span> <span class='kw'>==</span> <span class='fl'>0</span>)
-<span class='fu'>subset</span>(<span class='fu'><a href='freqs.html'>props</a></span>(<span class='no'>immigration</span>, ~ <span class='no'>ReasonForApplication</span> + <span class='no'>CountryOfOrigin</span>,
-             <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>), <span class='no'>Proportion</span> <span class='kw'>==</span> <span class='fl'>0</span>)
-
+<span class='fu'>subset</span>(<span class='fu'><a href='freqs.html'>props</a></span>(<span class='no'>immigration</span>, ~ <span class='no'>Job</span> + <span class='no'>Education</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>), <span class='no'>Proportion</span> <span class='kw'>==</span> <span class='fl'>0</span>)</div><div class='output co'>#&gt;                    Job   Education Proportion
+#&gt; 5    Financial Analyst   No Formal          0
+#&gt; 8  Computer Programmer   No Formal          0
+#&gt; 10  Research Scientist   No Formal          0
+#&gt; 11              Doctor   No Formal          0
+#&gt; 16   Financial Analyst   4th Grade          0
+#&gt; 19 Computer Programmer   4th Grade          0
+#&gt; 21  Research Scientist   4th Grade          0
+#&gt; 22              Doctor   4th Grade          0
+#&gt; 27   Financial Analyst   8th Grade          0
+#&gt; 30 Computer Programmer   8th Grade          0
+#&gt; 32  Research Scientist   8th Grade          0
+#&gt; 33              Doctor   8th Grade          0
+#&gt; 38   Financial Analyst High School          0
+#&gt; 41 Computer Programmer High School          0
+#&gt; 43  Research Scientist High School          0
+#&gt; 44              Doctor High School          0</div><div class='input'><span class='fu'>subset</span>(<span class='fu'><a href='freqs.html'>props</a></span>(<span class='no'>immigration</span>, ~ <span class='no'>ReasonForApplication</span> + <span class='no'>CountryOfOrigin</span>,
+             <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>), <span class='no'>Proportion</span> <span class='kw'>==</span> <span class='fl'>0</span>)</div><div class='output co'>#&gt;    ReasonForApplication CountryOfOrigin Proportion
+#&gt; 3    Escape Persecution           India          0
+#&gt; 6    Escape Persecution         Germany          0
+#&gt; 9    Escape Persecution          France          0
+#&gt; 12   Escape Persecution          Mexico          0
+#&gt; 15   Escape Persecution     Philippines          0
+#&gt; 18   Escape Persecution          Poland          0</div><div class='input'>
 <span class='co'># AMCEs with interactions for constraints</span>
 <span class='no'>f1</span> <span class='kw'>&lt;-</span> <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span> * <span class='no'>Job</span> +
          <span class='no'>LanguageSkills</span> + <span class='no'>CountryOfOrigin</span> * <span class='no'>ReasonForApplication</span> +
          <span class='no'>JobExperience</span> + <span class='no'>JobPlans</span> + <span class='no'>PriorEntry</span>
-<span class='fu'>cj</span>(<span class='no'>immigration</span>, <span class='no'>f1</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
-<span class='co'># }</span></pre>
+<span class='fu'>cj</span>(<span class='no'>immigration</span>, <span class='no'>f1</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)</div><div class='output co'>#&gt;            outcome statistic                feature                     level
+#&gt; 1  ChosenImmigrant      amce                 Gender                    Female
+#&gt; 2  ChosenImmigrant      amce                 Gender                      Male
+#&gt; 3  ChosenImmigrant      amce Educational Attainment                 No Formal
+#&gt; 4  ChosenImmigrant      amce Educational Attainment                 4th Grade
+#&gt; 5  ChosenImmigrant      amce Educational Attainment                 8th Grade
+#&gt; 6  ChosenImmigrant      amce Educational Attainment               High School
+#&gt; 7  ChosenImmigrant      amce Educational Attainment          Two-Year College
+#&gt; 8  ChosenImmigrant      amce Educational Attainment            College Degree
+#&gt; 9  ChosenImmigrant      amce Educational Attainment           Graduate Degree
+#&gt; 10 ChosenImmigrant      amce                    Job                   Janitor
+#&gt; 11 ChosenImmigrant      amce                    Job                    Waiter
+#&gt; 12 ChosenImmigrant      amce                    Job       Child Care Provider
+#&gt; 13 ChosenImmigrant      amce                    Job                  Gardener
+#&gt; 14 ChosenImmigrant      amce                    Job         Financial Analyst
+#&gt; 15 ChosenImmigrant      amce                    Job       Construction Worker
+#&gt; 16 ChosenImmigrant      amce                    Job                   Teacher
+#&gt; 17 ChosenImmigrant      amce                    Job       Computer Programmer
+#&gt; 18 ChosenImmigrant      amce                    Job                     Nurse
+#&gt; 19 ChosenImmigrant      amce                    Job        Research Scientist
+#&gt; 20 ChosenImmigrant      amce                    Job                    Doctor
+#&gt; 21 ChosenImmigrant      amce        Language Skills            Fluent English
+#&gt; 22 ChosenImmigrant      amce        Language Skills            Broken English
+#&gt; 23 ChosenImmigrant      amce        Language Skills  Tried English but Unable
+#&gt; 24 ChosenImmigrant      amce        Language Skills          Used Interpreter
+#&gt; 25 ChosenImmigrant      amce      Country of Origin                     India
+#&gt; 26 ChosenImmigrant      amce      Country of Origin                   Germany
+#&gt; 27 ChosenImmigrant      amce      Country of Origin                    France
+#&gt; 28 ChosenImmigrant      amce      Country of Origin                    Mexico
+#&gt; 29 ChosenImmigrant      amce      Country of Origin               Philippines
+#&gt; 30 ChosenImmigrant      amce      Country of Origin                    Poland
+#&gt; 31 ChosenImmigrant      amce      Country of Origin                     China
+#&gt; 32 ChosenImmigrant      amce      Country of Origin                     Sudan
+#&gt; 33 ChosenImmigrant      amce      Country of Origin                   Somalia
+#&gt; 34 ChosenImmigrant      amce      Country of Origin                      Iraq
+#&gt; 35 ChosenImmigrant      amce Reason for Application       Reunite with Family
+#&gt; 36 ChosenImmigrant      amce Reason for Application           Seek Better Job
+#&gt; 37 ChosenImmigrant      amce Reason for Application        Escape Persecution
+#&gt; 38 ChosenImmigrant      amce         Job Experience                      None
+#&gt; 39 ChosenImmigrant      amce         Job Experience                 1-2 Years
+#&gt; 40 ChosenImmigrant      amce         Job Experience                 3-5 Years
+#&gt; 41 ChosenImmigrant      amce         Job Experience                  5+ Years
+#&gt; 42 ChosenImmigrant      amce              Job Plans        Will Look for Work
+#&gt; 43 ChosenImmigrant      amce              Job Plans    Contract with Employer
+#&gt; 44 ChosenImmigrant      amce              Job Plans  Interviews with Employer
+#&gt; 45 ChosenImmigrant      amce              Job Plans No Plans to Look for Work
+#&gt; 46 ChosenImmigrant      amce            Prior Entry                     Never
+#&gt; 47 ChosenImmigrant      amce            Prior Entry           Once as Tourist
+#&gt; 48 ChosenImmigrant      amce            Prior Entry     Many Times as Tourist
+#&gt; 49 ChosenImmigrant      amce            Prior Entry    Six Months with Family
+#&gt; 50 ChosenImmigrant      amce            Prior Entry    Once w/o Authorization
+#&gt;        estimate   std.error           z            p        lower        upper
+#&gt; 1   0.000000000          NA          NA           NA           NA           NA
+#&gt; 2  -0.026023159 0.008012413  -3.2478555 1.162783e-03 -0.041727199 -0.010319118
+#&gt; 3   0.000000000          NA          NA           NA           NA           NA
+#&gt; 4   0.033068508 0.014906199   2.2184401 2.652484e-02  0.008549993  0.057587023
+#&gt; 5   0.057744013 0.014945344   3.8636790 1.116920e-04  0.033161109  0.082326917
+#&gt; 6   0.119483476 0.014963743   7.9848655 1.406756e-15  0.094870309  0.144096644
+#&gt; 7   0.163405352 0.022955261   7.1184270 1.091657e-12  0.125647307  0.201163397
+#&gt; 8   0.190036705 0.023015067   8.2570564 1.493088e-16  0.152180289  0.227893121
+#&gt; 9   0.176068029 0.016908355  10.4130786 2.161174e-25  0.148256260  0.203879798
+#&gt; 10  0.000000000          NA          NA           NA           NA           NA
+#&gt; 11 -0.006814709 0.016605007  -0.4104009 6.815119e-01 -0.034127516  0.020498097
+#&gt; 12  0.014886098 0.016644893   0.8943342 3.711431e-01 -0.012492315  0.042264511
+#&gt; 13  0.013171373 0.016779579   0.7849644 4.324744e-01 -0.014428579  0.040771324
+#&gt; 14  0.063934683 0.029472979   2.1692644 3.006262e-02  0.015455947  0.112413419
+#&gt; 15  0.037824466 0.016758607   2.2570173 2.400699e-02  0.010259010  0.065389921
+#&gt; 16  0.073287616 0.016710294   4.3857766 1.155727e-05  0.045801629  0.100773604
+#&gt; 17  0.079101210 0.028702989   2.7558527 5.853935e-03  0.031888995  0.126313425
+#&gt; 18  0.084736815 0.016669902   5.0832222 3.710851e-07  0.057317267  0.112156364
+#&gt; 19  0.127636596 0.028715687   4.4448387 8.795785e-06  0.080403494  0.174869698
+#&gt; 20  0.157302433 0.028627660   5.4947709 3.912179e-08  0.110214123  0.204390744
+#&gt; 21  0.000000000          NA          NA           NA           NA           NA
+#&gt; 22 -0.056319723 0.011312971  -4.9783317 6.413467e-07 -0.078492739 -0.034146707
+#&gt; 23 -0.126359527 0.011370259 -11.1131620 1.082569e-28 -0.148644825 -0.104074230
+#&gt; 24 -0.159740917 0.011589128 -13.7836870 3.195271e-43 -0.182455191 -0.137026643
+#&gt; 25  0.000000000          NA          NA           NA           NA           NA
+#&gt; 26  0.047160626 0.017701825   2.6641675 7.717913e-03  0.018043715  0.076277536
+#&gt; 27  0.026912000 0.017642487   1.5254085 1.271572e-01 -0.002107309  0.055931308
+#&gt; 28  0.010474179 0.017885716   0.5856170 5.581330e-01 -0.018945206  0.039893564
+#&gt; 29  0.034025766 0.017808198   1.9106798 5.604574e-02  0.004733886  0.063317646
+#&gt; 30  0.032579818 0.017762441   1.8341971 6.662475e-02  0.003363202  0.061796434
+#&gt; 31 -0.016966177 0.021050652  -0.8059692 4.202606e-01 -0.051591418  0.017659064
+#&gt; 32 -0.042461230 0.021138314  -2.0087330 4.456546e-02 -0.077230663 -0.007691797
+#&gt; 33 -0.048329846 0.021087744  -2.2918452 2.191458e-02 -0.083016099 -0.013643593
+#&gt; 34 -0.112660797 0.020249980  -5.5635017 2.644143e-08 -0.145969050 -0.079352544
+#&gt; 35  0.000000000          NA          NA           NA           NA           NA
+#&gt; 36 -0.038318972 0.008764003  -4.3723138 1.229366e-05 -0.052734475 -0.023903470
+#&gt; 37  0.055634454 0.015546453   3.5785946 3.454468e-04  0.030062814  0.081206094
+#&gt; 38  0.000000000          NA          NA           NA           NA           NA
+#&gt; 39  0.065290374 0.011021037   5.9241587 3.139003e-09  0.043689538  0.086891210
+#&gt; 40  0.107817867 0.011563087   9.3243156 1.117022e-20  0.085154634  0.130481101
+#&gt; 41  0.113148256 0.011355436   9.9642368 2.185459e-23  0.090892010  0.135404502
+#&gt; 42  0.000000000          NA          NA           NA           NA           NA
+#&gt; 43  0.124929937 0.011682877  10.6934219 1.092637e-26  0.102031918  0.147827955
+#&gt; 44  0.025217294 0.011770294   2.1424523 3.215710e-02  0.002147942  0.048286647
+#&gt; 45 -0.157301077 0.011744316 -13.3938053 6.572515e-41 -0.180319513 -0.134282642
+#&gt; 46  0.000000000          NA          NA           NA           NA           NA
+#&gt; 47  0.055954954 0.012463168   4.4896253 7.134857e-06  0.031527594  0.080382315
+#&gt; 48  0.054748425 0.012912603   4.2399217 2.235978e-05  0.029440188  0.080056661
+#&gt; 49  0.075317887 0.012603718   5.9758467 2.288981e-09  0.050615054  0.100020720
+#&gt; 50 -0.110084275 0.013026767  -8.4506211 2.897573e-17 -0.135616269 -0.084552280</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1</span>
       </span>
     </div>
 
@@ -153,12 +153,108 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>data</span>(<span class='st'>"taxes"</span>)
+    <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='st'>"taxes"</span>)
 <span class='no'>f1</span> <span class='kw'>&lt;-</span> <span class='no'>chose_plan</span> ~ <span class='no'>taxrate1</span> + <span class='no'>taxrate2</span> + <span class='no'>taxrate3</span> +
         <span class='no'>taxrate4</span> + <span class='no'>taxrate5</span> + <span class='no'>taxrate6</span> + <span class='no'>taxrev</span>
-<span class='fu'>cj</span>(<span class='no'>taxes</span>, <span class='no'>f1</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>ID</span>, <span class='kw'>weights</span> <span class='kw'>=</span> ~     <span class='no'>weight</span>)
-<span class='co'># }</span></pre>
+<span class='fu'>cj</span>(<span class='no'>taxes</span>, <span class='no'>f1</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>ID</span>, <span class='kw'>weights</span> <span class='kw'>=</span> ~     <span class='no'>weight</span>)</div><div class='output co'>#&gt;       outcome statistic                        feature         level
+#&gt; 1  chose_plan      amce          Tax rate for &lt;$10,000      &lt;10k: 0%
+#&gt; 2  chose_plan      amce          Tax rate for &lt;$10,000      &lt;10k: 5%
+#&gt; 3  chose_plan      amce          Tax rate for &lt;$10,000     &lt;10k: 15%
+#&gt; 4  chose_plan      amce          Tax rate for &lt;$10,000     &lt;10k: 25%
+#&gt; 5  chose_plan      amce   Tax rate for $10,000-$35,000    10-35k: 5%
+#&gt; 6  chose_plan      amce   Tax rate for $10,000-$35,000   10-35k: 15%
+#&gt; 7  chose_plan      amce   Tax rate for $10,000-$35,000   10-35k: 25%
+#&gt; 8  chose_plan      amce   Tax rate for $10,000-$35,000   10-35k: 35%
+#&gt; 9  chose_plan      amce   Tax rate for $25,000-$85,000    35-85k: 5%
+#&gt; 10 chose_plan      amce   Tax rate for $25,000-$85,000   35-85k: 15%
+#&gt; 11 chose_plan      amce   Tax rate for $25,000-$85,000   35-85k: 25%
+#&gt; 12 chose_plan      amce   Tax rate for $25,000-$85,000   35-85k: 35%
+#&gt; 13 chose_plan      amce  Tax rate for $85,000-$175,000   85-175k: 5%
+#&gt; 14 chose_plan      amce  Tax rate for $85,000-$175,000  85-175k: 15%
+#&gt; 15 chose_plan      amce  Tax rate for $85,000-$175,000  85-175k: 25%
+#&gt; 16 chose_plan      amce  Tax rate for $85,000-$175,000  85-175k: 35%
+#&gt; 17 chose_plan      amce Tax rate for $175,000-$375,000  175-375k: 5%
+#&gt; 18 chose_plan      amce Tax rate for $175,000-$375,000 175-375k: 15%
+#&gt; 19 chose_plan      amce Tax rate for $175,000-$375,000 175-375k: 25%
+#&gt; 20 chose_plan      amce Tax rate for $175,000-$375,000 175-375k: 35%
+#&gt; 21 chose_plan      amce Tax rate for $175,000-$375,000 175-375k: 45%
+#&gt; 22 chose_plan      amce         Tax rate for &gt;$375,000     &gt;375k: 5%
+#&gt; 23 chose_plan      amce         Tax rate for &gt;$375,000    &gt;375k: 15%
+#&gt; 24 chose_plan      amce         Tax rate for &gt;$375,000    &gt;375k: 25%
+#&gt; 25 chose_plan      amce         Tax rate for &gt;$375,000    &gt;375k: 35%
+#&gt; 26 chose_plan      amce         Tax rate for &gt;$375,000    &gt;375k: 45%
+#&gt; 27 chose_plan      amce         Tax rate for &gt;$375,000    &gt;375k: 55%
+#&gt; 28 chose_plan      amce                    Tax revenue          &lt;75%
+#&gt; 29 chose_plan      amce                    Tax revenue        75-95%
+#&gt; 30 chose_plan      amce                    Tax revenue       95-105%
+#&gt; 31 chose_plan      amce                    Tax revenue      105-125%
+#&gt; 32 chose_plan      amce                    Tax revenue         &gt;125%
+#&gt;         estimate   std.error            z             p         lower
+#&gt; 1   0.0000000000          NA           NA            NA            NA
+#&gt; 2  -0.0213657909 0.005603362  -3.81303088  1.372730e-04 -0.0323481778
+#&gt; 3  -0.1085089681 0.006796459 -15.96551498  2.222001e-57 -0.1218297830
+#&gt; 4  -0.2417205854 0.008531343 -28.33324048 1.346689e-176 -0.2584417099
+#&gt; 5   0.0000000000          NA           NA            NA            NA
+#&gt; 6  -0.0216654811 0.007365031  -2.94166851  3.264492e-03 -0.0361006774
+#&gt; 7  -0.1028048639 0.010913360  -9.42009287  4.506892e-21 -0.1241946563
+#&gt; 8  -0.2194266402 0.013745146 -15.96393661  2.278927e-57 -0.2463666314
+#&gt; 9   0.0000000000          NA           NA            NA            NA
+#&gt; 10  0.0001812976 0.005518348   0.03285361  9.737913e-01 -0.0106344656
+#&gt; 11 -0.0650669525 0.007085019  -9.18373729  4.163836e-20 -0.0789533344
+#&gt; 12 -0.1260348655 0.008661017 -14.55197102  5.674421e-48 -0.1430101465
+#&gt; 13  0.0000000000          NA           NA            NA            NA
+#&gt; 14  0.0109438886 0.005308487   2.06158349  3.924741e-02  0.0005394458
+#&gt; 15 -0.0155419502 0.005542475  -2.80415325  5.044892e-03 -0.0264050022
+#&gt; 16 -0.0126122794 0.005761680  -2.18899344  2.859732e-02 -0.0239049645
+#&gt; 17  0.0000000000          NA           NA            NA            NA
+#&gt; 18  0.0332708646 0.005571528   5.97158679  2.349570e-09  0.0223508699
+#&gt; 19  0.0425251595 0.006516894   6.52537219  6.783288e-11  0.0297522818
+#&gt; 20  0.0580764422 0.005944731   9.76939761  1.523552e-22  0.0464249833
+#&gt; 21  0.0327895914 0.006830710   4.80031956  1.584127e-06  0.0194016456
+#&gt; 22  0.0000000000          NA           NA            NA            NA
+#&gt; 23  0.0558225384 0.006793283   8.21731380  2.081120e-16  0.0425079483
+#&gt; 24  0.0896621795 0.007361044  12.18063394  3.942058e-34  0.0752347989
+#&gt; 25  0.1139343820 0.007379616  15.43906689  8.938405e-54  0.0994706008
+#&gt; 26  0.1099558977 0.008312893  13.22715226  6.116108e-40  0.0936629273
+#&gt; 27  0.0838214633 0.008780819   9.54597283  1.348361e-21  0.0666113735
+#&gt; 28  0.0000000000          NA           NA            NA            NA
+#&gt; 29  0.0297942004 0.008374721   3.55763502  3.742088e-04  0.0133800490
+#&gt; 30  0.0692814207 0.011332045   6.11376152  9.730969e-10  0.0470710206
+#&gt; 31  0.0911924955 0.014408949   6.32887902  2.469486e-10  0.0629514743
+#&gt; 32  0.1354902736 0.018772915   7.21732757  5.301916e-13  0.0986960372
+#&gt;           upper
+#&gt; 1            NA
+#&gt; 2  -0.010383404
+#&gt; 3  -0.095188153
+#&gt; 4  -0.224999461
+#&gt; 5            NA
+#&gt; 6  -0.007230285
+#&gt; 7  -0.081415072
+#&gt; 8  -0.192486649
+#&gt; 9            NA
+#&gt; 10  0.010997061
+#&gt; 11 -0.051180571
+#&gt; 12 -0.109059585
+#&gt; 13           NA
+#&gt; 14  0.021348331
+#&gt; 15 -0.004678898
+#&gt; 16 -0.001319594
+#&gt; 17           NA
+#&gt; 18  0.044190859
+#&gt; 19  0.055298037
+#&gt; 20  0.069727901
+#&gt; 21  0.046177537
+#&gt; 22           NA
+#&gt; 23  0.069137128
+#&gt; 24  0.104089560
+#&gt; 25  0.128398163
+#&gt; 26  0.126248868
+#&gt; 27  0.101031553
+#&gt; 28           NA
+#&gt; 29  0.046208352
+#&gt; 30  0.091491821
+#&gt; 31  0.119433517
+#&gt; 32  0.172284510</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

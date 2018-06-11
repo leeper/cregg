@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1</span>
       </span>
     </div>
 
@@ -221,8 +221,7 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='co'># load data</span>
+    <pre class="examples"><div class='input'><span class='co'># load data</span>
 <span class='fu'>data</span>(<span class='st'>"immigration"</span>)
 
 <span class='co'># calculate MMs</span>
@@ -232,12 +231,10 @@
 
 <span class='co'># plot MMs</span>
 <span class='co'>## simple plot</span>
-<span class='fu'>plot</span>(<span class='no'>d1</span>)
-<span class='co'>## plot with facetting by feature</span>
+<span class='fu'>plot</span>(<span class='no'>d1</span>)</div><div class='img'><img src='plot-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'>## plot with facetting by feature</span>
 <span class='fu'>plot</span>(<span class='no'>d1</span>, <span class='kw'>feature_headers</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) +
   <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a></span>(~<span class='no'>feature</span>, <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>1L</span>,
-                      <span class='kw'>scales</span> <span class='kw'>=</span> <span class='st'>"free_y"</span>, <span class='kw'>strip.position</span> <span class='kw'>=</span> <span class='st'>"right"</span>)
-
+                      <span class='kw'>scales</span> <span class='kw'>=</span> <span class='st'>"free_y"</span>, <span class='kw'>strip.position</span> <span class='kw'>=</span> <span class='st'>"right"</span>)</div><div class='img'><img src='plot-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># MMs split by profile number</span>
 <span class='no'>stacked</span> <span class='kw'>&lt;-</span> <span class='fu'>cj</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> +
               <span class='no'>Education</span> + <span class='no'>LanguageSkills</span> + <span class='no'>CountryOfOrigin</span> + <span class='no'>Job</span> + <span class='no'>JobExperience</span> +
@@ -245,11 +242,9 @@
               <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='st'>"mm"</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~ <span class='no'>contest_no</span>)
 
 <span class='co'>## plot with grouping</span>
-<span class='fu'>plot</span>(<span class='no'>stacked</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"contest_no"</span>, <span class='kw'>feature_headers</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-
+<span class='fu'>plot</span>(<span class='no'>stacked</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"contest_no"</span>, <span class='kw'>feature_headers</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='plot-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## plot with facetting</span>
-<span class='fu'>plot</span>(<span class='no'>stacked</span>) + <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a></span>(~<span class='no'>contest_no</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>1L</span>)
-
+<span class='fu'>plot</span>(<span class='no'>stacked</span>) + <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a></span>(~<span class='no'>contest_no</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>1L</span>)</div><div class='img'><img src='plot-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># estimate AMCEs over different subsets of data</span>
 <span class='no'>reasons12</span> <span class='kw'>&lt;-</span> <span class='fu'>subset</span>(<span class='no'>immigration</span>, <span class='no'>ReasonForApplication</span> <span class='kw'>%in%</span> <span class='fu'>levels</span>(<span class='no'>ReasonForApplication</span>)[<span class='fl'>1</span>:<span class='fl'>2</span>])
 <span class='no'>d2_1</span> <span class='kw'>&lt;-</span> <span class='fu'>cj</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>CountryOfOrigin</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
@@ -257,11 +252,9 @@
            <span class='kw'>feature_labels</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>CountryOfOrigin</span> <span class='kw'>=</span> <span class='st'>"Country Of Origin"</span>))
 <span class='no'>d2_1</span>$<span class='no'>reasons</span> <span class='kw'>&lt;-</span> <span class='st'>"1,2,3"</span>
 <span class='no'>d2_2</span>$<span class='no'>reasons</span> <span class='kw'>&lt;-</span> <span class='st'>"1,2"</span>
-<span class='fu'>plot</span>(<span class='fu'>rbind</span>(<span class='no'>d2_1</span>, <span class='no'>d2_2</span>), <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"reasons"</span>)
-
+<span class='fu'>plot</span>(<span class='fu'>rbind</span>(<span class='no'>d2_1</span>, <span class='no'>d2_2</span>), <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"reasons"</span>)</div><div class='img'><img src='plot-5.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># plot AMCEs</span>
-<span class='fu'>plot</span>(<span class='no'>d2</span>)
-<span class='co'># }</span></pre>
+<span class='fu'>plot</span>(<span class='no'>d2</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(d2): object 'd2' not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

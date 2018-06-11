@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1</span>
       </span>
     </div>
 
@@ -181,13 +181,12 @@
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Functions: <code><a href='amce.html'>amce</a></code> <code><a href='mm.html'>mm</a></code> <code><a href='freqs.html'>freqs</a></code> <code><a href='diffs.html'>mm_diffs</a></code> <code><a href='plot.html'>plot.cj_amce</a></code>
- Data: <code><a href='immigration.html'>immigration</a></code> <code><a href='taxes.html'>taxes</a></code></p></div>
+    <div class='dont-index'><p>Functions: <code><a href='amce.html'>amce</a></code>, <code><a href='mm.html'>mm</a></code>, <code><a href='freqs.html'>freqs</a></code>, <code><a href='diffs.html'>mm_diffs</a></code>, <code><a href='plot.html'>plot.cj_amce</a></code>, <code><a href='cj_tidy.html'>cj_tidy</a></code>
+ Data: <code><a href='immigration.html'>immigration</a></code>, <code><a href='taxes.html'>taxes</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='co'># load data</span>
+    <pre class="examples"><div class='input'><span class='co'># load data</span>
 <span class='fu'>requireNamespace</span>(<span class='st'>"ggplot2"</span>)
 <span class='fu'>data</span>(<span class='st'>"immigration"</span>)
 <span class='fu'>data</span>(<span class='st'>"taxes"</span>)
@@ -198,37 +197,31 @@
          <span class='no'>JobPlans</span> + <span class='no'>ReasonForApplication</span> + <span class='no'>PriorEntry</span>
 <span class='no'>d1</span> <span class='kw'>&lt;-</span> <span class='fu'>cj</span>(<span class='no'>immigration</span>, <span class='no'>f1</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>, <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='st'>"mm"</span>, <span class='kw'>h0</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
 <span class='co'># plot MMs</span>
-<span class='fu'>plot</span>(<span class='no'>d1</span>, <span class='kw'>vline</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
-
+<span class='fu'>plot</span>(<span class='no'>d1</span>, <span class='kw'>vline</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='img'><img src='cregg-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># calculate MMs for survey-weighted data</span>
 <span class='no'>d1</span> <span class='kw'>&lt;-</span> <span class='fu'>cj</span>(<span class='no'>taxes</span>, <span class='no'>chose_plan</span> ~ <span class='no'>taxrate1</span> + <span class='no'>taxrate2</span> + <span class='no'>taxrate3</span> +
          <span class='no'>taxrate4</span> + <span class='no'>taxrate5</span> + <span class='no'>taxrate6</span> + <span class='no'>taxrev</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>ID</span>,
          <span class='kw'>weights</span> <span class='kw'>=</span> ~ <span class='no'>weight</span>, <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='st'>"mm"</span>, <span class='kw'>h0</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
 <span class='co'># plot MMs</span>
-<span class='fu'>plot</span>(<span class='no'>d1</span>, <span class='kw'>vline</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
-
+<span class='fu'>plot</span>(<span class='no'>d1</span>, <span class='kw'>vline</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='img'><img src='cregg-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># MMs split by profile number</span>
 <span class='no'>stacked</span> <span class='kw'>&lt;-</span> <span class='fu'>cj</span>(<span class='no'>immigration</span>, <span class='no'>f1</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>,
               <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='st'>"mm"</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~ <span class='no'>contest_no</span>)
 
 <span class='co'>## plot with grouping</span>
-<span class='fu'>plot</span>(<span class='no'>stacked</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"contest_no"</span>, <span class='kw'>vline</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>feature_headers</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-
+<span class='fu'>plot</span>(<span class='no'>stacked</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"contest_no"</span>, <span class='kw'>vline</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>feature_headers</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='cregg-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## plot with facetting</span>
-<span class='fu'>plot</span>(<span class='no'>stacked</span>) + <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a></span>(~<span class='no'>contest_no</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>1L</span>)
-
+<span class='fu'>plot</span>(<span class='no'>stacked</span>) + <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a></span>(~<span class='no'>contest_no</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>1L</span>)</div><div class='img'><img src='cregg-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># estimate AMCEs</span>
 <span class='no'>d2</span> <span class='kw'>&lt;-</span> <span class='fu'>cj</span>(<span class='no'>immigration</span>, <span class='no'>f1</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
 
 <span class='co'># plot AMCEs</span>
-<span class='fu'>plot</span>(<span class='no'>d2</span>)
-
+<span class='fu'>plot</span>(<span class='no'>d2</span>)</div><div class='img'><img src='cregg-5.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## subgroup analysis</span>
 <span class='no'>immigration</span>$<span class='no'>ethnosplit</span> <span class='kw'>&lt;-</span> <span class='fu'>cut</span>(<span class='no'>immigration</span>$<span class='no'>ethnocentrism</span>, <span class='fl'>2</span>)
 <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>cj</span>(<span class='fu'>na.omit</span>(<span class='no'>immigration</span>), <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span> + <span class='no'>LanguageSkills</span>,
         <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>, <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='st'>"mm"</span>, <span class='kw'>h0</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~ <span class='no'>ethnosplit</span>)
-<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"ethnosplit"</span>, <span class='kw'>vline</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
-<span class='co'># }</span></pre>
+<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"ethnosplit"</span>, <span class='kw'>vline</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='img'><img src='cregg-6.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

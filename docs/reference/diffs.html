@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1</span>
       </span>
     </div>
 
@@ -217,13 +217,74 @@
 #&gt; 2     13880     3374.5 72   33.286 1.9016 6.756e-06 ***
 #&gt; ---
 #&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</div><div class='input'>
-</div><span class='co'># NOT RUN {</span>
-<span class='co'># Differences in MMs by Gender feature</span>
-<span class='fu'>mm_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span> + <span class='no'>Education</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
-
+</div><div class='input'><span class='co'># Differences in MMs by Gender feature</span>
+<span class='fu'>mm_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span> + <span class='no'>Education</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)</div><div class='output co'>#&gt;               BY     statistic         outcome                feature
+#&gt; 1  Male - Female mm_difference ChosenImmigrant        Language Skills
+#&gt; 2  Male - Female mm_difference ChosenImmigrant        Language Skills
+#&gt; 3  Male - Female mm_difference ChosenImmigrant        Language Skills
+#&gt; 4  Male - Female mm_difference ChosenImmigrant        Language Skills
+#&gt; 5  Male - Female mm_difference ChosenImmigrant Educational Attainment
+#&gt; 6  Male - Female mm_difference ChosenImmigrant Educational Attainment
+#&gt; 7  Male - Female mm_difference ChosenImmigrant Educational Attainment
+#&gt; 8  Male - Female mm_difference ChosenImmigrant Educational Attainment
+#&gt; 9  Male - Female mm_difference ChosenImmigrant Educational Attainment
+#&gt; 10 Male - Female mm_difference ChosenImmigrant Educational Attainment
+#&gt; 11 Male - Female mm_difference ChosenImmigrant Educational Attainment
+#&gt;                       level     estimate  std.error          z           p
+#&gt; 1            Fluent English -0.015436300 0.01646342 -0.9376119 0.348443914
+#&gt; 2            Broken English -0.047683617 0.01700966 -2.8033252 0.005057864
+#&gt; 3  Tried English but Unable -0.009770039 0.01685623 -0.5796101 0.562177567
+#&gt; 4          Used Interpreter -0.030670893 0.01684202 -1.8210936 0.068592625
+#&gt; 5                 No Formal -0.008679690 0.02201690 -0.3942285 0.693412336
+#&gt; 6                 4th Grade -0.007051326 0.02199317 -0.3206144 0.748502651
+#&gt; 7                 8th Grade -0.029815233 0.02222458 -1.3415430 0.179744227
+#&gt; 8               High School -0.018077430 0.02244671 -0.8053488 0.420618401
+#&gt; 9          Two-Year College -0.049321323 0.02212607 -2.2291047 0.025806942
+#&gt; 10           College Degree -0.021520237 0.02221213 -0.9688508 0.332619642
+#&gt; 11          Graduate Degree -0.044846098 0.02195145 -2.0429676 0.041055645
+#&gt;          lower        upper Gender
+#&gt; 1  -0.04251622  0.011643620   Male
+#&gt; 2  -0.07566202 -0.019705211   Male
+#&gt; 3  -0.03749606  0.017955984   Male
+#&gt; 4  -0.05837355 -0.002968237   Male
+#&gt; 5  -0.04489427  0.027534890   Male
+#&gt; 6  -0.04322687  0.029124216   Male
+#&gt; 7  -0.06637142  0.006740953   Male
+#&gt; 8  -0.05499898  0.018844118   Male
+#&gt; 9  -0.08571547 -0.012927179   Male
+#&gt; 10 -0.05805593  0.015015461   Male
+#&gt; 11 -0.08095302 -0.008739178   Male</div><div class='input'>
 <span class='co'># Differences in AMCEs by Gender feature (i.e., feature interactions)</span>
-<span class='fu'>amce_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span> + <span class='no'>Education</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
-<span class='co'># }</span><div class='input'>
+<span class='fu'>amce_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span> + <span class='no'>Education</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)</div><div class='output co'>#&gt;              BY         outcome       statistic                feature
+#&gt; 1 Male - Female ChosenImmigrant amce_difference Educational Attainment
+#&gt; 2 Male - Female ChosenImmigrant amce_difference Educational Attainment
+#&gt; 3 Male - Female ChosenImmigrant amce_difference Educational Attainment
+#&gt; 4 Male - Female ChosenImmigrant amce_difference Educational Attainment
+#&gt; 5 Male - Female ChosenImmigrant amce_difference Educational Attainment
+#&gt; 6 Male - Female ChosenImmigrant amce_difference Educational Attainment
+#&gt; 7 Male - Female ChosenImmigrant amce_difference        Language Skills
+#&gt; 8 Male - Female ChosenImmigrant amce_difference        Language Skills
+#&gt; 9 Male - Female ChosenImmigrant amce_difference        Language Skills
+#&gt;                      level Gender     estimate  std.error          z         p
+#&gt; 1                4th Grade   Male -0.005966999 0.03172945 -0.1880587 0.8508306
+#&gt; 2                8th Grade   Male -0.030625179 0.03090707 -0.9908793 0.3217445
+#&gt; 3           College Degree   Male -0.014844848 0.03107888 -0.4776507 0.6328989
+#&gt; 4          Graduate Degree   Male -0.042143177 0.03134662 -1.3444249 0.1788110
+#&gt; 5              High School   Male -0.013956325 0.03121208 -0.4471450 0.6547704
+#&gt; 6         Two-Year College   Male -0.047183288 0.03112293 -1.5160299 0.1295118
+#&gt; 7           Broken English   Male -0.029903918 0.02329320 -1.2838049 0.1992102
+#&gt; 8 Tried English but Unable   Male  0.004543744 0.02291366  0.1982985 0.8428115
+#&gt; 9         Used Interpreter   Male -0.013293411 0.02371292 -0.5605978 0.5750718
+#&gt;         lower      upper
+#&gt; 1 -0.06815558 0.05622158
+#&gt; 2 -0.09120193 0.02995157
+#&gt; 3 -0.07575833 0.04606864
+#&gt; 4 -0.10358142 0.01929507
+#&gt; 5 -0.07513088 0.04721823
+#&gt; 6 -0.10818311 0.01381653
+#&gt; 7 -0.07555774 0.01574991
+#&gt; 8 -0.04036620 0.04945369
+#&gt; 9 -0.05976988 0.03318306</div><div class='input'>
 <span class='co'># preferences differ for Male and Female immigrants with 'Broken English' ability</span>
 (<span class='no'>m1</span> <span class='kw'>&lt;-</span> <span class='fu'>mm_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>))</div><div class='output co'>#&gt;              BY     statistic         outcome         feature
 #&gt; 1 Male - Female mm_difference ChosenImmigrant Language Skills
