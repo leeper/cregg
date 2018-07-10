@@ -1,6 +1,6 @@
-#' @rdname freqs
+#' @rdname cj_freqs
 #' @title Conjoint feature frequencies
-#' @description Tabulate and visualize conjoint feature frequencies and proportions
+#' @description Tabulate and visualize conjoint features, and their display frequencies and proportions
 #' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors.
 #' @param formula An RHS formula specifying conjoint features to tabulate. All RHS variables should be factors.
 #' @template id
@@ -9,27 +9,32 @@
 #' @template feature_order
 #' @template feature_labels
 #' @template level_order
+#' @param include_reference A logical indicating whether to include a \dQuote{reference} column that indicates whether a feature level is the reference category for that feature. Default is \code{FALSE}.
 #' @param \dots Ignored.
-#' @details These two functions provide slightly different functionality. \code{props} provides tidy proportion tables to examine cross-feature restrictions in conjoint designs that are not equally randomized. This enables, for example, tabulation and visualization of complete restrictions (where combinations of two or more features are not permitted), as well as calculation of AMCEs for constrained designs appropriately weighted by the display proportions for particular combinations of features.
+#' @details These functions provide related but slightly different functionality. \code{cj_table} simply creates a data frame of features and their levels, which is useful for printing. \code{cj_props} provides tidy proportion tables to examine cross-feature restrictions in conjoint designs that are not equally randomized. This enables, for example, tabulation and visualization of complete restrictions (where combinations of two or more features are not permitted), as well as calculation of AMCEs for constrained designs appropriately weighted by the display proportions for particular combinations of features.
 #' 
-#' \code{freqs} provides \emph{marginal} display frequencies, which are a descriptive check on the presentation of individual conjoint features (for example, to ensure equal or intentionally unequal appearance of levels). This is mostly useful for plotting functionality provided in \code{\link{plot.cj_freqs}}, which provides barcharts for the frequency with which each level of each feature was presented.
+#' \code{cj_freqs} provides \emph{marginal} display frequencies, which are a descriptive check on the presentation of individual conjoint features (for example, to ensure equal or intentionally unequal appearance of levels). This is mostly useful for plotting functionality provided in \code{\link{plot.cj_freqs}}, which provides barcharts for the frequency with which each level of each feature was presented.
 #'
 #' @examples
 #' data(immigration)
+#' # identify all levels
+#' cj_table(immigration, ~ Gender + Education + LanguageSkills)
+#' cj_table(immigration, ~ Gender + Education + LanguageSkills, include_ref = TRUE)
+#' 
 #' # display frequencies
-#' freqs(immigration, ~ Gender + Education + LanguageSkills, id = ~ CaseID)
+#' cj_freqs(immigration, ~ Gender + Education + LanguageSkills, id = ~ CaseID)
 #' 
 #' # restrictions
 #' ## check display proportions
-#' props(immigration, ~ Job, id = ~ CaseID)
+#' cj_props(immigration, ~ Job, id = ~ CaseID)
 #' ## check which combinations were not allowed
-#' subset(props(immigration, ~ Job + Education, id = ~ CaseID), Proportion == 0)
+#' subset(cj_props(immigration, ~ Job + Education, id = ~ CaseID), Proportion == 0)
 #' 
 #' @seealso \code{\link{plot.cj_mm}}
 #' @import stats
 #' @importFrom survey svydesign svyby svymean
 #' @export
-freqs <- 
+cj_freqs <- 
 function(
   data,
   formula,
@@ -103,34 +108,4 @@ function(
     out <- out[order(out[["level"]]),]
     rownames(out) <- seq_len(nrow(out))
     return(structure(out, class = c("cj_freqs", "data.frame")))
-}
-
-#' @rdname freqs
-#' @export
-props <- 
-function(data,
-         formula,
-         id,
-         weights = NULL,
-         margin = NULL,
-         ...
-) {
-    
-    # create survey design object
-    if (inherits(data, "data.frame") && is.null(weights)) {
-        svydesign <- survey::svydesign(ids = ~ 0, weights = ~ 1, data = data)
-    } else if (inherits(data, "data.frame")) {
-        svydesign <- survey::svydesign(ids = ~ 0, weights = weights, data = data)
-    } else if (inherits(data, "survey.design")) {
-        svydesign <- data
-    } else {
-        stop("'data' is not a 'data.frame' or 'survey.design' object")
-    }
-    
-    # calculate display frequencies
-    out <- data.frame(prop.table(survey::svytable(formula, design = svydesign), margin = margin))
-    
-    # return
-    names(out)[names(out) == "Freq"] <- "Proportion"
-    return(structure(out, class = c("cj_props", "data.frame")))
 }

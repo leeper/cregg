@@ -19,7 +19,7 @@ This vignette provides an introduction to **cregg** a package for analyzing and 
 
  - Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs (as well as designs involving an unlimited number of two-way constraints between features) and munging of AMCE estimates into tidy data frames, via `amce()`
  - Calculation of marginal means (MMs) for conjoint designs and munging them into tidy data frames via `mm()`
- - Tabulation of display frequencies of feature attributes via `freqs()` and cross-tabulation of feature restrictions using `props()`
+ - Tabulation of display frequencies of feature attributes via `cj_table()` and `cj_freqs()` and cross-tabulation of feature restrictions using `cj_props()`
  - Tidying of raw "wide"-format conjoint survey datasets into "long" or "tidy" datasets using `cj_tidy()`
 
 In addition, the package provides a number of tools that are likely useful to conjoint analysts:
@@ -187,14 +187,14 @@ For example, to check display frequencies of conjoint features (to ensure equal 
 
 ```{r plot_freqs}
 # plotting of display frequencies
-plot(freqs(immigration, f1, id = ~ CaseID))
+plot(cj_freqs(immigration, f1, id = ~ CaseID))
 ```
 
-As can be clear in the above, constraints were imposed in the original study on the allowed combinations of `Job` and `Education` and also on combinations of `CountryOfOrigin` and `ReasonForApplication`. The `props()` function provides tidy proportions tables to quickly 
+As can be clear in the above, constraints were imposed in the original study on the allowed combinations of `Job` and `Education` and also on combinations of `CountryOfOrigin` and `ReasonForApplication`. The `cj_props()` function provides tidy proportions tables to quickly 
 
 ```{r table_freqs}
-subset(props(immigration, ~ Job + Education, id = ~ CaseID), Proportion == 0)
-subset(props(immigration, ~ CountryOfOrigin + ReasonForApplication, id = ~ CaseID), Proportion == 0)
+subset(cj_props(immigration, ~ Job + Education, id = ~ CaseID), Proportion == 0)
+subset(cj_props(immigration, ~ CountryOfOrigin + ReasonForApplication, id = ~ CaseID), Proportion == 0)
 ```
 
 So that it is possible to very the design was implemented as intended or to perform further subgroup analyses.

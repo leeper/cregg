@@ -22,7 +22,7 @@ cj(data, formula, id = NULL, weights = NULL, estimate = c("amce",
 
 \item{weights}{An (optional) RHS formula specifying a variable holding survey weights.}
 
-\item{estimate}{A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, \dQuote{amce}, estimated via \code{\link{amce}}), display frequencies (\dQuote{frequncies}, estimated via \code{\link{freqs}}), marginal means (or AMMs, \dQuote{mm}, estimated via \code{\link{mm}}), differences in MMs (\dQuote{mm_differences}, via \code{\link{mm_diffs}}), or differences in AMCEs (\dQuote{amce_differences}, via \code{\link{amce_diffs}}). Additional options may be made available in the future. Non-ambiguous abbreviations are allowed.}
+\item{estimate}{A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, \dQuote{amce}, estimated via \code{\link{amce}}), display frequencies (\dQuote{frequncies}, estimated via \code{\link{cj_freqs}}), marginal means (or AMMs, \dQuote{mm}, estimated via \code{\link{mm}}), differences in MMs (\dQuote{mm_differences}, via \code{\link{mm_diffs}}), or differences in AMCEs (\dQuote{amce_differences}, via \code{\link{amce_diffs}}). Additional options may be made available in the future. Non-ambiguous abbreviations are allowed.}
 
 \item{feature_order}{An (optional) character vector specifying the names of feature (RHS) variables in the order they should be encoded in the resulting data frame.}
 
@@ -32,13 +32,13 @@ cj(data, formula, id = NULL, weights = NULL, estimate = c("amce",
 
 \item{by}{A formula containing only RHS variables, specifying grouping factors over which to perform estimation.}
 
-\item{\dots}{Additional arguments to \code{\link{amce}}, \code{\link{freqs}}, \code{\link{mm}}, \code{\link{mm_diffs}}, or \code{\link{amce_diffs}}.}
+\item{\dots}{Additional arguments to \code{\link{amce}}, \code{\link{cj_freqs}}, \code{\link{mm}}, \code{\link{mm_diffs}}, or \code{\link{amce_diffs}}.}
 }
 \description{
 Simple analyses of conjoint (factorial) experiments and visualization of results.
 }
 \details{
-The main function \code{cj} is a convenience function wrapper around the underlying estimation functions that provide for average marginal component effects (AMCEs), by default, via the \code{\link{amce}} function, marginal means (MMs) via the \code{\link{mm}} function, and display frequencies via \code{\link{freqs}} and \code{\link{props}}. Additional estimands may be supported in the future through their own functions and through the \code{cj} interface. Plotting is provided via ggplot2 for all types of estimates.
+The main function \code{cj} is a convenience function wrapper around the underlying estimation functions that provide for average marginal component effects (AMCEs), by default, via the \code{\link{amce}} function, marginal means (MMs) via the \code{\link{mm}} function, and display frequencies via \code{\link{cj_freqs}} and \code{\link{cj_props}}. Additional estimands may be supported in the future through their own functions and through the \code{cj} interface. Plotting is provided via ggplot2 for all types of estimates.
 
 The only additional functionality provided by \code{cj} over the underlying functions is the \code{by} argument, which will perform operations on subsets of \code{data}, returning a single data frame. This can be useful, for example, for evaluating profile spillover effects and subgroup results, or in any situation where one might be inclined to use a \code{for} loop or \code{lapply}, calling \code{cj} repeatedly on subgroups.
 
@@ -90,7 +90,7 @@ plot(x, group = "ethnosplit", vline = 0.5)
 }
 }
 \seealso{
-Functions: \code{\link{amce}}, \code{\link{mm}}, \code{\link{freqs}}, \code{\link{mm_diffs}}, \code{\link{plot.cj_amce}}, \code{\link{cj_tidy}}
+Functions: \code{\link{amce}}, \code{\link{mm}}, \code{\link{cj_freqs}}, \code{\link{mm_diffs}}, \code{\link{plot.cj_amce}}, \code{\link{cj_tidy}}
  Data: \code{\link{immigration}}, \code{\link{taxes}}
 }
 \author{

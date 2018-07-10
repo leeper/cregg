@@ -40,9 +40,9 @@ This is a modified version of the \samp{hainmueller} dataset available from the 
 data("immigration")
 
 # view constraints between features
-subset(props(immigration, ~ Job + Education, id = ~ CaseID), Proportion == 0)
-subset(props(immigration, ~ ReasonForApplication + CountryOfOrigin, 
-             id = ~ CaseID), Proportion == 0)
+subset(cj_props(immigration, ~ Job + Education, id = ~ CaseID), Proportion == 0)
+subset(cj_props(immigration, ~ ReasonForApplication + CountryOfOrigin, 
+                id = ~ CaseID), Proportion == 0)
 
 # AMCEs with interactions for constraints
 f1 <- ChosenImmigrant ~ Gender + Education * Job +

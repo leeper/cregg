@@ -35,7 +35,7 @@ mm_diffs(data, formula, by, id = NULL, weights = NULL,
 
 \item{alpha}{A numeric value indicating the significance level at which to calculate confidence intervals for the MMs (by default 0.95, meaning 95-percent CIs are returned).}
 
-\item{\dots}{Additional arguments to \code{\link{amce}}, \code{\link{freqs}}, or \code{\link{mm}}.}
+\item{\dots}{Additional arguments to \code{\link{amce}}, \code{\link{cj_freqs}}, or \code{\link{mm}}.}
 }
 \value{
 \code{amce_diffs} and \code{mm_diffs} return a data frame similar to the one returned by \code{\link{cj}}, including a \code{BY} column (with the value \dQuote{Difference}) for easy merging with results returned by that function.
@@ -83,7 +83,7 @@ amce_diffs(immigration, ChosenImmigrant ~ LanguageSkills2, ~ Gender, id = ~ Case
 
 }
 \seealso{
-\code{\link{amce}} \code{\link{mm}} \code{\link{freqs}} \code{\link{plot.cj_amce}}
+\code{\link{amce}} \code{\link{mm}} \code{\link{cj_freqs}} \code{\link{plot.cj_amce}}
 }
 \author{
 Thomas J. Leeper <thosjleeper@gmail.com>

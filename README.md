@@ -10,7 +10,7 @@ output:
 
  - Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs (as well as designs involving an unlimited number of two-way constraints between features) and munging of AMCE estimates into tidy data frames, via `amce()`
  - Calculation of marginal means (MMs) for conjoint designs and munging them into tidy data frames via `mm()`
- - Tabulation of display frequencies of feature attributes via `freqs()` and cross-tabulation of feature restrictions using `props()`
+ - Tabulation of display frequencies of feature levels via `cj_table()` and `cj_freqs()` and cross-tabulation of feature restrictions using `cj_props()`
  - Diagnostics to assess preference heterogeneity, including an omnibus statstical test (`cj_anova()`) and tidying of differences in MMs (`mm_diffs()`) and AMCEs (`amce_diffs()`) across subgroups
 
 In addition, the package provides a number of tools that are likely useful to conjoint analysts:

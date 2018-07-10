@@ -50,14 +50,15 @@ function(
         BY <- list()
         for(i in seq_along(split_df)) {
             # execute function on subset of data
-            BY[[i]] <- switch(estimate, amce = amce, freq = freqs, mm = mm)(data = split_df[[i]],
-                                                                            formula = formula,
-                                                                            id = id,
-                                                                            weights = weights,
-                                                                            feature_order = feature_order,
-                                                                            feature_labels = feature_labels,
-                                                                            level_order = level_order,
-                                                                            ...)
+            BY[[i]] <- switch(estimate, amce = amce, freq = cj_freqs, mm = mm)(
+                         data = split_df[[i]],
+                         formula = formula,
+                         id = id,
+                         weights = weights,
+                         feature_order = feature_order,
+                         feature_labels = feature_labels,
+                         level_order = level_order,
+                         ...)
             BY[[i]][["BY"]] <- i
         }
         ## get names of subsets
@@ -85,7 +86,7 @@ function(
         out <- switch(estimate,
                  amce = amce(data = data, formula = formula, id = id, weights = weights,
                              feature_order = feature_order, feature_labels = feature_labels, level_order = level_order, ...),
-                 freqs = freqs(data = data, formula = formula, id = id, weights = weights,
+                 freqs = cj_freqs(data = data, formula = formula, id = id, weights = weights,
                                feature_order = feature_order, feature_labels = feature_labels, level_order = level_order, ...),
                  mm = mm(data = data, formula = formula, id = id, weights = weights,
                          feature_order = feature_order, feature_labels = feature_labels, level_order = level_order, ...)

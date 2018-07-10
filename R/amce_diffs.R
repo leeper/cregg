@@ -10,7 +10,7 @@
 #' @template level_order
 #' @template alpha
 #' @param by A formula containing only RHS variables, specifying grouping factors over which to perform estimation. For \code{amce_diffs}, this can be a factor or something coercable to factor. For \code{mm_diffs} the variable must only take two levels.
-#' @param \dots Additional arguments to \code{\link{amce}}, \code{\link{freqs}}, or \code{\link{mm}}.
+#' @param \dots Additional arguments to \code{\link{amce}}, \code{\link{cj_freqs}}, or \code{\link{mm}}.
 #' @author Thomas J. Leeper <thosjleeper@gmail.com>
 #' @return \code{amce_diffs} and \code{mm_diffs} return a data frame similar to the one returned by \code{\link{cj}}, including a \code{BY} column (with the value \dQuote{Difference}) for easy merging with results returned by that function.
 #' 
@@ -51,7 +51,7 @@
 #' # while differences in MMs do not depend on the reference cateory
 #' (m2 <- mm_diffs(immigration, ChosenImmigrant ~ LanguageSkills2, ~ Gender, id = ~ CaseID))
 #' 
-#' @seealso \code{\link{amce}} \code{\link{mm}} \code{\link{freqs}} \code{\link{plot.cj_amce}}
+#' @seealso \code{\link{amce}} \code{\link{mm}} \code{\link{cj_freqs}} \code{\link{plot.cj_amce}}
 #' @importFrom lmtest coeftest
 #' @export
 amce_diffs <-
