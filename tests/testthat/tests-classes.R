@@ -79,15 +79,20 @@ test_that("mm_diffs() works", {
     expect_error(mm_diffs(immigration,  ~ LanguageSkills, by = ~ Gender, id = ~ CaseID), label = "mm_diffs() fails w/o LHS variable in formula")
 })
 
-test_that("freqs() works", {
-    expect_true(inherits(x <- freqs(immigration, ~ Gender, id = ~ CaseID), "cj_freqs"))
-    expect_true(inherits(plot(x), "ggplot"))
-    expect_true(inherits(freqs(immigration, ~ Gender, id = ~ CaseID, weights = ~ wts), "cj_freqs"), label = "freqs() works w/ 'weights'")
+test_that("cj_table() works", {
+    expect_true(inherits(cj_table(immigration, ~ Gender + Education), "data.frame"))
+    expect_true("reference" %in% names(cj_table(immigration, ~ Gender + Education, include_reference = TRUE)))
 })
 
-test_that("props() works", {
-    expect_true(inherits(x <- props(immigration, ~ Gender, id = ~ CaseID), "cj_props"))
-    expect_true(inherits(props(immigration, ~ Gender, id = ~ CaseID, weights = ~ wts), "cj_props"), label = "props() works w/ 'weights'")
+test_that("cj_freqs() works", {
+    expect_true(inherits(x <- cj_freqs(immigration, ~ Gender, id = ~ CaseID), "cj_freqs"))
+    expect_true(inherits(plot(x), "ggplot"))
+    expect_true(inherits(cj_freqs(immigration, ~ Gender, id = ~ CaseID, weights = ~ wts), "cj_freqs"), label = "freqs() works w/ 'weights'")
+})
+
+test_that("cj_props() works", {
+    expect_true(inherits(x <- cj_props(immigration, ~ Gender, id = ~ CaseID), "cj_props"))
+    expect_true(inherits(cj_props(immigration, ~ Gender, id = ~ CaseID, weights = ~ wts), "cj_props"), label = "props() works w/ 'weights'")
 })
 
 test_that("cj_anova() works", {

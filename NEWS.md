@@ -1,3 +1,8 @@
+# cregg 0.2.3
+
+* Added function `cj_table()`, which can be useful in communicating the set of features and levels used in the design as a data frame (e.g,. using `knitr::kable(cj_table(data, ~ feat1 + feat2))`).
+* Renamed functions `props()` -> `cj_props()` and `freqs()` to `cj_freqs()` for API consistency.
+
 # cregg 0.2.2
 
 * Added function `cj_df()`, which provides a modified data frame class ("cj_df") that preserves variable "label" attributes when subsetting.
