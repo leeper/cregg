@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.3</span>
       </span>
     </div>
 
@@ -149,6 +149,7 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A data frame with rows equal to the number of respondents times the number of tasks times the number of profiles (fixed at 2), to be fed into any other function in the package. The columns will include the names of elements in <code>profile_variables</code> and <code>task_variables</code>, and <code>id</code>, along with an indicator <code>task</code> (from 1 to the number of tasks), <code>pair</code> (an indicator for each task pair from 1 to the number of pairs), <code>profile</code> (a fator indicator for profile, either &#8220;A&#8221; or &#8220;B&#8221;), and any other respondent-varying covariates not specified. As such, respondent-varying variables do not need to be specified to <code>cj_tidy</code> at all.</p>
+<p>The returned data frame carries an additional S3 class (&#8220;cj_df&#8221;) with methods that preserve column attributes. See <code><a href='cj_df.html'>cj_df</a></code>.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -160,7 +161,7 @@
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code>cj</code></p></div>
+    <div class='dont-index'><p><code>cj</code>, <code><a href='cj_df.html'>cj_df</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.3</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@
     <div class="page-header toc-ignore">
       <h1>Introduction to cregg</h1>
             
-            <h4 class="date">2018-06-11</h4>
+            <h4 class="date">2018-07-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/leeper/cregg/blob/master/vignettes/Introduction.Rmd"><code>vignettes/Introduction.Rmd</code></a></small>
       <div class="hidden name"><code>Introduction.Rmd</code></div>
@@ -96,7 +96,7 @@
 </li>
 <li>Calculation of marginal means (MMs) for conjoint designs and munging them into tidy data frames via <code><a href="../reference/mm.html">mm()</a></code>
 </li>
-<li>Tabulation of display frequencies of feature attributes via <code><a href="../reference/freqs.html">freqs()</a></code> and cross-tabulation of feature restrictions using <code><a href="../reference/freqs.html">props()</a></code>
+<li>Tabulation of display frequencies of feature attributes via <code><a href="../reference/cj_freqs.html">cj_table()</a></code> and <code><a href="../reference/cj_freqs.html">cj_freqs()</a></code> and cross-tabulation of feature restrictions using <code><a href="../reference/cj_freqs.html">cj_props()</a></code>
 </li>
 <li>Tidying of raw “wide”-format conjoint survey datasets into “long” or “tidy” datasets using <code><a href="../reference/cj_tidy.html">cj_tidy()</a></code>
 </li>
@@ -265,10 +265,10 @@ diff_mms<span class="op">$</span>Estimate &lt;-<span class="st"> "MM Difference"
 <a href="#display-frequencies-and-proportions" class="anchor"></a>Display Frequencies and Proportions</h3>
 <p>For example, to check display frequencies of conjoint features (to ensure equal - or unequal - display frequency):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># plotting of display frequencies</span>
-<span class="kw">plot</span>(<span class="kw"><a href="../reference/freqs.html">freqs</a></span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID))</code></pre></div>
+<span class="kw">plot</span>(<span class="kw"><a href="../reference/cj_freqs.html">cj_freqs</a></span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID))</code></pre></div>
 <p><img src="Introduction_files/figure-html/plot_freqs-1.png" width="960"></p>
-<p>As can be clear in the above, constraints were imposed in the original study on the allowed combinations of <code>Job</code> and <code>Education</code> and also on combinations of <code>CountryOfOrigin</code> and <code>ReasonForApplication</code>. The <code><a href="../reference/freqs.html">props()</a></code> function provides tidy proportions tables to quickly</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">subset</span>(<span class="kw"><a href="../reference/freqs.html">props</a></span>(immigration, <span class="op">~</span>Job <span class="op">+</span><span class="st"> </span>Education, <span class="dt">id =</span> <span class="op">~</span>CaseID), Proportion <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)</code></pre></div>
+<p>As can be clear in the above, constraints were imposed in the original study on the allowed combinations of <code>Job</code> and <code>Education</code> and also on combinations of <code>CountryOfOrigin</code> and <code>ReasonForApplication</code>. The <code><a href="../reference/cj_freqs.html">cj_props()</a></code> function provides tidy proportions tables to quickly</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">subset</span>(<span class="kw"><a href="../reference/cj_freqs.html">cj_props</a></span>(immigration, <span class="op">~</span>Job <span class="op">+</span><span class="st"> </span>Education, <span class="dt">id =</span> <span class="op">~</span>CaseID), Proportion <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)</code></pre></div>
 <pre><code>                   Job   Education Proportion
 5    Financial Analyst   No Formal          0
 8  Computer Programmer   No Formal          0
@@ -286,7 +286,7 @@ diff_mms<span class="op">$</span>Estimate &lt;-<span class="st"> "MM Difference"
 41 Computer Programmer High School          0
 43  Research Scientist High School          0
 44              Doctor High School          0</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">subset</span>(<span class="kw"><a href="../reference/freqs.html">props</a></span>(immigration, <span class="op">~</span>CountryOfOrigin <span class="op">+</span><span class="st"> </span>ReasonForApplication, <span class="dt">id =</span> <span class="op">~</span>CaseID), Proportion <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">subset</span>(<span class="kw"><a href="../reference/cj_freqs.html">cj_props</a></span>(immigration, <span class="op">~</span>CountryOfOrigin <span class="op">+</span><span class="st"> </span>ReasonForApplication, <span class="dt">id =</span> <span class="op">~</span>CaseID), Proportion <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)</code></pre></div>
 <pre><code>   CountryOfOrigin ReasonForApplication Proportion
 21           India   Escape Persecution          0
 22         Germany   Escape Persecution          0

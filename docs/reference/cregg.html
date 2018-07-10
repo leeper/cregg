@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.3</span>
       </span>
     </div>
 
@@ -149,7 +149,7 @@
     </tr>
     <tr>
       <th>estimate</th>
-      <td><p>A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, &#8220;amce&#8221;, estimated via <code><a href='amce.html'>amce</a></code>), display frequencies (&#8220;frequncies&#8221;, estimated via <code><a href='freqs.html'>freqs</a></code>), marginal means (or AMMs, &#8220;mm&#8221;, estimated via <code><a href='mm.html'>mm</a></code>), differences in MMs (&#8220;mm_differences&#8221;, via <code><a href='diffs.html'>mm_diffs</a></code>), or differences in AMCEs (&#8220;amce_differences&#8221;, via <code><a href='diffs.html'>amce_diffs</a></code>). Additional options may be made available in the future. Non-ambiguous abbreviations are allowed.</p></td>
+      <td><p>A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, &#8220;amce&#8221;, estimated via <code><a href='amce.html'>amce</a></code>), display frequencies (&#8220;frequncies&#8221;, estimated via <code><a href='cj_freqs.html'>cj_freqs</a></code>), marginal means (or AMMs, &#8220;mm&#8221;, estimated via <code><a href='mm.html'>mm</a></code>), differences in MMs (&#8220;mm_differences&#8221;, via <code><a href='diffs.html'>mm_diffs</a></code>), or differences in AMCEs (&#8220;amce_differences&#8221;, via <code><a href='diffs.html'>amce_diffs</a></code>). Additional options may be made available in the future. Non-ambiguous abbreviations are allowed.</p></td>
     </tr>
     <tr>
       <th>feature_order</th>
@@ -169,19 +169,19 @@
     </tr>
     <tr>
       <th>&#8230;</th>
-      <td><p>Additional arguments to <code><a href='amce.html'>amce</a></code>, <code><a href='freqs.html'>freqs</a></code>, <code><a href='mm.html'>mm</a></code>, <code><a href='diffs.html'>mm_diffs</a></code>, or <code><a href='diffs.html'>amce_diffs</a></code>.</p></td>
+      <td><p>Additional arguments to <code><a href='amce.html'>amce</a></code>, <code><a href='cj_freqs.html'>cj_freqs</a></code>, <code><a href='mm.html'>mm</a></code>, <code><a href='diffs.html'>mm_diffs</a></code>, or <code><a href='diffs.html'>amce_diffs</a></code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The main function <code>cj</code> is a convenience function wrapper around the underlying estimation functions that provide for average marginal component effects (AMCEs), by default, via the <code><a href='amce.html'>amce</a></code> function, marginal means (MMs) via the <code><a href='mm.html'>mm</a></code> function, and display frequencies via <code><a href='freqs.html'>freqs</a></code> and <code><a href='freqs.html'>props</a></code>. Additional estimands may be supported in the future through their own functions and through the <code>cj</code> interface. Plotting is provided via ggplot2 for all types of estimates.</p>
+    <p>The main function <code>cj</code> is a convenience function wrapper around the underlying estimation functions that provide for average marginal component effects (AMCEs), by default, via the <code><a href='amce.html'>amce</a></code> function, marginal means (MMs) via the <code><a href='mm.html'>mm</a></code> function, and display frequencies via <code><a href='cj_freqs.html'>cj_freqs</a></code> and <code><a href='cj_freqs.html'>cj_props</a></code>. Additional estimands may be supported in the future through their own functions and through the <code>cj</code> interface. Plotting is provided via ggplot2 for all types of estimates.</p>
 <p>The only additional functionality provided by <code>cj</code> over the underlying functions is the <code>by</code> argument, which will perform operations on subsets of <code>data</code>, returning a single data frame. This can be useful, for example, for evaluating profile spillover effects and subgroup results, or in any situation where one might be inclined to use a <code>for</code> loop or <code>lapply</code>, calling <code>cj</code> repeatedly on subgroups.</p>
 <p>Note: Some features of cregg (namely, the <code><a href='diffs.html'>amce_diffs</a></code>) function, or <code>estimate = "amce_diff"</code> here) only work with full factorial conjoint experiments. Designs involving two-way constraints between features are supported simply by expressing interactions between constrained terms in <code>formula</code> (again, except for <code>amce_diffs</code>). Higher-order constraints may be supported in the future.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Functions: <code><a href='amce.html'>amce</a></code>, <code><a href='mm.html'>mm</a></code>, <code><a href='freqs.html'>freqs</a></code>, <code><a href='diffs.html'>mm_diffs</a></code>, <code><a href='plot.html'>plot.cj_amce</a></code>, <code><a href='cj_tidy.html'>cj_tidy</a></code>
+    <div class='dont-index'><p>Functions: <code><a href='amce.html'>amce</a></code>, <code><a href='mm.html'>mm</a></code>, <code><a href='cj_freqs.html'>cj_freqs</a></code>, <code><a href='diffs.html'>mm_diffs</a></code>, <code><a href='plot.html'>plot.cj_amce</a></code>, <code><a href='cj_tidy.html'>cj_tidy</a></code>
  Data: <code><a href='immigration.html'>immigration</a></code>, <code><a href='taxes.html'>taxes</a></code></p></div>
     
 
