@@ -1,6 +1,6 @@
 # function used in cj and ammplot to produce "fancy" feature labels
 clean_feature_labels <- function(data, RHS, feature_labels) {
-    if (inherits(data, "data.frame")) {
+    if (inherits(data, "cj_df") | inherits(data, "data.frame")) {
         fancy_labels <- stats::setNames(lapply(data[RHS], attr, "label"), RHS)
     } else if (inherits(data, "survey.design")) {
         fancy_labels <- stats::setNames(lapply(data[["variables"]][RHS], attr, "label"), RHS)

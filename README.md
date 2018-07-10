@@ -33,7 +33,7 @@ The design of cregg follows a few key princples:
 
 cregg also provides some sugar:
 
- - Using "label" attributes on variables to provide pretty printing, with options to relabel features or plots on the fly
+ - Using "label" attributes on variables to provide pretty printing, with options to relabel features or plots on the fly. The `cj_df()` function (and data frame class "cj_df") is designed to preserve these attributes during subsetting.
  - Using factor base levels rather than trying to set baseline levels atomically
  - A convenient API (via the `cj(..., by = ~ group)` idiom) for repeated, subgroup operations without the need for `lapply()` or `for` loops
  - All functions have arguments in data-formula order, making it simple to pipe into them via the magrittr pipe (`%>%`).
@@ -66,7 +66,7 @@ f1 <- ChosenImmigrant ~ Gender + Education + LanguageSkills + CountryOfOrigin + 
 plot(mm(immigration, f1, id = ~CaseID), vline = 0.5)
 ```
 
-![plot of chunk mmplot](https://i.imgur.com/cUbSTLv.png)
+![plot of chunk mmplot](https://i.imgur.com/G1VOtM3.png)
 
 cregg functions uses `attr(data$feature, "label")` to provide pretty printing of feature labels, so that variable names can be arbitrary. These can be overwritten using the `feature_labels` argument to override these settings. Feature levels are always deduced from the `levels()` of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in `feature_order`.
 
@@ -111,7 +111,7 @@ This makes it very easy to modify, combine, print, etc. the resulting output. It
 plot(amces)
 ```
 
-![plot of chunk plot_amce](https://i.imgur.com/g0w9pbf.png)
+![plot of chunk plot_amce](https://i.imgur.com/q90UQWp.png)
 
 To provide simple subgroup analyses, the `cj()` function provides a `by` argument to iterate over subsets of `data` and calculate AMCEs or MMs on each subgroup. For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:
 
@@ -121,7 +121,7 @@ mm_by <- cj(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills, 
 plot(mm_by, group = "contest_no", vline = 0.5)
 ```
 
-![plot of chunk mm_by](https://i.imgur.com/lQ3HjEr.png)
+![plot of chunk mm_by](https://i.imgur.com/IVNsJw0.png)
 
 A more formal test of these differences is provided by a nested model comparison test:
 

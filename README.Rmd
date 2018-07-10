@@ -33,7 +33,7 @@ The design of cregg follows a few key princples:
 
 cregg also provides some sugar:
 
- - Using "label" attributes on variables to provide pretty printing, with options to relabel features or plots on the fly
+ - Using "label" attributes on variables to provide pretty printing, with options to relabel features or plots on the fly. The `cj_df()` function (and data frame class "cj_df") is designed to preserve these attributes during subsetting.
  - Using factor base levels rather than trying to set baseline levels atomically
  - A convenient API (via the `cj(..., by = ~ group)` idiom) for repeated, subgroup operations without the need for `lapply()` or `for` loops
  - All functions have arguments in data-formula order, making it simple to pipe into them via the magrittr pipe (`%>%`).

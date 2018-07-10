@@ -14,7 +14,10 @@
 #' 
 #' Finally, \code{data} should not use the variable names \dQuote{task}, \dQuote{pair}, or \dQuote{profile}, which are the names of metadata columns created by reshaping.
 #' 
-#' @return A data frame with rows equal to the number of respondents times the number of tasks times the number of profiles (fixed at 2), to be fed into any other function in the package. The columns will include the names of elements in \code{profile_variables} and \code{task_variables}, and \code{id}, along with an indicator \code{task} (from 1 to the number of tasks), \code{pair} (an indicator for each task pair from 1 to the number of pairs), \code{profile} (a fator indicator for profile, either \dQuote{A} or \dQuote{B}), and any other respondent-varying covariates not specified. As such, respondent-varying variables do not need to be specified to \code{cj_tidy} at all.
+#' @return A data frame with rows equal to the number of respondents times the number of tasks times the number of profiles (fixed at 2), to be fed into any other function in the package. The columns will include the names of elements in \code{profile_variables} and \code{task_variables}, and \code{id}, along with an indicator \code{task} (from 1 to the number of tasks), \code{pair} (an indicator for each task pair from 1 to the number of pairs), \code{profile} (a fator indicator for profile, either \dQuote{A} or \dQuote{B}), and any other respondent-varying covariates not specified. As such, respondent-varying variables do not need to be specified to \code{cj_tidy} at all. 
+#' 
+#' The returned data frame carries an additional S3 class (\dQuote{cj_df}) with methods that preserve column attributes. See \code{\link{cj_df}}.
+#' 
 #' @examples
 #' \dontrun{
 #' data("wide_conjoint")
@@ -78,7 +81,7 @@
 #' # use for analysis
 #' cj(long, chosen ~ feature1 + feature2 + feature3, id = ~ respondent)
 #' }
-#' @seealso \code{\link{cj}}
+#' @seealso \code{\link{cj}}, \code{\link{cj_df}}
 #' @export
 cj_tidy <-
 function(
@@ -183,5 +186,5 @@ function(
     fullstack[["profile"]] <- factor(fullstack[["profile"]], labels = c("A", "B"))
     ## remove unnecesary reshaping attribute
     attr(fullstack, "reshapeLong") <- NULL
-    return(fullstack)
+    return(structure(fullstack, class = c("cj_df", "data.frame")))
 }

@@ -4,7 +4,7 @@
 \name{immigration}
 \alias{immigration}
 \title{Immigration Conjoint Experiment Dataset from Hainmueller et. al. (2014)}
-\format{A data frame with 13960 observations on the following 16 variables.
+\format{A data frame (with additional \dQuote{cj_df} class) with 13960 observations on the following 16 variables.
  \describe{
    \item{\samp{CaseID}}{a numeric vector indicating the respondent to which the particular profile corresponds}
    \item{\samp{contest_no}}{a numeric vector indicating the number of the task to which the profile corresponds}
@@ -52,6 +52,6 @@ cj(immigration, f1, id = ~ CaseID)
 }
 }
 \seealso{
-\code{\link{cj}} \code{\link{taxes}}
+\code{\link{cj}} \code{\link{taxes}} \code{\link{cj_df}}
 }
 \keyword{datasets}

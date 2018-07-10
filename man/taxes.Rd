@@ -4,7 +4,7 @@
 \name{taxes}
 \alias{taxes}
 \title{Tax Preference Conjoint Experiment Dataset from Ballard-Rosa et al. (2016)}
-\format{A data frame with 32000 observations on the following 13 variables. Each row corresponds to a single profile presented to a respondent.
+\format{A data frame (with additional \dQuote{cj_df} class) with 32000 observations on the following 13 variables. Each row corresponds to a single profile presented to a respondent.
  \describe{
    \item{\samp{chose_plan}}{A numeric vector denoting whether the immigrant profile was selected (=1) or not (=0).}
    \item{\samp{taxrate1}}{An experimental factor with levels \dQuote{<10k: 0\%}, dQuote{<10k: 5\%}, dQuote{<10k: 15\%}, dQuote{<10k: 25\%}.}
@@ -38,6 +38,6 @@ cj(taxes, f1, id = ~ ID, weights = ~     weight)
 }
 }
 \seealso{
-\code{\link{cj}} \code{\link{immigration}}
+\code{\link{cj}} \code{\link{immigration}} \code{\link{cj_df}}
 }
 \keyword{datasets}

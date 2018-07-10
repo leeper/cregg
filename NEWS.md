@@ -1,3 +1,9 @@
+# cregg 0.2.2
+
+* Added function `cj_df()`, which provides a modified data frame class ("cj_df") that preserves variable "label" attributes when subsetting.
+* Built-in datasets `immigration` and `taxes` gain a "cj_df" class.
+* `cj_tidy()` now returns objects of class `c("cj_df", "data.frame")`.
+
 # cregg 0.2.1
 
 * Added function `cj_tidy()` to tidy a "wide" respondent-length conjoint dataset into a "long" respondent*task*alternative-length dataset. An example dataset, `wide_conjoint`, is provided for examples and testing.
@@ -6,7 +12,7 @@
 
 * First stable release.
 * Completed functionality of `amce_diffs()`, limiting it to work with unconstrained designs. (#6)
-* Added tests for accuracy of AMCEs in constrained and unconstrained designs.
+* Added tests for accuracy of AMCEs in two-way constrained and fully unconstrained designs.
 
 # cregg 0.1.14
 

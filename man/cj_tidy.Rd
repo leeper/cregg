@@ -16,7 +16,9 @@ cj_tidy(data, profile_variables, task_variables, id)
 \item{id}{An RHS formula specifying a variable holding respondent identifiers.}
 }
 \value{
-A data frame with rows equal to the number of respondents times the number of tasks times the number of profiles (fixed at 2), to be fed into any other function in the package. The columns will include the names of elements in \code{profile_variables} and \code{task_variables}, and \code{id}, along with an indicator \code{task} (from 1 to the number of tasks), \code{pair} (an indicator for each task pair from 1 to the number of pairs), \code{profile} (a fator indicator for profile, either \dQuote{A} or \dQuote{B}), and any other respondent-varying covariates not specified. As such, respondent-varying variables do not need to be specified to \code{cj_tidy} at all.
+A data frame with rows equal to the number of respondents times the number of tasks times the number of profiles (fixed at 2), to be fed into any other function in the package. The columns will include the names of elements in \code{profile_variables} and \code{task_variables}, and \code{id}, along with an indicator \code{task} (from 1 to the number of tasks), \code{pair} (an indicator for each task pair from 1 to the number of pairs), \code{profile} (a fator indicator for profile, either \dQuote{A} or \dQuote{B}), and any other respondent-varying covariates not specified. As such, respondent-varying variables do not need to be specified to \code{cj_tidy} at all. 
+
+The returned data frame carries an additional S3 class (\dQuote{cj_df}) with methods that preserve column attributes. See \code{\link{cj_df}}.
 }
 \description{
 Coerce a \dQuote{wide} conjoint dataset into a \dQuote{long}/\dQuote{tidy} one for use with cregg
@@ -97,5 +99,5 @@ cj(long, chosen ~ feature1 + feature2 + feature3, id = ~ respondent)
 }
 }
 \seealso{
-\code{\link{cj}}
+\code{\link{cj}}, \code{\link{cj_df}}
 }
