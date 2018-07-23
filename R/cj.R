@@ -15,6 +15,9 @@ function(
 ) {
     estimate <- match.arg(estimate)
     
+    # coerce to "cj_df" to preserve attributes
+    data <- cj_df(data)
+    
     if (!is.null(by)) {
         # get RHS variables, variable labels, and factor levels
         RHS <- all.vars(stats::update(formula, 0 ~ . ))

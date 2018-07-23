@@ -1,3 +1,7 @@
+# cregg 0.2.4
+
+* `cj()` now imposes class "cj_df" on `data` to preserve attributes during subsetting.
+
 # cregg 0.2.3
 
 * Added function `cj_table()`, which can be useful in communicating the set of features and levels used in the design as a data frame (e.g,. using `knitr::kable(cj_table(data, ~ feat1 + feat2))`).

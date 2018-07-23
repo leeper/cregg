@@ -68,6 +68,9 @@ function(
   ...
 ) {
     
+    # coerce to "cj_df" to preserve attributes
+    data <- cj_df(data)
+    
     # get outcome variable
     outcome <- all.vars(stats::update(formula, . ~ 0))
     
