@@ -88,7 +88,10 @@ list2 <- list(choice = ~ choice_a + choice_b + choice_c + choice_d,
 
 
 # perform reshape
-str(long <- cj_tidy(wide_conjoint, profile_variables = list1, task_variables = list2, id = ~ respondent))
+str(long <- cj_tidy(wide_conjoint,
+                    profile_variables = list1,
+                    task_variables = list2,
+                    id = ~ respondent))
 stopifnot(nrow(long) == nrow(wide_conjoint)*4*2)
 
 # recode outcome so it is coded sensibly

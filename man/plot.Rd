@@ -106,9 +106,6 @@ d2_2 <- cj(reasons12, ChosenImmigrant ~ CountryOfOrigin, id = ~ CaseID,
 d2_1$reasons <- "1,2,3"
 d2_2$reasons <- "1,2"
 plot(rbind(d2_1, d2_2), group = "reasons")
-
-# plot AMCEs
-plot(d2)
 }
 }
 \seealso{

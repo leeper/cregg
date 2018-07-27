@@ -28,7 +28,7 @@
 #' data("immigration")
 #' # estimating AMCEs with constraints
 #' amce(immigration, ChosenImmigrant ~ Gender + ReasonForApplication * CountryOfOrigin,
-#'      id = ~CaseID, constraints = list(~ReasonForApplication + CountryOfOrigin))
+#'      id = ~CaseID)
 #' 
 #' # balance testing example
 #' plot(amce(immigration[!is.na(immigration$ethnocentrism),],
