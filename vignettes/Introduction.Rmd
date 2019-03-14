@@ -15,7 +15,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This vignette provides an introduction to **cregg** a package for analyzing and visualizing the results of conjoint experiments, which are factorial discrete choice experiments that are increasingly popular in the political and social sciences for studying decision making and preferences over multidimensional issues. cregg provides functionality that is useful for analyzing and otherwise examining data from these designs, namely:
+This vignette provides an introduction to **cregg**, a package for analyzing and visualizing the results of conjoint experiments, which are factorial discrete choice experiments that are increasingly popular in the political and social sciences for studying decision making and preferences over multidimensional issues. cregg provides functionality that is useful for analyzing and otherwise examining data from these designs, namely:
 
  - Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs (as well as designs involving an unlimited number of two-way constraints between features) and munging of AMCE estimates into tidy data frames, via `amce()`
  - Calculation of marginal means (MMs) for conjoint designs and munging them into tidy data frames via `mm()`
@@ -173,7 +173,11 @@ immigration$ethnosplit[immigration$ethnocentrism <= 10] <- 1L
 immigration$ethnosplit[immigration$ethnocentrism > 10] <- 2L
 immigration$ethnosplit <- factor(immigration$ethnosplit, 
                                  1:2, c("Low Ethnocentrism", "High Ethnocentrism"))
-x <- cj(na.omit(immigration), f1, id = ~ CaseID, estimate = "mm", by = ~ ethnosplit)
+x <- cj(na.omit(immigration), 
+        f1, 
+        id = ~ CaseID, 
+        estimate = "mm", 
+        by = ~ ethnosplit)
 plot(x, group = "ethnosplit", vline = 0.5)
 ```
 
@@ -181,10 +185,16 @@ But if we want to interpret differences in the sizes of AMCEs (rather than descr
 
 ```{r conditional_amces, dependson = c("conditional_mms"), fig.height = 4}
 # calculate conditional AMCEs
-amces <- cj(na.omit(immigration), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
-            id = ~ CaseID, estimate = "amce", by = ~ ethnosplit)
-diff_amces <- cj(na.omit(immigration), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
-                 id = ~ CaseID, estimate = "amce_diff", by = ~ ethnosplit)
+amces <- cj(na.omit(immigration), 
+            ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
+            id = ~ CaseID, 
+            estimate = "amce", 
+            by = ~ ethnosplit)
+diff_amces <- cj(na.omit(immigration), 
+                 ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
+                 id = ~ CaseID, 
+                 estimate = "amce_diff", 
+                 by = ~ ethnosplit)
 plot(rbind(amces, diff_amces)) + ggplot2::facet_wrap(~BY, ncol = 3L)
 ```
 
@@ -214,7 +224,9 @@ plot(rbind(diff_amces, diff_mms), feature_headers = FALSE) +
   ggplot2::facet_wrap(~Estimate, ncol = 2L)
 ```
 
-This general process is also possible with a profile feature, rather than a respondent characteristic, in the `by =` argument. This may be necessary when interaction effects are hypothesised. These tell us the causal effect of each level of the RHS features, depending on what value another attribute is held at. For example, we could check for an interaction between the gender of immigrants and their language skills:
+## Interactions
+
+This general process is also possible with a profile feature, rather than a respondent characteristic, in the `by =` argument. This may be necessary when interaction effects are hypothesised. These tell us the causal effect of each level of the RHS features, depending on the value at which another attribute is held. For example, we could check for an interaction between the gender of immigrants and their language skills:
 
 ```{r interaction_amces, dependson = c("conditional_amces"), fig.height = 4}
 # calculate interaction AMCEs (ACIEs)
@@ -231,24 +243,43 @@ plot(rbind(amces_2, diff_amces_2)) + ggplot2::facet_wrap(~BY, ncol = 3L)
 
 The explicit test of differences in effect sizes tells us that the change in probability of choosing a profile for each level of language skill, *relative to the baseline level of fluent English*, does not vary significantly contingent on the gender of the profile. For interactions between variables with more levels, however, these plots become large and complex, so it may be better to exclude the explicit tests of differences, which become difficult to interpret:
 
-```{r interaction_amces_2, dependson = c("interaction_amces"), fig.height = 4}
+```{r interaction_amces_2, dependson = c("interaction_amces"), fig.height = 6}
 # calculate interaction AMCEs (ACIEs)
 amces_2 <- cj(immigration,
             ChosenImmigrant ~ LanguageSkills,
             id = ~CaseID, estimate = "amce", 
             by = ~Job)
-plot(rbind(amces_2)) + ggplot2::facet_wrap(~BY, ncol = 3L)
+plot(amces_2) + ggplot2::facet_wrap(~BY, ncol = 3L)
 ```
 
 While this may be necessary when (causal) interaction *effects* specifically need to be tested, again inferential errors are very possible with this kind of visualisation of AMCEs. In many cases it may be preferable to report MMs. Here these tell us respondents' language skill preferences contingent on the job of the profile:
 
-```{r interaction_mms, dependson = c("interaction_amces_2"), fig.height = 4}
+```{r interaction_mms, dependson = c("interaction_amces_2"), fig.height = 6}
 # calculate interaction MMs
 mms <- cj(immigration,
             ChosenImmigrant ~ LanguageSkills,
             id = ~CaseID, estimate = "mm", 
             by = ~Job)
-plot(rbind(mms), vline = 0.5) + ggplot2::facet_wrap(~BY, ncol = 3L)
+plot(mms, vline = 0.5) + ggplot2::facet_wrap(~BY, ncol = 3L)
+```
+
+Alternatively, new interaction variables can be created using `interaction()` and then their AMCEs (with inferential caution) or MMs can be plotted like any other variable:  
+
+
+```{r interactions, dependson = c("interaction_mms"), fig.height = 5}
+immigration$language_entry <- 
+  interaction(immigration$LanguageSkills, immigration$PriorEntry, sep = "_")
+# average component interaction effects
+acies <- amce(immigration,
+              ChosenImmigrant ~ language_entry,
+              id = ~CaseID)
+plot(acies)
+# higher order MMs
+interaction_mms <- mm(immigration, 
+                      ChosenImmigrant ~ language_entry,
+                      id = ~CaseID)
+plot(interaction_mms, vline = 0.5)
+                     
 ```
 
 
