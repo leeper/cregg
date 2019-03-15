@@ -2,7 +2,7 @@
 #' @title Marginal Means
 #' @description Calculate (descriptive) marginal means (MMs) from a conjoint design
 #' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors.
-#' @param formula A formula specifying an outcome (LHS) and conjoint features (RHS) to describe. All RHS variables should be factors.
+#' @param formula A formula specifying an outcome (LHS) and conjoint features (RHS) to describe. All RHS variables should be factors, with constraints specified with an asterisk (*) between features, as in \code{amce}.
 #' @template id
 #' @template weights
 #' @template feature_order
@@ -11,16 +11,29 @@
 #' @param h0 A numeric value specifying a null hypothesis value to use when generating z-statistics and p-values.
 #' @template alpha
 #' @param \dots Ignored.
-#' @details \code{mm} provides descriptive representations of conjoint data as marginal means (MMs), which represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, MMs can take any value in the full range of the outcome.
+#' @details \code{mm} provides descriptive representations of conjoint data as marginal means (MMs), which represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs with two profiles per choice task, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, MMs can take any value in the full range of the outcome.
 #' 
 #' But note that if feature levels can co-occur, such that both alternatives share a feature level, then the MMs on forced choice outcomes are bounded by the probability of co-occurrence (as a lower bound) and 1 minus that probability as an upper bound.
 #' 
 #' Plotting functionality is provided in \code{\link{plot.cj_mm}}.
 #' 
 #' @examples
+#' \donttest{
 #' data(immigration)
+#' # marginal means
 #' mm(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills,
 #'    id = ~ CaseID, h0 = 0.5)
+#'
+#' # marginal means with design constraints
+#' mm(immigration, ChosenImmigrant ~ Gender + LanguageSkills + PriorEntry + 
+#'      CountryOfOrigin * ReasonForApplication, id = ~CaseID)
+#'
+#' # higher-order marginal means with feature interactions
+#' immigration$language_entry <- 
+#'   interaction(immigration$LanguageSkills, immigration$PriorEntry, sep = "_")
+#' mm(immigration, ChosenImmigrant ~ language_entry,
+#'    id = ~CaseID)
+#' }
 #' @seealso \code{\link{mm_diffs}} \code{\link{plot.cj_mm}}
 #' @import stats
 #' @importFrom survey svydesign svyby svymean
