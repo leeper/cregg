@@ -1,5 +1,6 @@
 # cregg 0.3.1
 
+* Fixed issue in `mm_diffs()` wherein a `by` variable that shared levels with a feature variable led to incorrect estimates being returned. (#22, h/t Michael Jankowski)
 * Updated documentation with various fixes (#19, #20, #21, #23, h/t Matthew Barnfield, Evgeniia Mitrokhina)
 * Added error when feature variables are not factors. (#12, #25, Maciej Szymkiewicz)
 * Added documentation of how to replace colour scale with shape scale in `plot()` methods. (#18, h/t Mia Costa)
