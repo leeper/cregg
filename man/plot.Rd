@@ -70,6 +70,7 @@ ggplot2-based plotting of conjoint AMCEs estimates and MMs
 }
 \examples{
 \donttest{
+require(ggplot2)
 # load data
 data("immigration")
 
@@ -81,6 +82,10 @@ d1 <- mm(immigration, ChosenImmigrant ~ Gender + Education +
 # plot MMs
 ## simple plot
 plot(d1)
+
+## gridlines to aid interpretation
+plot(d1) + ggplot2::theme_grey()
+
 ## plot with facetting by feature
 plot(d1, feature_headers = FALSE) + 
   ggplot2::facet_wrap(~feature, ncol = 1L, 
@@ -98,8 +103,16 @@ plot(stacked, group = "contest_no", feature_headers = FALSE)
 ## plot with facetting
 plot(stacked) + ggplot2::facet_wrap(~contest_no, nrow = 1L)
 
+## plot with shapes instead of colors for groups
+plot(stacked, group = "contest_no", vline = 0.5) + 
+ aes(shape = contest_no) + # map group to `shape` aesthetic
+ scale_shape_manual(values=c(1, 2, 3, 4, 5)) +
+ scale_discrete_manual(values=rep("black", 5)) # optionally, override colour
+
 # estimate AMCEs over different subsets of data
-reasons12 <- subset(immigration, ReasonForApplication \%in\% levels(ReasonForApplication)[1:2])
+reasons12 <- subset(
+  immigration, ReasonForApplication \%in\% levels(ReasonForApplication)[1:2]
+)
 d2_1 <- cj(immigration, ChosenImmigrant ~ CountryOfOrigin, id = ~ CaseID)
 d2_2 <- cj(reasons12, ChosenImmigrant ~ CountryOfOrigin, id = ~ CaseID,
            feature_labels = list(CountryOfOrigin = "Country Of Origin"))

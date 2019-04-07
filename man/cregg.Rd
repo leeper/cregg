@@ -86,6 +86,18 @@ immigration$ethnosplit <- cut(immigration$ethnocentrism, 2)
 x <- cj(na.omit(immigration), ChosenImmigrant ~ Gender + Education + LanguageSkills,
         id = ~ CaseID, estimate = "mm", h0 = 0.5, by = ~ ethnosplit)
 plot(x, group = "ethnosplit", vline = 0.5)
+
+# combinations of/interactions between features
+immigration$language_entry <- 
+  interaction(immigration$LanguageSkills, immigration$PriorEntry, sep = "_")
+
+## higher-order MMs for feature combinations
+cj(immigration, ChosenImmigrant ~ language_entry,
+   id = ~CaseID, estimate = "mm", h0 = 0.5)
+
+## average component interaction effects (AMCEs for feature interactions)
+cj(immigration, ChosenImmigrant ~ language_entry,
+   id = ~CaseID, estimate = "amce")
 }
 }
 \seealso{
