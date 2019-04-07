@@ -3,6 +3,7 @@
 * Updated documentation with various fixes (#19, #20, #21, #23, h/t Matthew Barnfield, Evgeniia Mitrokhina)
 * Added error when feature variables are not factors. (#12, #25, Maciej Szymkiewicz)
 * Added documentation of how to replace colour scale with shape scale in `plot()` methods. (#18, h/t Mia Costa)
+* Added documentation of how to print estimates on the `plot()` method output. (#14)
 * Make `cj_tidy()` work with tibbles. (#11, Umberto Mignozzetti)
 
 # cregg 0.3.0

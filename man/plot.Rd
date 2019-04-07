@@ -81,10 +81,16 @@ d1 <- mm(immigration, ChosenImmigrant ~ Gender + Education +
 
 # plot MMs
 ## simple plot
-plot(d1)
+(p <- plot(d1, vline = 0.5))
 
 ## gridlines to aid interpretation
-plot(d1) + ggplot2::theme_grey()
+p + ggplot2::theme_grey()
+
+## plot with estimates shown as text labels
+p + ggplot2::geom_text(
+  aes(label = sprintf("\%0.2f (\%0.2f)", estimate, std.error)),
+  colour = "black", position = position_nudge(y = .5)
+)
 
 ## plot with facetting by feature
 plot(d1, feature_headers = FALSE) + 
