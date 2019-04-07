@@ -1,3 +1,14 @@
+# cregg 0.3.1
+
+* Updated documentation with various fixes (#19, #20, #21, #23, h/t Matthew Barnfield, Evgeniia Mitrokhina)
+* Added error when feature variables are not factors. (#12, #25, Maciej Szymkiewicz)
+* Added documentation of how to replace colour scale with shape scale in `plot()` methods. (#18, h/t Mia Costa)
+* Make `cj_tidy()` work with tibbles. (#11, Umberto Mignozzetti)
+
+# cregg 0.3.0
+
+* CRAN release.
+
 # cregg 0.2.4
 
 * `cj()` now imposes class "cj_df" on `data` to preserve attributes during subsetting.
