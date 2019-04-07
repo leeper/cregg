@@ -46,8 +46,16 @@ clean_term_names <- function(x, RHS) {
 make_term_labels_df <- function(data, feature_names, level_order = c("ascending", "descending")) {
     # setup data
     if (inherits(data, "data.frame")) {
+        # check that features are factors
+        if (!all(unlist(lapply(data[feature_names], is.factor)))) {
+            stop("All feature variables must be factors")
+        }
         term_levels_list <- lapply(data[feature_names], levels)
     } else if (inherits(data, "survey.design")) {
+        # check that features are factors
+        if (!all(unlist(lapply(data[["variables"]][feature_names], is.factor)))) {
+            stop("All feature variables must be factors")
+        }
         term_levels_list <- lapply(data[["variables"]][feature_names], levels)
     } else {
         stop("'data' is not a 'data.frame' or 'survey.design' object")

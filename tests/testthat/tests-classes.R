@@ -29,6 +29,13 @@ test_that("cj() works", {
                    label = "cj() fails for wrong feature names in 'feature_order'")
     expect_error(inherits(x <- cj(immigration, ChosenImmigrant ~ LanguageSkills, estimate = "diff", id = ~ CaseID), "cj_mm"),
                  label = "cj() fails on estimate = 'diff' w/o 'by'")
+    immigration$tmp <- as.character(immigration$Gender)
+    expect_error(cj(immigration, ChosenImmigrant ~ tmp, id = ~CaseID, estimate = "mm"),
+                   label = "cj() fails when features aren't factors (character)")
+    immigration$tmp <- as.numeric(immigration$Gender)
+    expect_error(cj(immigration, ChosenImmigrant ~ tmp, id = ~CaseID, estimate = "mm"),
+                   label = "cj() fails when features aren't factors (numeric)")
+    immigration$tmp <- NULL
 })
 
 test_that("amce() works", {
