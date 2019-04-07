@@ -2,7 +2,7 @@
 #' @title Tidy estimation of AMCEs
 #' @description Estimate AMCEs for a conjoint analysis and return a tidy data frame of results
 #' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and its reported AMCE will be NA (for printing). Optionally, this can instead be an object of class \dQuote{survey.design} returned by \code{\link[survey]{svydesign}}.
-#' @param formula A formula specifying an AMCE model to be estimated. All variables should be factors. Two-way constraints can be specified with an asterisk (*) between RHS features. The specific constrained level pairs within these features are then detected automatically. Higher-order constraints are not allowed.
+#' @param formula A formula specifying an AMCE model to be estimated. All variables should be factors; all levels across features should be unique. Two-way constraints can be specified with an asterisk (*) between RHS features. The specific constrained level pairs within these features are then detected automatically. Higher-order constraints are not allowed.
 #' @param variable An RHS formula containing a single factor variable from \code{formula}. This will be used by \code{amce_by_reference} to estimate AMCEs relative to each possible factor level as a reference category. If more than one RHS variables are specified, the first will be used.
 #' @template id
 #' @template weights

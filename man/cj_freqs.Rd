@@ -17,9 +17,9 @@ cj_table(data, formula, feature_order = NULL, feature_labels = NULL,
   include_reference = FALSE, ...)
 }
 \arguments{
-\item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors.}
+\item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; all levels across features should be unique.}
 
-\item{formula}{An RHS formula specifying conjoint features to tabulate. All RHS variables should be factors.}
+\item{formula}{An RHS formula specifying conjoint features to tabulate. All RHS variables should be factors; all levels across features should be unique.}
 
 \item{id}{An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.}
 

@@ -20,6 +20,13 @@ test_that("cj() works", {
                           c("Gender", "Educational Attainment")),
                 label = "cj() respects 'feature_order'")
     
+    # expected warnings
+    dat <- data.frame(
+        y = rnorm(100),
+        a = factor(rep(1:2, 50), labels = c("a", "b")),
+        b = factor(rep(c(1:2, 1:2), each = 25), labels = c("a", "b"))
+    )
+    expect_warning(expect_error(cj(dat, y ~ a + b, label = "cj() fails for duplicate levels across features")))
     # expected errors
     expect_error(cj(immigration, ChosenImmigrant ~ Education + Gender, id = ~CaseID, feature_order = "Education", estimate = "mm"),
                    label = "cj() fails for missing feature names in 'feature_order'")

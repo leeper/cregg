@@ -1,3 +1,4 @@
+
 # function used in cj and ammplot to produce "fancy" feature labels
 clean_feature_labels <- function(data, RHS, feature_labels) {
     if (inherits(data, "cj_df") | inherits(data, "data.frame")) {
@@ -61,6 +62,7 @@ make_term_labels_df <- function(data, feature_names, level_order = c("ascending"
         stop("'data' is not a 'data.frame' or 'survey.design' object")
     }
     
+    
     # figure out level order
     level_order <- match.arg(level_order)
     if (level_order == "descending") {
@@ -69,6 +71,10 @@ make_term_labels_df <- function(data, feature_names, level_order = c("ascending"
     
     # construct data frame
     term_levels <- rev(unlist(term_levels_list))
+    ## check that term levels are unique across features
+    if (anyDuplicated(term_levels)) {
+        warning("Some level labels are duplicated across features. This may cause problems!")
+    }
     term_labels <- stats::setNames(rep(feature_names, lengths(term_levels_list)), rev(term_levels))
     data.frame(feature = unlist(term_labels), level = unlist(names(term_labels)), stringsAsFactors = FALSE)
 }

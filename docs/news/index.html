@@ -120,6 +120,8 @@
 <a href="#cregg-0-3-1" class="anchor"></a>cregg 0.3.1<small> Unreleased </small>
 </h1>
 <ul>
+<li>Fixed issue in <code><a href="../reference/diffs.html">mm_diffs()</a></code> wherein a <code>by</code> variable that shared levels with a feature variable led to incorrect estimates being returned. (<a href='https://github.com/leeper/cregg/issues/22'>#22</a>, h/t Michael Jankowski)</li>
+<li>A warning is now issued when levels are not unique across feature. (<a href='https://github.com/leeper/cregg/issues/13'>#13</a>, h/t Chris Wratil)</li>
 <li>Updated documentation with various fixes (<a href='https://github.com/leeper/cregg/issues/19'>#19</a>, <a href='https://github.com/leeper/cregg/issues/20'>#20</a>, <a href='https://github.com/leeper/cregg/issues/21'>#21</a>, <a href='https://github.com/leeper/cregg/issues/23'>#23</a>, h/t Matthew Barnfield, Evgeniia Mitrokhina)</li>
 <li>Added error when feature variables are not factors. (<a href='https://github.com/leeper/cregg/issues/12'>#12</a>, <a href='https://github.com/leeper/cregg/issues/25'>#25</a>, Maciej Szymkiewicz)</li>
 <li>Added documentation of how to replace colour scale with shape scale in <code><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot()</a></code> methods. (<a href='https://github.com/leeper/cregg/issues/18'>#18</a>, h/t Mia Costa)</li>

@@ -19,7 +19,7 @@ mm_diffs(data, formula, by, id = NULL, weights = NULL,
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be NA. Optionally, this can instead be an object of class \dQuote{survey.design} returned by \code{\link[survey]{svydesign}}.}
 
-\item{formula}{A formula specifying a model to be estimated. All variables should be factors.}
+\item{formula}{A formula specifying a model to be estimated. All variables should be factors; all levels across features should be unique.}
 
 \item{by}{A formula containing only RHS variables, specifying grouping factors over which to perform estimation. For \code{amce_diffs}, this can be a factor or something coercable to factor. For \code{mm_diffs} the variable must only take two levels.}
 

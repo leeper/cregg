@@ -15,7 +15,7 @@ cj(data, formula, id = NULL, weights = NULL, estimate = c("amce",
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be zero. Optionally, this can instead be an object of class \dQuote{survey.design} returned by \code{\link[survey]{svydesign}}.}
 
-\item{formula}{A formula specifying a model to be estimated. All variables should be factors. For \code{estimate = "amce"} in a constrained conjoint design, two-way interactions can be specified to handle constraints between factors in the design. These are detected automatically. Higher-order constraints are not allowed and interactions are ignored for all other values of \code{estimate} as constraints are irrelevant to those statistics.}
+\item{formula}{A formula specifying a model to be estimated. ; all levels across features should be unique. For \code{estimate = "amce"} in a constrained conjoint design, two-way interactions can be specified to handle constraints between factors in the design. These are detected automatically. Higher-order constraints are not allowed and interactions are ignored for all other values of \code{estimate} as constraints are irrelevant to those statistics.}
 
 \item{id}{An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.}
 

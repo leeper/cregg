@@ -1,8 +1,8 @@
 #' @rdname cj_freqs
 #' @title Conjoint feature frequencies
 #' @description Tabulate and visualize conjoint features, and their display frequencies and proportions
-#' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors.
-#' @param formula An RHS formula specifying conjoint features to tabulate. All RHS variables should be factors.
+#' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors; all levels across features should be unique.
+#' @param formula An RHS formula specifying conjoint features to tabulate. All RHS variables should be factors; all levels across features should be unique.
 #' @template id
 #' @template weights
 #' @param margin A numeric value passed to \code{\link[base]{prop.table}}. If \code{NULL} overall proportions are calculated.

@@ -2,7 +2,7 @@
 #' @title Preference Heterogeneity Diagnostics
 #' @description Tests for preference heterogeneity in conjoint experiments
 #' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be NA. Optionally, this can instead be an object of class \dQuote{survey.design} returned by \code{\link[survey]{svydesign}}.
-#' @param formula A formula specifying a model to be estimated. All variables should be factors.
+#' @param formula A formula specifying a model to be estimated. All variables should be factors; all levels across features should be unique.
 #' @param id Ignored.
 #' @template weights
 #' @template feature_order

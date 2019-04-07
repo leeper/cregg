@@ -2,7 +2,7 @@
 #' @title Marginal Means
 #' @description Calculate (descriptive) marginal means (MMs) from a conjoint design
 #' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors.
-#' @param formula A formula specifying an outcome (LHS) and conjoint features (RHS) to describe. All RHS variables should be factors, with constraints specified with an asterisk (*) between features, as in \code{amce}.
+#' @param formula A formula specifying an outcome (LHS) and conjoint features (RHS) to describe. All variables should be factors; all levels across features should be unique, with constraints specified with an asterisk (*) between features, as in \code{amce}.
 #' @template id
 #' @template weights
 #' @template feature_order

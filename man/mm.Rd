@@ -11,7 +11,7 @@ mm(data, formula, id = NULL, weights = NULL, feature_order = NULL,
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors.}
 
-\item{formula}{A formula specifying an outcome (LHS) and conjoint features (RHS) to describe. All RHS variables should be factors, with constraints specified with an asterisk (*) between features, as in \code{amce}.}
+\item{formula}{A formula specifying an outcome (LHS) and conjoint features (RHS) to describe. All variables should be factors; all levels across features should be unique, with constraints specified with an asterisk (*) between features, as in \code{amce}.}
 
 \item{id}{An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.}
 
