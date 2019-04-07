@@ -6,32 +6,32 @@
 \alias{plot.cj_mm}
 \alias{plot.cj_freqs}
 \alias{plot.cj_diffs}
-\alias{plot.cj_freqs}
-\alias{plot.cj_mm}
 \title{Plot AMCE estimates, MM descriptives, and frequency plots}
 \usage{
-\method{plot}{cj_amce}(x, group = attr(x, "by"), feature_headers = TRUE,
-  header_fmt = "(\%s)", size = 1, xlab = "Estimated AMCE", ylab = "",
-  legend_title = if (is.null(group)) "Feature" else group,
-  legend_pos = "bottom", xlim = NULL, vline = 0, vline_color = "gray",
-  theme = ggplot2::theme_bw(), ...)
-
-\method{plot}{cj_diffs}(x, group = attr(x, "by"), feature_headers = TRUE,
-  header_fmt = "(\%s)", size = 1, xlab = "Estimated Difference",
-  ylab = "", legend_title = if (is.null(group)) "Feature" else group,
-  legend_pos = "bottom", xlim = NULL, vline = 0, vline_color = "gray",
-  theme = ggplot2::theme_bw(), ...)
-
-\method{plot}{cj_freqs}(x, group = attr(x, "by"), feature_headers = TRUE,
-  header_fmt = "(\%s)", xlab = "", ylab = "Frequency", legend_title = if
+\method{plot}{cj_amce}(x, group = attr(x, "by"),
+  feature_headers = TRUE, header_fmt = "(\%s)", size = 1,
+  xlab = "Estimated AMCE", ylab = "", legend_title = if
   (is.null(group)) "Feature" else group, legend_pos = "bottom",
+  xlim = NULL, vline = 0, vline_color = "gray",
   theme = ggplot2::theme_bw(), ...)
+
+\method{plot}{cj_diffs}(x, group = attr(x, "by"),
+  feature_headers = TRUE, header_fmt = "(\%s)", size = 1,
+  xlab = "Estimated Difference", ylab = "", legend_title = if
+  (is.null(group)) "Feature" else group, legend_pos = "bottom",
+  xlim = NULL, vline = 0, vline_color = "gray",
+  theme = ggplot2::theme_bw(), ...)
+
+\method{plot}{cj_freqs}(x, group = attr(x, "by"),
+  feature_headers = TRUE, header_fmt = "(\%s)", xlab = "",
+  ylab = "Frequency", legend_title = if (is.null(group)) "Feature" else
+  group, legend_pos = "bottom", theme = ggplot2::theme_bw(), ...)
 
 \method{plot}{cj_mm}(x, group = attr(x, "by"), feature_headers = TRUE,
-  header_fmt = "(\%s)", size = 1, xlab = "Marginal Mean", ylab = "",
-  legend_title = if (is.null(group)) "Feature" else group,
-  legend_pos = "bottom", xlim = NULL, vline = 0, vline_color = "gray",
-  theme = ggplot2::theme_bw(), ...)
+  header_fmt = "(\%s)", size = 1, xlab = "Marginal Mean",
+  ylab = "", legend_title = if (is.null(group)) "Feature" else group,
+  legend_pos = "bottom", xlim = NULL, vline = 0,
+  vline_color = "gray", theme = ggplot2::theme_bw(), ...)
 }
 \arguments{
 \item{x}{A data frame returned from \code{\link{cj}} or \code{\link{mm}}.}

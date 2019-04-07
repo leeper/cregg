@@ -5,7 +5,6 @@
 \alias{cj}
 \alias{cregg-package}
 \alias{cregg}
-\alias{cj}
 \title{Simple Conjoint Analyses and Visualization}
 \usage{
 cj(data, formula, id = NULL, weights = NULL, estimate = c("amce",

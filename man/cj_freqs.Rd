@@ -6,14 +6,15 @@
 \alias{cj_table}
 \title{Conjoint feature frequencies}
 \usage{
-cj_freqs(data, formula, id = NULL, weights = NULL, feature_order = NULL,
-  feature_labels = NULL, level_order = c("ascending", "descending"), ...)
+cj_freqs(data, formula, id = NULL, weights = NULL,
+  feature_order = NULL, feature_labels = NULL,
+  level_order = c("ascending", "descending"), ...)
 
 cj_props(data, formula, id, weights = NULL, margin = NULL, ...)
 
 cj_table(data, formula, feature_order = NULL, feature_labels = NULL,
-  level_order = c("ascending", "descending"), include_reference = FALSE,
-  ...)
+  level_order = c("ascending", "descending"),
+  include_reference = FALSE, ...)
 }
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors.}
