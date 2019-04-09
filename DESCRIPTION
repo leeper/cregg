@@ -3,9 +3,12 @@ Type: Package
 Title: Simple Conjoint Tidying, Analysis, and Visualization
 Version: 0.3.1
 Date: 2019-04-07
-Authors@R: c(person("Thomas J.", "Leeper", role = c("aut", "cre"),
-                    email = "thosjleeper@gmail.com",
-                    comment = c(ORCID = "0000-0003-4097-6326")))
+Authors@R: c(
+   person("Thomas J.", "Leeper", role = c("aut", "cre"),
+           email = "thosjleeper@gmail.com",
+           comment = c(ORCID = "0000-0003-4097-6326")),
+   person("Matthew", "Barnfield", role = "ctb"),
+           email = "m.barnfield@qmul.ac.uk")
 Description: Simple tidying, analysis, and visualization of conjoint (factorial) experiments, including estimation and visualization of average marginal component effects ('AMCEs') and marginal means ('MMs') for weighted and un-weighted survey data, along with useful reference category diagnostics and statistical tests. Estimation of 'AMCEs' is based upon methods described by Hainmueller, Hopkins, and Yamamoto (2014) <doi:10.1093/pan/mpt024>.
 License: MIT + file LICENSE
 URL: https://github.com/leeper/cregg
