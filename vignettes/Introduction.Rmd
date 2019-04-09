@@ -15,7 +15,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This vignette provides an introduction to **cregg** a package for analyzing and visualizing the results of conjoint experiments, which are factorial discrete choice experiments that are increasingly popular in the political and social sciences for studying decision making and preferences over multidimensional issues. cregg provides functionality that is useful for analyzing and otherwise examining data from these designs, namely:
+This vignette provides an introduction to **cregg**, a package for analyzing and visualizing the results of conjoint experiments, which are factorial discrete choice experiments that are increasingly popular in the political and social sciences for studying decision making and preferences over multidimensional issues. cregg provides functionality that is useful for analyzing and otherwise examining data from these designs, namely:
 
  - Estimation of average marginal component effects (AMCEs) for fully randomized conjoint designs (as well as designs involving an unlimited number of two-way constraints between features) and munging of AMCE estimates into tidy data frames, via `amce()`
  - Calculation of marginal means (MMs) for conjoint designs and munging them into tidy data frames via `mm()`
@@ -34,11 +34,11 @@ To demonstrate package functionality, the package includes three example dataset
  - `immigration`, a partial factorial conjoint experiment with several restrictions between features conducted by Hainmueller, Hopkins, and Yamamoto (2014)
  - `conjoint_wide`, a simulated "wide"-format conjoint dataset that is used to demonstrate functionality of `cj_tidy()`
 
-The design of cregg follows a few key princples:
+The design of cregg follows a few key principles:
 
  - Following tidy data principles throughout, so that all of the main functions produce consistently structured, metadata-rich data frames. Thus the response from any function is a tidy data frame that can easily be stacked with others (e.g., for computing AMCEs for subsets of respondents) and then producing ggplot2 visualizations. 
  - A formula-based interface that meshes well with the underlying [**survey**](https://cran.r-project.org/package=survey)-based effect estimation API.
- - A consistent interface for both unconstrained and two-way constrained designs that relies only on formula notation without any package-specific "design" specification. Conjoint designs involving two-way constraints between features are easily supported using simple formula notation: `Y ~ A + B + C` implies an unconstrained design, while `Y ~ A * B + C` implies a constraint between levels of features A and B. cregg figures out the constraints automatically without needing to further specify them explicitly.
+ - A consistent interface for both unconstrained and two-way constrained designs that relies only on formula notation without any package-specific "design" specification. Conjoint designs involving two-way constraints between features are easily supported using simple formula notation: `Y ~ A + B + C` implies an unconstrained design, while `Y ~ A * B + C` implies a constraint between levels of features A and B. cregg figures out the constrained level pairs automatically without needing to further specify them explicitly.
 
 cregg also provides some sugar:
 
@@ -59,7 +59,7 @@ options(width = 120)
 knitr::opts_chunk$set(comment = "", warning = FALSE, message = FALSE, echo = TRUE, tidy = TRUE, size="small", fig.width = 10, fig.height = 10)
 ```
 
-The package includes several example conjoint datasets, which is used here and and in examples:
+The package includes several example conjoint datasets, which are used here and in examples:
 
 ```{r load}
 library("cregg")
@@ -68,7 +68,7 @@ data("immigration")
 
 ### Marginal Means
 
-The package provides straightforward calculation and visualization of descriptive marginal means (MMs). These represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, MMs can take any value in the full range of the outcome. Calculation of MMs entail no modelling assumptions are simply descriptive quantities of interest:
+The package provides straightforward calculation and visualization of descriptive marginal means (MMs). These represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs with two profiles per choice task, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. (They will average 0.33 in designs with three profiles, 0.25 with four profiles, etc.) For continuous/ordinal outcomes, MMs can take any value in the full range of the outcome. Calculation of MMs entail no modelling assumptions are simply descriptive quantities of interest:
 
 ```{r mmplot}
 # descriptive plotting
@@ -78,7 +78,7 @@ f1 <- ChosenImmigrant ~ Gender + LanguageSkills + PriorEntry +
 plot(mm(immigration, f1, id = ~ CaseID), vline = 0.5)
 ```
 
-cregg functions uses `attr(data$feature, "label")` to provide pretty printing of feature labels, so that variable names can be arbitrary. These can be overwritten using the `feature_labels` argument to override these settings. Feature levels are always deduced from the `levels()` of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in `feature_order`.
+cregg functions use `attr(data$feature, "label")` to provide pretty printing of feature labels, so that variable names can be arbitrary. These can be overwritten using the `feature_labels` argument to override these settings within cregg functions. (To overwrite/create feature labels permanently, use for example `attr(immigration$LanguageSkills, "label") <- "English Proficiency"`.) Feature levels are always deduced from the `levels()` of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in `feature_order`.
 
 ### Marginal Effects
 
@@ -102,21 +102,49 @@ plot(amces)
 Reference categories for AMCEs are often arbitrary and can affect intuitions about results, so the package also provides a diagnostic tool for helping to decide on an appropriate reference category:
 
 ```{r amce_diagnostic, fig.height = 5}
-amce_diagnostic <- amce_by_reference(immigration, ChosenImmigrant ~ LanguageSkills, ~LanguageSkills, id = ~ CaseID)
-plot(amce_diagnostic, group = "BY")
+amce_diagnostic <- amce_by_reference(immigration, 
+                                     ChosenImmigrant ~ LanguageSkills, 
+                                     ~LanguageSkills, 
+                                     id = ~ CaseID)
+plot(amce_diagnostic, group = "BY", legend_title = "Reference Category")
 ```
+
+The reference category can be specified directly using `relevel(data$feature, "New reference category")`. This may result in levels not being plotted in the desired order, however, in which case the entire feature can be reordered and plotted with a new reference category:
+
+```{r reorder, fig.height = 5}
+# calculate marginal means and order output by estimate
+country_mms <- mm(immigration, 
+                  ChosenImmigrant ~ CountryOfOrigin, 
+                  id = ~CaseID)
+country_mms <- country_mms[order(country_mms$estimate),]
+# reorder feature in preference ascending order
+immigration$CountryOfOrigin2 <- factor(immigration$CountryOfOrigin,
+                                       levels = c("Iraq", "Somalia", "Sudan", 
+                                                  "China", "India", "Mexico",
+                                                  "France", "Poland", "Philippines",
+                                                  "Germany"))
+country2_amces <- amce(immigration, 
+                       ChosenImmigrant ~ CountryOfOrigin2, 
+                       id = ~CaseID)
+plot(country2_amces)
+```
+
+which is useful to generate easily interpretable plots in which otherwise unordered features are ordered according to preferences. 
 
 ## Subgroup Analyis
 
-While the reference category has no meaningful bearing on estimation, it can affect inferences especially when subgroups are compared. For this reason, it can be useful to assess the substantive inferences from difference reference categories alongside any subgroup analysis. To provide simple subgroup analyses, the `cj()` function provides a `by` argument to iterate over subsets of `data` and calculate AMCEs or MMs on each subgroup.
+While the reference category has no meaningful bearing on estimation, it can affect inferences especially when subgroups are compared. For this reason, it can be useful to assess the substantive inferences from different reference categories alongside any subgroup analysis. To provide simple subgroup analyses, the `cj()` function provides a `by` argument to iterate over subsets of `data` and calculate AMCEs or MMs on each subgroup.
 
 ### Subgroup Marginal Means
 
 For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:
 
 ```{r mm_by, fig.height=8}
-mm_by <- cj(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills,
-            id = ~ CaseID, estimate = "mm", by = ~ contest_no)
+mm_by <- cj(immigration, 
+            ChosenImmigrant ~ Gender + Education + LanguageSkills,
+            id = ~ CaseID, 
+            estimate = "mm", 
+            by = ~ contest_no)
 plot(mm_by, group = "BY", vline = 0.5)
 ```
 
@@ -125,7 +153,9 @@ plot(mm_by, group = "BY", vline = 0.5)
 A more formal test of these differences is provided by a nested model comparison test:
 
 ```{r cj_anova}
-cj_anova(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills, by = ~ contest_no)
+cj_anova(immigration, 
+         ChosenImmigrant ~ Gender + Education + LanguageSkills, 
+         by = ~ contest_no)
 ```
 
 which provides a test of whether any of the interactions between the `by` variable and feature levels differ from zero.
@@ -141,30 +171,47 @@ For example, we might want to understand differences in preferences by ethnocent
 immigration$ethnosplit <- NA_real_
 immigration$ethnosplit[immigration$ethnocentrism <= 10] <- 1L
 immigration$ethnosplit[immigration$ethnocentrism > 10] <- 2L
-immigration$ethnosplit <- factor(immigration$ethnosplit, 1:2, c("Low Ethnocentrism", "High Ethnocentrism"))
-x <- cj(na.omit(immigration), f1, id = ~ CaseID, estimate = "mm", by = ~ ethnosplit)
+immigration$ethnosplit <- factor(immigration$ethnosplit, 
+                                 1:2, c("Low Ethnocentrism", "High Ethnocentrism"))
+x <- cj(na.omit(immigration), 
+        f1, 
+        id = ~ CaseID, 
+        estimate = "mm", 
+        by = ~ ethnosplit)
 plot(x, group = "ethnosplit", vline = 0.5)
 ```
 
-But if we want to interpret differences in the sizes of AMCEs (rather than descriptive differences in preferences), we might be inclined to design a similar visualization, replacing MMs with AMCEs. But in such cases, we cannot comment on the descriptive similarity in preferences across subgroups only the heterogeneity in causal effects of feature variations. To make (dis)similarity explicit, such visualizations should include an explicit test of differences in effect sizes. Facetting works well:
+But if we want to interpret differences in the sizes of AMCEs (rather than descriptive differences in preferences), we might be inclined to design a similar visualization, replacing MMs with AMCEs. But in such cases, we cannot comment on the descriptive similarity in preferences across subgroups - only the heterogeneity in causal effects of feature variations. To make (dis)similarity explicit, such visualizations should include an explicit test of differences in effect sizes. Facetting works well:
 
 ```{r conditional_amces, dependson = c("conditional_mms"), fig.height = 4}
 # calculate conditional AMCEs
-amces <- cj(na.omit(immigration), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
-            id = ~ CaseID, estimate = "amce", by = ~ ethnosplit)
-diff_amces <- cj(na.omit(immigration), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
-                 id = ~ CaseID, estimate = "amce_diff", by = ~ ethnosplit)
+amces <- cj(na.omit(immigration), 
+            ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
+            id = ~ CaseID, 
+            estimate = "amce", 
+            by = ~ ethnosplit)
+diff_amces <- cj(na.omit(immigration), 
+                 ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
+                 id = ~ CaseID, 
+                 estimate = "amce_diff", 
+                 by = ~ ethnosplit)
 plot(rbind(amces, diff_amces)) + ggplot2::facet_wrap(~BY, ncol = 3L)
 ```
 
 But again, this plot showcases differences in conjoint effect sizes (AMCEs) not descriptive differences in underlying preferences. A plot of the differences in MMs might be clearer:
 
 ```{r conditional_differences, dependson = c("conditional_amces"), fig.height = 4}
-# calculate conditional AMCEs
-mms <- cj(na.omit(immigration), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
-          id = ~ CaseID, estimate = "mm", by = ~ ethnosplit)
-diff_mms <- cj(na.omit(immigration), ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
-               id = ~ CaseID, estimate = "mm_diff", by = ~ ethnosplit)
+# calculate conditional MMs
+mms <- cj(na.omit(immigration), 
+          ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
+          id = ~ CaseID, 
+          estimate = "mm", 
+          by = ~ ethnosplit)
+diff_mms <- cj(na.omit(immigration), 
+               ChosenImmigrant ~ ReasonForApplication + LanguageSkills,
+               id = ~ CaseID, 
+               estimate = "mm_diff", 
+               by = ~ ethnosplit)
 plot(rbind(mms, diff_mms)) + ggplot2::facet_wrap(~BY, ncol = 3L)
 ```
 
@@ -176,6 +223,65 @@ diff_mms$Estimate <- "MM Difference"
 plot(rbind(diff_amces, diff_mms), feature_headers = FALSE) +
   ggplot2::facet_wrap(~Estimate, ncol = 2L)
 ```
+
+## Interactions
+
+This general process is also possible with a profile feature, rather than a respondent characteristic, in the `by =` argument. This may be necessary when interaction effects are hypothesised. These tell us the causal effect of each level of the RHS features, depending on the value at which another attribute is held. For example, we could check for an interaction between the gender of immigrants and their language skills:
+
+```{r interaction_amces, dependson = c("conditional_amces"), fig.height = 4}
+# calculate interaction AMCEs (ACIEs)
+amces_2 <- cj(immigration,
+            ChosenImmigrant ~ LanguageSkills,
+            id = ~CaseID, estimate = "amce", 
+            by = ~Gender)
+diff_amces_2 <- cj(immigration, 
+                 ChosenImmigrant ~ LanguageSkills, 
+                 id = ~CaseID, estimate = "amce_diff", 
+                 by = ~Gender)
+plot(rbind(amces_2, diff_amces_2)) + ggplot2::facet_wrap(~BY, ncol = 3L)
+```
+
+The explicit test of differences in effect sizes tells us that the change in probability of choosing a profile for each level of language skill, *relative to the baseline level of fluent English*, does not vary significantly contingent on the gender of the profile. For interactions between variables with more levels, however, these plots become large and complex, so it may be better to exclude the explicit tests of differences, which become difficult to interpret:
+
+```{r interaction_amces_2, dependson = c("interaction_amces"), fig.height = 6}
+# calculate interaction AMCEs (ACIEs)
+amces_2 <- cj(immigration,
+            ChosenImmigrant ~ LanguageSkills,
+            id = ~CaseID, estimate = "amce", 
+            by = ~Job)
+plot(amces_2) + ggplot2::facet_wrap(~BY, ncol = 3L)
+```
+
+While this may be necessary when (causal) interaction *effects* specifically need to be tested, again inferential errors are very possible with this kind of visualisation of AMCEs. In many cases it may be preferable to report MMs. Here these tell us respondents' language skill preferences contingent on the job of the profile:
+
+```{r interaction_mms, dependson = c("interaction_amces_2"), fig.height = 6}
+# calculate interaction MMs
+mms <- cj(immigration,
+            ChosenImmigrant ~ LanguageSkills,
+            id = ~CaseID, estimate = "mm", 
+            by = ~Job)
+plot(mms, vline = 0.5) + ggplot2::facet_wrap(~BY, ncol = 3L)
+```
+
+Alternatively, new interaction variables can be created using `interaction()` and then their AMCEs (with inferential caution) or MMs can be plotted like any other variable:  
+
+
+```{r interactions, dependson = c("interaction_mms"), fig.height = 5}
+immigration$language_entry <- 
+  interaction(immigration$LanguageSkills, immigration$PriorEntry, sep = "_")
+# average component interaction effects
+acies <- amce(immigration,
+              ChosenImmigrant ~ language_entry,
+              id = ~CaseID)
+plot(acies)
+# higher order MMs
+interaction_mms <- mm(immigration, 
+                      ChosenImmigrant ~ language_entry,
+                      id = ~CaseID)
+plot(interaction_mms, vline = 0.5)
+                     
+```
+
 
 ## Diagnostics
 
@@ -190,18 +296,17 @@ For example, to check display frequencies of conjoint features (to ensure equal 
 plot(cj_freqs(immigration, f1, id = ~ CaseID))
 ```
 
-As can be clear in the above, constraints were imposed in the original study on the allowed combinations of `Job` and `Education` and also on combinations of `CountryOfOrigin` and `ReasonForApplication`. The `cj_props()` function provides tidy proportions tables to quickly 
+As is clear in the above, constraints were imposed in the original study on the allowed combinations of `Job` and `Education` and also on combinations of `CountryOfOrigin` and `ReasonForApplication`. The `cj_props()` function provides tidy proportions tables to verify that the design was implemented as intended or to perform further subgroup analyses.
 
 ```{r table_freqs}
 subset(cj_props(immigration, ~ Job + Education, id = ~ CaseID), Proportion == 0)
 subset(cj_props(immigration, ~ CountryOfOrigin + ReasonForApplication, id = ~ CaseID), Proportion == 0)
 ```
 
-So that it is possible to very the design was implemented as intended or to perform further subgroup analyses.
 
 ### Balance Testing
 
-The main `amce()` and `mm()` functions can also be used for balance testing. Rather than comparing outcomes across features levels, we will compare a covariate across feature levels. Both approaches will give a similar result:
+The main `amce()` and `mm()` functions can also be used for balance testing. Rather than comparing outcomes across feature levels, we will compare a covariate across feature levels. Both approaches will give a similar result:
 
 ```{r balance_testing, fig.height=8}
 plot(mm(immigration,
@@ -210,11 +315,11 @@ plot(mm(immigration,
      xlim = c(10,30),
      vline = mean(immigration$ethnocentrism, na.rm = TRUE))
 ```
-Given that confidence intervals for each feature hover closely around the grand mean, there is little reason to believe that imbalance is a problem. The same analysis could be performed using `amce()`.
+Given that confidence intervals for each feature hover closely around the grand mean, there is little reason to believe that imbalance is a problem. The same analysis could be performed using `amce()` or, of course, `cj()` with either estimand specified in `estimate =`.
 
 ### Carryover and Left/Right Diagnostics
 
-Subgroup diagnostics can be used to evaluate whether there is, for example, any preference for the lefthand or righthand profile (in a two-profile design):
+Subgroup diagnostics can be used to evaluate whether there is, for example, any preference for the left-hand or right-hand profile (in a two-profile design):
 
 ```{r leftright}
 plot(cj(immigration, f1, id = ~CaseID, by = ~ profile, estimate = "mm"),

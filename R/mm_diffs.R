@@ -53,24 +53,12 @@ function(
     
     # loop over all levels, differencing against the first one
     for (i in seq_len(length(mm_split))[-1L]) {
-        # difference
-        ## temporarily preserve differences within the 'by' variable
-        this_level_diff <- 
-            mm_split[[i]][mm_split[[i]][["level"]] == levels(data[[by_var]])[i], "estimate"] - 
-            mm_split[[1L]][mm_split[[1L]][["level"]] == levels(data[[by_var]])[1L], "estimate"]
-        this_level_se <- 
-            sqrt(mm_split[[i]][mm_split[[i]][["level"]] == levels(data[[by_var]])[i], "std.error"]^2 + 
-                 mm_split[[1L]][mm_split[[1L]][["level"]] == levels(data[[by_var]])[1L], "std.error"]^2)
         
-        ## differences for all variables
+        # differences for all variables
         mm_split[[i]][["estimate"]] <- mm_split[[i]][["estimate"]] - mm_split[[1L]][["estimate"]]
         # SE of difference
         variance <- ((mm_split[[i]][["std.error"]]^2)) + ((mm_split[[1L]][["std.error"]]^2))
         mm_split[[i]][["std.error"]] <- sqrt( variance )
-        
-        ## overwrite differences and SEs thereof for 'by' variable (given they aren't ordered correctly)
-        mm_split[[i]][mm_split[[i]][["level"]] == levels(data[[by_var]])[i], "estimate"] <- this_level_diff
-        mm_split[[i]][mm_split[[i]][["level"]] == levels(data[[by_var]])[i], "std.error"] <- this_level_se
         
         # z-statistic
         mm_split[[i]][["z"]] <- mm_split[[i]][["estimate"]]/mm_split[[i]][["std.error"]]

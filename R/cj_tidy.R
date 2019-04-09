@@ -94,6 +94,11 @@ function(
   id
 ) {
     
+    # coerce to data frame (for tibbles)
+    if (identical(class(data), "data.frame")) {
+        data <- as.data.frame(data)
+    }
+    
     # warn for possible variable name problems
     if (any(c("profile", "task", "pair") %in% names(data))) {
         stop("'profile', 'task', and 'pair' are reserved variable names and cannot appear in 'data'")

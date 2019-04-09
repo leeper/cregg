@@ -5,7 +5,7 @@
 #' @docType package
 #' @description Simple analyses of conjoint (factorial) experiments and visualization of results.
 #' @param data A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be zero. Optionally, this can instead be an object of class \dQuote{survey.design} returned by \code{\link[survey]{svydesign}}.
-#' @param formula A formula specifying a model to be estimated. All variables should be factors. For \code{estimate = "amce"} in a constrained conjoint design, two-way interactions can be specified to handle constraints between factors in the design. These are detected automatically. Higher-order constraints are not allowed and interactions are ignored for all other values of \code{estimate} as constraints are irrelevant to those statistics.
+#' @param formula A formula specifying a model to be estimated. ; all levels across features should be unique. For \code{estimate = "amce"} in a constrained conjoint design, two-way interactions can be specified to handle constraints between factors in the design. These are detected automatically. Higher-order constraints are not allowed and interactions are ignored for all other values of \code{estimate} as constraints are irrelevant to those statistics.
 #' @param id An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.
 #' @param weights An (optional) RHS formula specifying a variable holding survey weights.
 #' @param estimate A character string specifying an estimate type. Current options are average marginal component effects (or AMCEs, \dQuote{amce}, estimated via \code{\link{amce}}), display frequencies (\dQuote{frequncies}, estimated via \code{\link{cj_freqs}}), marginal means (or AMMs, \dQuote{mm}, estimated via \code{\link{mm}}), differences in MMs (\dQuote{mm_differences}, via \code{\link{mm_diffs}}), or differences in AMCEs (\dQuote{amce_differences}, via \code{\link{amce_diffs}}). Additional options may be made available in the future. Non-ambiguous abbreviations are allowed.
@@ -64,6 +64,18 @@
 #' x <- cj(na.omit(immigration), ChosenImmigrant ~ Gender + Education + LanguageSkills,
 #'         id = ~ CaseID, estimate = "mm", h0 = 0.5, by = ~ ethnosplit)
 #' plot(x, group = "ethnosplit", vline = 0.5)
+#' 
+#' # combinations of/interactions between features
+#' immigration$language_entry <- 
+#'   interaction(immigration$LanguageSkills, immigration$PriorEntry, sep = "_")
+#'
+#' ## higher-order MMs for feature combinations
+#' cj(immigration, ChosenImmigrant ~ language_entry,
+#'    id = ~CaseID, estimate = "mm", h0 = 0.5)
+#'
+#' ## average component interaction effects (AMCEs for feature interactions)
+#' cj(immigration, ChosenImmigrant ~ language_entry,
+#'    id = ~CaseID, estimate = "amce")
 #' }
 #' @seealso
 #'  Functions: \code{\link{amce}}, \code{\link{mm}}, \code{\link{cj_freqs}}, \code{\link{mm_diffs}}, \code{\link{plot.cj_amce}}, \code{\link{cj_tidy}}

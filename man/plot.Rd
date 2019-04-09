@@ -6,32 +6,32 @@
 \alias{plot.cj_mm}
 \alias{plot.cj_freqs}
 \alias{plot.cj_diffs}
-\alias{plot.cj_freqs}
-\alias{plot.cj_mm}
 \title{Plot AMCE estimates, MM descriptives, and frequency plots}
 \usage{
-\method{plot}{cj_amce}(x, group = attr(x, "by"), feature_headers = TRUE,
-  header_fmt = "(\%s)", size = 1, xlab = "Estimated AMCE", ylab = "",
-  legend_title = if (is.null(group)) "Feature" else group,
-  legend_pos = "bottom", xlim = NULL, vline = 0, vline_color = "gray",
-  theme = ggplot2::theme_bw(), ...)
-
-\method{plot}{cj_diffs}(x, group = attr(x, "by"), feature_headers = TRUE,
-  header_fmt = "(\%s)", size = 1, xlab = "Estimated Difference",
-  ylab = "", legend_title = if (is.null(group)) "Feature" else group,
-  legend_pos = "bottom", xlim = NULL, vline = 0, vline_color = "gray",
-  theme = ggplot2::theme_bw(), ...)
-
-\method{plot}{cj_freqs}(x, group = attr(x, "by"), feature_headers = TRUE,
-  header_fmt = "(\%s)", xlab = "", ylab = "Frequency", legend_title = if
+\method{plot}{cj_amce}(x, group = attr(x, "by"),
+  feature_headers = TRUE, header_fmt = "(\%s)", size = 1,
+  xlab = "Estimated AMCE", ylab = "", legend_title = if
   (is.null(group)) "Feature" else group, legend_pos = "bottom",
+  xlim = NULL, vline = 0, vline_color = "gray",
   theme = ggplot2::theme_bw(), ...)
+
+\method{plot}{cj_diffs}(x, group = attr(x, "by"),
+  feature_headers = TRUE, header_fmt = "(\%s)", size = 1,
+  xlab = "Estimated Difference", ylab = "", legend_title = if
+  (is.null(group)) "Feature" else group, legend_pos = "bottom",
+  xlim = NULL, vline = 0, vline_color = "gray",
+  theme = ggplot2::theme_bw(), ...)
+
+\method{plot}{cj_freqs}(x, group = attr(x, "by"),
+  feature_headers = TRUE, header_fmt = "(\%s)", xlab = "",
+  ylab = "Frequency", legend_title = if (is.null(group)) "Feature" else
+  group, legend_pos = "bottom", theme = ggplot2::theme_bw(), ...)
 
 \method{plot}{cj_mm}(x, group = attr(x, "by"), feature_headers = TRUE,
-  header_fmt = "(\%s)", size = 1, xlab = "Marginal Mean", ylab = "",
-  legend_title = if (is.null(group)) "Feature" else group,
-  legend_pos = "bottom", xlim = NULL, vline = 0, vline_color = "gray",
-  theme = ggplot2::theme_bw(), ...)
+  header_fmt = "(\%s)", size = 1, xlab = "Marginal Mean",
+  ylab = "", legend_title = if (is.null(group)) "Feature" else group,
+  legend_pos = "bottom", xlim = NULL, vline = 0,
+  vline_color = "gray", theme = ggplot2::theme_bw(), ...)
 }
 \arguments{
 \item{x}{A data frame returned from \code{\link{cj}} or \code{\link{mm}}.}
@@ -70,6 +70,7 @@ ggplot2-based plotting of conjoint AMCEs estimates and MMs
 }
 \examples{
 \donttest{
+require(ggplot2)
 # load data
 data("immigration")
 
@@ -80,7 +81,17 @@ d1 <- mm(immigration, ChosenImmigrant ~ Gender + Education +
 
 # plot MMs
 ## simple plot
-plot(d1)
+(p <- plot(d1, vline = 0.5))
+
+## gridlines to aid interpretation
+p + ggplot2::theme_grey()
+
+## plot with estimates shown as text labels
+p + ggplot2::geom_text(
+  aes(label = sprintf("\%0.2f (\%0.2f)", estimate, std.error)),
+  colour = "black", position = position_nudge(y = .5)
+)
+
 ## plot with facetting by feature
 plot(d1, feature_headers = FALSE) + 
   ggplot2::facet_wrap(~feature, ncol = 1L, 
@@ -98,8 +109,16 @@ plot(stacked, group = "contest_no", feature_headers = FALSE)
 ## plot with facetting
 plot(stacked) + ggplot2::facet_wrap(~contest_no, nrow = 1L)
 
+## plot with shapes instead of colors for groups
+plot(stacked, group = "contest_no", vline = 0.5) + 
+ aes(shape = contest_no) + # map group to `shape` aesthetic
+ scale_shape_manual(values=c(1, 2, 3, 4, 5)) +
+ scale_discrete_manual(values=rep("black", 5)) # optionally, override colour
+
 # estimate AMCEs over different subsets of data
-reasons12 <- subset(immigration, ReasonForApplication \%in\% levels(ReasonForApplication)[1:2])
+reasons12 <- subset(
+  immigration, ReasonForApplication \%in\% levels(ReasonForApplication)[1:2]
+)
 d2_1 <- cj(immigration, ChosenImmigrant ~ CountryOfOrigin, id = ~ CaseID)
 d2_2 <- cj(reasons12, ChosenImmigrant ~ CountryOfOrigin, id = ~ CaseID,
            feature_labels = list(CountryOfOrigin = "Country Of Origin"))
