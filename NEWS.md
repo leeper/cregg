@@ -3,6 +3,7 @@
 ## cregg 0.4.0
 
 * Fixed a bug related to variances for clustered designs that was erroneously handling clusters. The bug arose from an unintended difference in calculating variances when designs were weighted versus not. All designs now estimate AMCEs using `svyglm()` for consistency. Weighted designs with weights provided to the `weight` argument of `cj()`, `amce()`, etc. were unaffected. Analysts using the package for unweighted designs should update there results to obtain appropriately conservative standard errors of AMCEs. Tests of this behavior have now been added.
+* Added an error when attempting to use `by` variables in `cj()` that contain empty character string levels. (#32, Farsan Ghassim)
 
 ## cregg 0.3.1
 

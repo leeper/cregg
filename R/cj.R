@@ -24,6 +24,12 @@ function(
         
         # get RHS variables, variable labels, and factor levels
         by_vars <- all.vars(stats::update(by, 0 ~ . ))
+        ## check for empty string values in by vars; error if present
+        for (b in by_vars) {
+            if ("" %in% unique(data[[b]])) {
+                stop(sprintf("'by' variables cannot contain \"\" values (see '%s')", b))
+            }
+        }
         
         # process feature_order argument
         feature_order <- check_feature_order(feature_order, RHS)
