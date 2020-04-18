@@ -43,7 +43,7 @@ get_coef_metadata <- function(mod, data = model.frame(mod)) {
     ## any column (a coef) with more than one non-zero entry mean involves two or more variables
     ## Note: it has to be non-zero because the matrix can contain 1s and 2s, which have different substantive meanings
     model_factors_df <- data.frame(t(model_factors[-1L, assign_vec, drop = FALSE] != 0), check.names = FALSE)
-#browser()
+
     # build a data frame of the coefficients and information from terms() and 'assign' attribute
     terms_df <- cbind.data.frame(
       # add coefficient names
