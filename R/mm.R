@@ -42,13 +42,13 @@ mm <-
 function(
   data,
   formula,
-  id = NULL,
+  id = ~ 0,
   weights = NULL,
   feature_order = NULL,
   feature_labels = NULL,
   level_order = c("ascending", "descending"),
-  h0 = 0,
   alpha = 0.05,
+  h0 = 0,
   ...
 ) {
     
@@ -64,13 +64,6 @@ function(
     # process feature_order argument
     feature_order <- check_feature_order(feature_order, RHS)
     
-    # get `id` as character string
-    if (!is.null(id)) {
-        idvar <- all.vars(update(id, 0 ~ . ))
-    } else {
-        idvar <- NULL
-    }
-    
     # set level_order (within features) to ascending or descending
     level_order <- match.arg(level_order)
     
@@ -82,15 +75,25 @@ function(
     
     # get `weights` as character string
     if (!is.null(weights)) {
-        weightsvar <- all.vars(update(weights, 0 ~ . ))
+        weightsvar <- all.vars(update(weights, 0 ~ . ))[1L]
+        data[["CREGG_WEIGHT"]] <- data[[weightsvar]]
     } else {
-        weightsvar <- NULL
+        weights <- ~ 0
+        data[["CREGG_WEIGHT"]] <- 1
+    }
+    
+    # get `id` as character string
+    if (length(all.vars(id))) {
+        idvar <- all.vars(id)[1L]
+    } else {
+        id <- ~ 0
+        idvar <- NULL
     }
     
     # reshape data
-    long <- stats::reshape(data[c(outcome, RHS, idvar, weightsvar)], 
+    long <- stats::reshape(data[c(outcome, RHS, idvar, "CREGG_WEIGHT")], 
                            varying = list(names(data[RHS])), 
-                           v.names = "Level", 
+                           v.names = "LEVEL", 
                            timevar = "Feature",
                            times = names(data[RHS]),
                            idvar = "observation",
@@ -98,19 +101,25 @@ function(
     names(long)[names(long) == outcome] <- "OUTCOME"
     
     # convert to survey object
-    if (!is.null(weights)) {
-        svylong <- survey::svydesign(ids = ~ 0, weights = weights, data = long)
-    } else {
-        svylong <- survey::svydesign(ids = ~ 0, weights = ~0, data = long)
-    }
-    
+    svylong <- survey::svydesign(ids = id, weights = ~ CREGG_WEIGHT, data = long)
+
     # calculate MMs, SEs, etc.
-    out <- survey::svyby(~ OUTCOME, ~ Level, FUN = survey::svymean, design = svylong, na.rm = TRUE)
+    out <- survey::svyby(~ OUTCOME, ~ LEVEL, FUN = survey::svymean, design = svylong, na.rm = TRUE)
     out[["z"]] <- (out[["OUTCOME"]] - h0)/out[["se"]]
     out[["p"]] <- (2*stats::pnorm(-abs(out[["z"]])))
     out[["lower"]] <- out[["OUTCOME"]] - stats::qnorm((1-alpha) + (alpha/2)) * out[["se"]]
     out[["upper"]] <- out[["OUTCOME"]] + stats::qnorm((1-alpha) + (alpha/2)) * out[["se"]]
     names(out) <- c("level", "estimate", "std.error", "z", "p", "lower", "upper")
+    
+    # an alternative way of getting those estimates is with `svyglm`
+    ## but there's no way to pass h0 through lmtest::coeftest() so it isn't that useful for the common use case
+    # out <- do.call("rbind", lapply(unique(long[["Feature"]]), function(this_feature) {
+    #     mod <- survey::svyglm(OUTCOME ~ 0 + LEVEL, design = svylong, subset = Feature == this_feature, ...)
+    #     cs <- get_coef_summary(mod = mod, data = data, id = NULL, alpha = alpha)
+    #    names(cs) <- c("estimate", "std.error", "z", "p", "lower", "upper", "level")
+    #     cs[["level"]] <- factor(sub("^LEVEL", "", cs[["level"]]))
+    #     cs
+    # }))
     
     # attach feature labels
     out <- merge(out, make_term_labels_df(data, RHS), by = c("level"), all = TRUE)

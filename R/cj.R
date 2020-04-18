@@ -4,7 +4,7 @@ cj <-
 function(
   data,
   formula,
-  id = NULL,
+  id = ~ 0,
   weights = NULL,
   estimate = c("amce", "frequencies", "mm", "amce_differences", "mm_differences"),
   feature_order = NULL,

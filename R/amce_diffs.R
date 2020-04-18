@@ -9,6 +9,7 @@
 #' @template feature_labels
 #' @template level_order
 #' @template alpha
+#' @param h0 A numeric value specifying a null hypothesis value to use when generating z-statistics and p-values (only used for \code{mm_diffs}).
 #' @param by A formula containing only RHS variables, specifying grouping factors over which to perform estimation. For \code{amce_diffs}, this can be a factor or something coercable to factor. For \code{mm_diffs} the variable must only take two levels.
 #' @param \dots Additional arguments to \code{\link{amce}}, \code{\link{cj_freqs}}, or \code{\link{mm}}.
 #' @author Thomas J. Leeper <thosjleeper@gmail.com>
@@ -59,7 +60,7 @@ function(
   data,
   formula,
   by,
-  id = NULL,
+  id = ~ 0,
   weights = NULL,
   feature_order = NULL,
   feature_labels = NULL,
@@ -102,10 +103,10 @@ function(
     
     # estimate model
     if (inherits(data, "data.frame") && is.null(weights)) {
-        svydesign <- NULL
-        mod <- stats::glm(formula, data = data, ...)
+        svydesign <- survey::svydesign(ids = id, weights = ~ 1, data = data)
+        mod <- survey::svyglm(formula, design = svydesign, ...)
     } else if (inherits(data, "data.frame")) {
-        svydesign <- survey::svydesign(ids = ~ 0, weights = weights, data = data)
+        svydesign <- survey::svydesign(ids = id, weights = weights, data = data)
         mod <- survey::svyglm(formula, design = svydesign, ...)
     } else if (inherits(data, "survey.design")) {
         svydesign <- data
@@ -123,7 +124,7 @@ function(
         terms_df <- terms_df[terms_df[[by_var]] & terms_df[["_order"]] != 1, , drop = FALSE]
         
         # get coefficients as data frame (correct, if needed, for clustering)
-        coef_summary <- get_coef_summary(mod = mod, data = data, id = id, alpha = alpha)
+        coef_summary <- get_coef_summary(mod = mod, data = data, id = NULL, alpha = alpha) # don't pass id
         # merge coef_df and coef_summary
         coef_summary <- merge(coef_summary, terms_df, by = "_coef")
         

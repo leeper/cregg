@@ -4,16 +4,25 @@
 \alias{mm}
 \title{Marginal Means}
 \usage{
-mm(data, formula, id = NULL, weights = NULL, feature_order = NULL,
-  feature_labels = NULL, level_order = c("ascending", "descending"),
-  h0 = 0, alpha = 0.05, ...)
+mm(
+  data,
+  formula,
+  id = ~0,
+  weights = NULL,
+  feature_order = NULL,
+  feature_labels = NULL,
+  level_order = c("ascending", "descending"),
+  alpha = 0.05,
+  h0 = 0,
+  ...
+)
 }
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors.}
 
 \item{formula}{A formula specifying an outcome (LHS) and conjoint features (RHS) to describe. All variables should be factors; all levels across features should be unique, with constraints specified with an asterisk (*) between features, as in \code{amce}.}
 
-\item{id}{An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.}
+\item{id}{An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors. By default, data are unclustered.}
 
 \item{weights}{An (optional) RHS formula specifying a variable holding survey weights.}
 
@@ -23,9 +32,9 @@ mm(data, formula, id = NULL, weights = NULL, feature_order = NULL,
 
 \item{level_order}{A character string specifying levels (within each feature) should be ordered increasing or decreasing in the final output. This is mostly only consequential for plotting via \code{\link{plot.cj_mm}}, etc.}
 
-\item{h0}{A numeric value specifying a null hypothesis value to use when generating z-statistics and p-values.}
-
 \item{alpha}{A numeric value indicating the significance level at which to calculate confidence intervals for the MMs (by default 0.95, meaning 95-percent CIs are returned).}
+
+\item{h0}{A numeric value specifying a null hypothesis value to use when generating z-statistics and p-values.}
 
 \item{\dots}{Ignored.}
 }

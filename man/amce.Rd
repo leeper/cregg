@@ -5,9 +5,17 @@
 \alias{amce_by_reference}
 \title{Tidy estimation of AMCEs}
 \usage{
-amce(data, formula, id = NULL, weights = NULL, feature_order = NULL,
-  feature_labels = NULL, level_order = c("ascending", "descending"),
-  alpha = 0.05, ...)
+amce(
+  data,
+  formula,
+  id = ~0,
+  weights = NULL,
+  feature_order = NULL,
+  feature_labels = NULL,
+  level_order = c("ascending", "descending"),
+  alpha = 0.05,
+  ...
+)
 
 amce_by_reference(data, formula, variable, ...)
 }
@@ -16,7 +24,7 @@ amce_by_reference(data, formula, variable, ...)
 
 \item{formula}{A formula specifying an AMCE model to be estimated. All variables should be factors; all levels across features should be unique. Two-way constraints can be specified with an asterisk (*) between RHS features. The specific constrained level pairs within these features are then detected automatically. Higher-order constraints are not allowed.}
 
-\item{id}{An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors.}
+\item{id}{An RHS formula specifying a variable holding respondent identifiers, to be used for clustering standard errors. By default, data are unclustered.}
 
 \item{weights}{An (optional) RHS formula specifying a variable holding survey weights.}
 

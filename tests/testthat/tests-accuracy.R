@@ -178,3 +178,14 @@ test_that("amce_diffs() returns correct differences", {
                 label = "amce_diffs() works w/o 'id' argument")
 })
 
+
+
+# TODO: variances
+
+# TODO: weighting
+
+# TODO: clustering
+
+# TODO: clustering + weighting
+
+

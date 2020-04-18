@@ -7,10 +7,18 @@
 \alias{cregg}
 \title{Simple Conjoint Analyses and Visualization}
 \usage{
-cj(data, formula, id = NULL, weights = NULL, estimate = c("amce",
-  "frequencies", "mm", "amce_differences", "mm_differences"),
-  feature_order = NULL, feature_labels = NULL,
-  level_order = c("ascending", "descending"), by = NULL, ...)
+cj(
+  data,
+  formula,
+  id = ~0,
+  weights = NULL,
+  estimate = c("amce", "frequencies", "mm", "amce_differences", "mm_differences"),
+  feature_order = NULL,
+  feature_labels = NULL,
+  level_order = c("ascending", "descending"),
+  by = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be zero. Optionally, this can instead be an object of class \dQuote{survey.design} returned by \code{\link[survey]{svydesign}}.}

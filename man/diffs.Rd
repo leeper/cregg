@@ -6,15 +6,34 @@
 \alias{mm_diffs}
 \title{Preference Heterogeneity Diagnostics}
 \usage{
-amce_diffs(data, formula, by, id = NULL, weights = NULL,
-  feature_order = NULL, feature_labels = NULL,
-  level_order = c("ascending", "descending"), alpha = 0.05, ...)
+amce_diffs(
+  data,
+  formula,
+  by,
+  id = ~0,
+  weights = NULL,
+  feature_order = NULL,
+  feature_labels = NULL,
+  level_order = c("ascending", "descending"),
+  alpha = 0.05,
+  ...
+)
 
 cj_anova(data, formula, id = NULL, weights = NULL, by = NULL, ...)
 
-mm_diffs(data, formula, by, id = NULL, weights = NULL,
-  feature_order = NULL, feature_labels = NULL,
-  level_order = c("ascending", "descending"), alpha = 0.05, ...)
+mm_diffs(
+  data,
+  formula,
+  by,
+  id = ~0,
+  weights = NULL,
+  feature_order = NULL,
+  feature_labels = NULL,
+  level_order = c("ascending", "descending"),
+  alpha = 0.05,
+  h0 = 0,
+  ...
+)
 }
 \arguments{
 \item{data}{A data frame containing variables specified in \code{formula}. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be NA. Optionally, this can instead be an object of class \dQuote{survey.design} returned by \code{\link[survey]{svydesign}}.}
@@ -36,6 +55,8 @@ mm_diffs(data, formula, by, id = NULL, weights = NULL,
 \item{alpha}{A numeric value indicating the significance level at which to calculate confidence intervals for the MMs (by default 0.95, meaning 95-percent CIs are returned).}
 
 \item{\dots}{Additional arguments to \code{\link{amce}}, \code{\link{cj_freqs}}, or \code{\link{mm}}.}
+
+\item{h0}{A numeric value specifying a null hypothesis value to use when generating z-statistics and p-values (only used for \code{mm_diffs}).}
 }
 \value{
 \code{amce_diffs} and \code{mm_diffs} return a data frame similar to the one returned by \code{\link{cj}}, including a \code{BY} column (with the value \dQuote{Difference}) for easy merging with results returned by that function.

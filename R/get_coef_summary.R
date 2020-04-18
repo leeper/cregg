@@ -1,4 +1,6 @@
 # function to convert model estimates (possibly corrected for clustering) into a data frame
+## a survey design object from `amce()` or `amce_diffs()` will already be clustered so this just formats the output
+## if somehow a model is passed in that's not clustered, then `id` can be used to do the clustering
 ## used in `amce_diffs()` and can be merged against output of `get_coef_metadata()` by `"_name"`
 get_coef_summary <- function(mod, data, id = NULL, alpha = 0.05) {
     
@@ -6,7 +8,7 @@ get_coef_summary <- function(mod, data, id = NULL, alpha = 0.05) {
     intercept <- if (attr(terms(mod), "intercept") == 1L) TRUE else FALSE
     
     # setup standard errors and create `coef_summary`
-    if (is.null(id) || !length(all.vars(id))) {
+    if (inherits(mod, "svyglm")) {
         # get `coef_summary` matrix
         coef_summary <- unclass(lmtest::coeftest(mod))
         
@@ -16,7 +18,7 @@ get_coef_summary <- function(mod, data, id = NULL, alpha = 0.05) {
         coef_summary <- cbind(coef_summary, confints)
         
     } else {
-        # get clustered var-cov matrix
+        # get clustered var-cov matrix if mod is not already clustered (i.e., a svyglm)
         if (inherits(data, "data.frame")) {
             cluster_vector <- stats::get_all_vars(id, data)[[1L]]
         } else if (inherits(data, "survey.design")) {

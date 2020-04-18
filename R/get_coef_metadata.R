@@ -1,21 +1,32 @@
 # function to get model terms converted into data frame where rows are coefficients and columns explain those coefficients
 ## used in `amce()` and `amce_diffs()`
 get_coef_metadata <- function(mod, data = model.frame(mod)) {
+
     # extract coefficient names
-    coefs <- coef(mod)
-    
+    if (inherits(mod, "svyglm")) {
+        coefs <- coef(mod, na.rm = FALSE)
+    } else {
+        coefs <- coef(mod, complete = TRUE)
+    }
+
     # extract terms
     model_terms <- terms(mod)
-    
-    # extract `dataClasses` attribute
-    data_classes <- attr(model_terms, "dataClasses")
     
     # is there an intercept?
     intercept <- if (attr(model_terms, "intercept") == 1L) TRUE else FALSE
     
+    # extract `dataClasses` attribute
+    data_classes <- attr(model_terms, "dataClasses")
+    
+    # is there a "weights" column?
+    weights <- if ("(weights)" %in% names(data_classes)) TRUE else FALSE
+    if (isTRUE(weights)) {
+        data_classes <- data_classes[names(data_classes) != "(weights)"]
+    }
+    
     # extract 'assign' attribute vector and attach names from formula terms
     assign_vec <- attr(model.matrix(mod), "assign")
-    if (intercept) {
+    if (isTRUE(intercept)) {
         # drop intercept from 'assign' vector temporarily
         assign_vec <- assign_vec[-1L]
         # drop intercept from 'coefs'
@@ -32,7 +43,7 @@ get_coef_metadata <- function(mod, data = model.frame(mod)) {
     ## any column (a coef) with more than one non-zero entry mean involves two or more variables
     ## Note: it has to be non-zero because the matrix can contain 1s and 2s, which have different substantive meanings
     model_factors_df <- data.frame(t(model_factors[-1L, assign_vec, drop = FALSE] != 0), check.names = FALSE)
-    
+#browser()
     # build a data frame of the coefficients and information from terms() and 'assign' attribute
     terms_df <- cbind.data.frame(
       # add coefficient names

@@ -5,12 +5,13 @@ function(
   data,
   formula,
   by,
-  id = NULL,
+  id = ~ 0,
   weights = NULL,
   feature_order = NULL,
   feature_labels = NULL,
   level_order = c("ascending", "descending"),
   alpha = 0.05,
+  h0 = 0,
   ...
 ) {
     
@@ -46,7 +47,7 @@ function(
     
     # estimate marginal means, by 'by_var'
     mm <- cj(data = data, formula = formula, estimate = "mm", id = id, weights = weights, by = by,
-             feature_order = feature_order, feature_labels = feature_labels, level_order = level_order, alpha = alpha, ...)
+             feature_order = feature_order, feature_labels = feature_labels, level_order = level_order, alpha = alpha, h0 = h0, ...)
     
     # split the output of 'mm' and order by factor levels
     mm_split <- split(mm, mm[["BY"]])[levels(data[[by_var]])]
