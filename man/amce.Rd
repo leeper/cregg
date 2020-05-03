@@ -49,7 +49,7 @@ Estimate AMCEs for a conjoint analysis and return a tidy data frame of results
 \details{
 \code{amce} provides estimates of AMCEs (or rather, average marginal effects for each feature level). Two-way constraints can be specified with an asterisk (*) between features. The specific constrained level pairs within these features are then detected automatically. The function can also be used for calculating average component interaction effects when combined with \code{interaction}, and for balance testing by specifying a covariate rather outcome on the left-hand side of \code{formula}. See examples.
 
-\code{amce_by_reference} provides a tool for quick sensitivity analysis. AMCEs are defined relative to an arbitrary reference category (i.e., feature level). This function will loop over all feature levels (for a specified feature) to show how interpretation will be affected by choice of reference category. The resulting data frame will be a stacked result from \code{amce}, containing an additional \code{BY} column specifying which level of \code{variable} was used as the reference category. In unconstrained conjoint designs, only AMCEs for \code{variable} will vary by reference category; in constrained designs, AMCEs for any factor constrained by \code{variable} may also vary.
+\code{amce_by_reference} provides a tool for quick sensitivity analysis. AMCEs are defined relative to an arbitrary reference category (i.e., feature level). This function will loop over all feature levels (for a specified feature) to show how interpretation will be affected by choice of reference category. The resulting data frame will be a stacked result from \code{amce}, containing an additional \code{REFERENCE} column specifying which level of \code{variable} was used as the reference category. In unconstrained conjoint designs, only AMCEs for \code{variable} will vary by reference category; in constrained designs, AMCEs for any factor constrained by \code{variable} may also vary.
 
 Users may desire to specify a \code{family} argument via \code{\dots}, which should be a \dQuote{family} object such as \code{gaussian}. Sensible alternatives are \code{binomial} (for binary outcomes) and quasibinomial (for weighted survey data). See \code{\link[stats]{family}} for details. In such cases, effects are always reported on the link (not outcome) scale.
 }
@@ -78,7 +78,7 @@ plot(amce(immigration[!is.na(immigration$ethnocentrism),],
 x <- amce_by_reference(immigration, ChosenImmigrant ~ LanguageSkills + Education, 
        variable = ~ LanguageSkills, id = ~ CaseID)
 # plot
-plot(x, group = "BY")
+plot(x)
 }
 }
 \seealso{
