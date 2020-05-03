@@ -10,7 +10,7 @@
 #' @template level_order
 #' @template alpha
 #' @param h0 A numeric value specifying a null hypothesis value to use when generating z-statistics and p-values (only used for \code{mm_diffs}).
-#' @param by A formula containing only RHS variables, specifying grouping factors over which to perform estimation. For \code{amce_diffs}, this can be a factor or something coercable to factor. For \code{mm_diffs} the variable must only take two levels.
+#' @param by A formula containing only RHS variables, specifying grouping factors over which to perform estimation. For \code{amce_diffs}, this can be a factor or something coercable to factor. For \code{mm_diffs}, differences are calculated against the base level of this variable.
 #' @param \dots Additional arguments to \code{\link{amce}}, \code{\link{cj_freqs}}, or \code{\link{mm}}.
 #' @author Thomas J. Leeper <thosjleeper@gmail.com>
 #' @return \code{amce_diffs} and \code{mm_diffs} return a data frame similar to the one returned by \code{\link{cj}}, including a \code{BY} column (with the value \dQuote{Difference}) for easy merging with results returned by that function.

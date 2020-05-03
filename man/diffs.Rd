@@ -40,7 +40,7 @@ mm_diffs(
 
 \item{formula}{A formula specifying a model to be estimated. All variables should be factors; all levels across features should be unique.}
 
-\item{by}{A formula containing only RHS variables, specifying grouping factors over which to perform estimation. For \code{amce_diffs}, this can be a factor or something coercable to factor. For \code{mm_diffs} the variable must only take two levels.}
+\item{by}{A formula containing only RHS variables, specifying grouping factors over which to perform estimation. For \code{amce_diffs}, this can be a factor or something coercable to factor. For \code{mm_diffs}, differences are calculated against the base level of this variable.}
 
 \item{id}{Ignored.}
 
