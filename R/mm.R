@@ -104,12 +104,17 @@ function(
     svylong <- survey::svydesign(ids = id, weights = ~ CREGG_WEIGHT, data = long)
 
     # calculate MMs, SEs, etc.
-    out <- survey::svyby(~ OUTCOME, ~ LEVEL, FUN = survey::svymean, design = svylong, na.rm = TRUE)
+    out <- survey::svyby(
+        ~ OUTCOME, 
+        ~ LEVEL, 
+        FUN = survey::svymean, 
+        design = svylong, 
+        na.rm = TRUE, 
+        vartype = c("se", "ci")
+    )
     out[["z"]] <- (out[["OUTCOME"]] - h0)/out[["se"]]
-    out[["p"]] <- (2*stats::pnorm(-abs(out[["z"]])))
-    out[["lower"]] <- out[["OUTCOME"]] - stats::qnorm((1-alpha) + (alpha/2)) * out[["se"]]
-    out[["upper"]] <- out[["OUTCOME"]] + stats::qnorm((1-alpha) + (alpha/2)) * out[["se"]]
-    names(out) <- c("level", "estimate", "std.error", "z", "p", "lower", "upper")
+    out[["p"]] <- (2 * stats::pnorm(-abs(out[["z"]])))
+    names(out) <- c("level", "estimate", "std.error", "lower", "upper", "z", "p")
     
     # an alternative way of getting those estimates is with `svyglm`
     ## but there's no way to pass h0 through lmtest::coeftest() so it isn't that useful for the common use case
