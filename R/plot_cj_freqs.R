@@ -35,6 +35,9 @@ function(
     if (is.null(group)) {
         p <- ggplot2::ggplot(data = x, ggplot2::aes_string(y = "estimate", x = "level", fill = "feature"))
     } else {
+        if (is.null(x[[group]])) {
+            stop(sprintf("`group` variable '%s' not found", group))
+        }
         p <- ggplot2::ggplot(data = x, ggplot2::aes_string(y = "estimate", x = "level", fill = group, group = group))
     }
     

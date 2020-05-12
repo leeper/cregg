@@ -6,6 +6,8 @@
 * Added an error when attempting to use `by` variables in `cj()` that contain empty character string levels. (#32, h/t Farsan Ghassim)
 * `amce_by_reference()` now returns a `REFERENCE` column rather than a `BY` column, for clarity. (#35, h/t Farsan Ghassim)
 * Documentation clarifies behavior of `mm_diffs()` to allow >= 2 levels for `by` factor. (#33, h/t Farsan Ghassim)
+* `cj()` now explicitly requires that all variables in `by` are factor and ensures factor level ordering is carried forward from input data to output data.
+* Added more informative error message when trying to plot by a missing grouping variable.
 
 ## cregg 0.3.1
 

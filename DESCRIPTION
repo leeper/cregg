@@ -1,8 +1,8 @@
 Package: cregg
 Type: Package
 Title: Simple Conjoint Tidying, Analysis, and Visualization
-Version: 0.3.2
-Date: 2020-04-18
+Version: 0.3.3
+Date: 2020-05-12
 Authors@R: c(
    person("Thomas J.", "Leeper", role = c("aut", "cre"),
            email = "thosjleeper@gmail.com",

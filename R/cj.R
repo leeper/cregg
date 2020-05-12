@@ -24,8 +24,16 @@ function(
         
         # get RHS variables, variable labels, and factor levels
         by_vars <- all.vars(stats::update(by, 0 ~ . ))
-        ## check for empty string values in by vars; error if present
+        ## check `by` variables
         for (b in by_vars) {
+            if (is.null(data[[b]])) {
+                stop(sprintf("Variable '%s' in `by` not found in 'data'", b))
+            }
+            # check that all variables in `by` are factors
+            if (!is.null(data[[b]]) && !inherits(data[[b]], "factor")) {
+                stop(sprintf("Variable '%s' in `by` must be a factor", b))
+            }
+            # check for empty string values in by vars; error if present
             if ("" %in% unique(data[[b]])) {
                 stop(sprintf("'by' variables cannot contain \"\" values (see '%s')", b))
             }
@@ -85,6 +93,10 @@ function(
         
         # label features and levels
         out <- out[c("BY", "outcome", "statistic", "feature", "level", "estimate", "std.error", "z", "p", "lower", "upper", by_vars)]
+        # make sure factor levels match input
+        for (b in by_vars) {
+            out[[b]] <- factor(out[[b]], levels(data[[b]]))
+        }
         rownames(out) <- seq_len(nrow(out))
         
     } else {

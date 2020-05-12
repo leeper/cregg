@@ -106,7 +106,7 @@ amce_diagnostic <- amce_by_reference(immigration,
                                      ChosenImmigrant ~ LanguageSkills, 
                                      ~LanguageSkills, 
                                      id = ~ CaseID)
-plot(amce_diagnostic, group = "BY", legend_title = "Reference Category")
+plot(amce_diagnostic, group = "REFERENCE", legend_title = "Reference Category")
 ```
 
 The reference category can be specified directly using `relevel(data$feature, "New reference category")`. This may result in levels not being plotted in the desired order, however, in which case the entire feature can be reordered and plotted with a new reference category:
@@ -140,12 +140,13 @@ While the reference category has no meaningful bearing on estimation, it can aff
 For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:
 
 ```{r mm_by, fig.height=8}
+immigration$contest <- factor(immigration$contest_no)
 mm_by <- cj(immigration, 
             ChosenImmigrant ~ Gender + Education + LanguageSkills,
             id = ~ CaseID, 
             estimate = "mm", 
-            by = ~ contest_no)
-plot(mm_by, group = "BY", vline = 0.5)
+            by = ~ contest)
+plot(mm_by, group = "contest", vline = 0.5)
 ```
 
 ### Tests of Preference Heterogeneity
@@ -322,8 +323,9 @@ Given that confidence intervals for each feature hover closely around the grand 
 Subgroup diagnostics can be used to evaluate whether there is, for example, any preference for the left-hand or right-hand profile (in a two-profile design):
 
 ```{r leftright}
-plot(cj(immigration, f1, id = ~CaseID, by = ~ profile, estimate = "mm"),
-     group = "profile", vline = 0.5)
+immigration$profile_fac <- factor(immigration$profile)
+plot(cj(immigration, f1, id = ~CaseID, by = ~ profile_fac, estimate = "mm"),
+     group = "profile_fac", vline = 0.5)
 ```
 
 Again, in this example there are no obvious concerns generated from the diagnostic. The same approach can be used to perform other diagnostics, such as detecting carryover problems.
