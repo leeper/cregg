@@ -65,11 +65,11 @@ function(
         mm_split[[i]][["z"]] <- mm_split[[i]][["estimate"]]/mm_split[[i]][["std.error"]]
         
         # p-value
-        mm_split[[i]][["p"]] <- 2L*(1L-stats::pnorm(abs(mm_split[[i]][["z"]])))
+        mm_split[[i]][["p"]] <- 2L * stats::pnorm(-abs(mm_split[[i]][["z"]]))
         
         # CIs
-        mm_split[[i]][["lower"]] <- mm_split[[i]][["estimate"]] - (stats::qnorm(1-alpha) * mm_split[[i]][["std.error"]])
-        mm_split[[i]][["upper"]] <- mm_split[[i]][["estimate"]] + (stats::qnorm(1-alpha) * mm_split[[i]][["std.error"]])
+        mm_split[[i]][["lower"]] <- mm_split[[i]][["estimate"]] - (stats::qnorm(1L - (alpha / 2L)) * mm_split[[i]][["std.error"]])
+        mm_split[[i]][["upper"]] <- mm_split[[i]][["estimate"]] + (stats::qnorm(1L - (alpha / 2L)) * mm_split[[i]][["std.error"]])
         
         # format output
         ## add column indicating value of 'by_var'

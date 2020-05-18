@@ -113,7 +113,7 @@ function(
         vartype = c("se", "ci")
     )
     out[["z"]] <- (out[["OUTCOME"]] - h0)/out[["se"]]
-    out[["p"]] <- (2 * stats::pnorm(-abs(out[["z"]])))
+    out[["p"]] <- 2L * stats::pnorm(-abs(out[["z"]]))
     names(out) <- c("level", "estimate", "std.error", "lower", "upper", "z", "p")
     
     # an alternative way of getting those estimates is with `svyglm`

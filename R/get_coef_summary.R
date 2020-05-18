@@ -31,8 +31,8 @@ get_coef_summary <- function(mod, data, id = NULL, alpha = 0.05) {
         
         # calculate confidence intervals
         coef_summary <- cbind(coef_summary,
-                              "lower" = coef_summary[,"Estimate"] - stats::qnorm((1-alpha) + (alpha/2)) * coef_summary[, "Std. Error"],
-                              "upper" = coef_summary[,"Estimate"] + stats::qnorm((1-alpha) + (alpha/2)) * coef_summary[, "Std. Error"])
+                              "lower" = coef_summary[,"Estimate"] - stats::qnorm(1L - (alpha / 2L)) * coef_summary[, "Std. Error"],
+                              "upper" = coef_summary[,"Estimate"] + stats::qnorm(1L - (alpha / 2L)) * coef_summary[, "Std. Error"])
     }
     
     # setup full coef summary (only includes subset of coefficients that are estimable)

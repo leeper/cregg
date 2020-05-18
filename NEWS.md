@@ -3,6 +3,7 @@
 ## cregg 0.4.0
 
 * Fixed a bug related to variances for clustered designs (e.g., multiple responses per respondent) that was erroneously handling clusters. The bug arose from an unintended difference in calculating variances when designs were weighted versus not. All designs now estimate AMCEs using `svyglm()` for consistency. Weighted designs with weights provided to the `weight` argument of `cj()`, `amce()`, etc. were unaffected. Analysts using the package for unweighted designs should update results to obtain appropriately conservative standard errors of AMCEs. Tests of this behavior have now been added.
+* Fixed a bug wherein `mm_diffs()` returned 90% rather than 95% confidence intervals. (# 37, h/t @hoellers)
 * Added an error when attempting to use `by` variables in `cj()` that contain empty character string levels. (#32, h/t Farsan Ghassim)
 * `amce_by_reference()` now returns a `REFERENCE` column rather than a `BY` column, for clarity. (#35, h/t Farsan Ghassim)
 * Documentation clarifies behavior of `mm_diffs()` to allow >= 2 levels for `by` factor. (#33, h/t Farsan Ghassim)
