@@ -111,8 +111,9 @@ function(
         FUN = survey::svymean, 
         design = svylong, 
         na.rm = TRUE, 
-        vartype = c("se", "ci")
+        vartype = "se"
     )
+    out <- cbind(out, confint(out, level = 1 - alpha))
     out[["z"]] <- (out[["OUTCOME"]] - h0)/out[["se"]]
     out[["p"]] <- 2L * stats::pnorm(-abs(out[["z"]]))
     names(out) <- c("level", "estimate", "std.error", "lower", "upper", "z", "p")
