@@ -41,6 +41,9 @@ cj(
 
 \item{\dots}{Additional arguments to \code{\link{amce}}, \code{\link{cj_freqs}}, \code{\link{mm}}, \code{\link{mm_diffs}}, or \code{\link{amce_diffs}}.}
 }
+\value{
+A data frame with special class to facilitate plotting (e.g., \dQuote{cj_amce}, \dQuote{cj_mm}, etc.)
+}
 \description{
 Simple analyses of conjoint (factorial) experiments and visualization of results.
 }

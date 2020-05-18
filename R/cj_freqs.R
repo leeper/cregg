@@ -11,6 +11,7 @@
 #' @template level_order
 #' @param include_reference A logical indicating whether to include a \dQuote{reference} column that indicates whether a feature level is the reference category for that feature. Default is \code{FALSE}.
 #' @param \dots Ignored.
+#' @return A data frame of class \dQuote{cj_freqs}, \dQuote{cj_props}, etc.
 #' @details These functions provide related but slightly different functionality. \code{cj_table} simply creates a data frame of features and their levels, which is useful for printing. \code{cj_props} provides tidy proportion tables to examine cross-feature restrictions in conjoint designs that are not equally randomized. This enables, for example, tabulation and visualization of complete restrictions (where combinations of two or more features are not permitted), as well as calculation of AMCEs for constrained designs appropriately weighted by the display proportions for particular combinations of features.
 #' 
 #' \code{cj_freqs} provides \emph{marginal} display frequencies, which are a descriptive check on the presentation of individual conjoint features (for example, to ensure equal or intentionally unequal appearance of levels). This is mostly useful for plotting functionality provided in \code{\link{plot.cj_freqs}}, which provides barcharts for the frequency with which each level of each feature was presented.

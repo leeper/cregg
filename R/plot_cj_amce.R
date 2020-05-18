@@ -1,7 +1,7 @@
 #' @rdname plot
 #' @aliases plot.cj_mm plot.cj_amce plot.cj_freqs
 #' @title Plot AMCE estimates, MM descriptives, and frequency plots
-#' @description ggplot2-based plotting of conjoint AMCEs estimates and MMs
+#' @description ggplot2-based plotting of conjoint AMCEs estimates and MMs, and differences
 #' @param x A data frame returned from \code{\link{cj}} or \code{\link{mm}}.
 #' @param group Optionally a character string specifying a grouping factor. This is useful when, for example, subgroup analyses or comparing AMCEs for different outcomes. An alternative is to use \code{\link[ggplot2]{facet_wrap}} for faceted graphics.
 #' @param feature_headers A logical indicating whether to include headers for each feature to visually separate levels for each feature (beyond the color palette).

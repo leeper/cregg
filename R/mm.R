@@ -11,6 +11,7 @@
 #' @param h0 A numeric value specifying a null hypothesis value to use when generating z-statistics and p-values.
 #' @template alpha
 #' @param \dots Ignored.
+#' @return A data frame of class \dQuote{cj_mm}
 #' @details \code{mm} provides descriptive representations of conjoint data as marginal means (MMs), which represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs with two profiles per choice task, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. For continuous outcomes, MMs can take any value in the full range of the outcome.
 #' 
 #' But note that if feature levels can co-occur, such that both alternatives share a feature level, then the MMs on forced choice outcomes are bounded by the probability of co-occurrence (as a lower bound) and 1 minus that probability as an upper bound.

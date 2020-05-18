@@ -38,6 +38,9 @@ mm(
 
 \item{\dots}{Ignored.}
 }
+\value{
+A data frame of class \dQuote{cj_mm}
+}
 \description{
 Calculate (descriptive) marginal means (MMs) from a conjoint design
 }

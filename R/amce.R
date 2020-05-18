@@ -11,7 +11,7 @@
 #' @template level_order
 #' @template alpha
 #' @param \dots For \code{amce}: additional arguments to \code{\link[stats]{glm}} or \code{\link[survey]{svyglm}}, the latter being used if \code{weights} is non-NULL. For \code{amce_by_reference}: additional arguments passed to \code{amce}.
-#' @return A data frame
+#' @return A data frame of class \dQuote{cj_amce}
 #' @details \code{amce} provides estimates of AMCEs (or rather, average marginal effects for each feature level). Two-way constraints can be specified with an asterisk (*) between features. The specific constrained level pairs within these features are then detected automatically. The function can also be used for calculating average component interaction effects when combined with \code{interaction}, and for balance testing by specifying a covariate rather outcome on the left-hand side of \code{formula}. See examples.
 #' 
 #' \code{amce_by_reference} provides a tool for quick sensitivity analysis. AMCEs are defined relative to an arbitrary reference category (i.e., feature level). This function will loop over all feature levels (for a specified feature) to show how interpretation will be affected by choice of reference category. The resulting data frame will be a stacked result from \code{amce}, containing an additional \code{REFERENCE} column specifying which level of \code{variable} was used as the reference category. In unconstrained conjoint designs, only AMCEs for \code{variable} will vary by reference category; in constrained designs, AMCEs for any factor constrained by \code{variable} may also vary.

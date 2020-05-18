@@ -50,6 +50,9 @@ cj_table(
 
 \item{include_reference}{A logical indicating whether to include a \dQuote{reference} column that indicates whether a feature level is the reference category for that feature. Default is \code{FALSE}.}
 }
+\value{
+A data frame of class \dQuote{cj_freqs}, \dQuote{cj_props}, etc.
+}
 \description{
 Tabulate and visualize conjoint features, and their display frequencies and proportions
 }

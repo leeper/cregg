@@ -105,7 +105,7 @@
 A ggplot2 object
 }
 \description{
-ggplot2-based plotting of conjoint AMCEs estimates and MMs
+ggplot2-based plotting of conjoint AMCEs estimates and MMs, and differences
 }
 \examples{
 \donttest{

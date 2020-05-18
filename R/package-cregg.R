@@ -15,6 +15,7 @@
 #' @param by A formula containing only RHS variables, specifying grouping factors over which to perform estimation.
 #' @param \dots Additional arguments to \code{\link{amce}}, \code{\link{cj_freqs}}, \code{\link{mm}}, \code{\link{mm_diffs}}, or \code{\link{amce_diffs}}.
 #' @author Thomas J. Leeper <thosjleeper@gmail.com>
+#' @return A data frame with special class to facilitate plotting (e.g., \dQuote{cj_amce}, \dQuote{cj_mm}, etc.)
 #' @details The main function \code{cj} is a convenience function wrapper around the underlying estimation functions that provide for average marginal component effects (AMCEs), by default, via the \code{\link{amce}} function, marginal means (MMs) via the \code{\link{mm}} function, and display frequencies via \code{\link{cj_freqs}} and \code{\link{cj_props}}. Additional estimands may be supported in the future through their own functions and through the \code{cj} interface. Plotting is provided via ggplot2 for all types of estimates.
 #' 
 #' The only additional functionality provided by \code{cj} over the underlying functions is the \code{by} argument, which will perform operations on subsets of \code{data}, returning a single data frame. This can be useful, for example, for evaluating profile spillover effects and subgroup results, or in any situation where one might be inclined to use a \code{for} loop or \code{lapply}, calling \code{cj} repeatedly on subgroups.

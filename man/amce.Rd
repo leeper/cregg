@@ -41,7 +41,7 @@ amce_by_reference(data, formula, variable, ...)
 \item{variable}{An RHS formula containing a single factor variable from \code{formula}. This will be used by \code{amce_by_reference} to estimate AMCEs relative to each possible factor level as a reference category. If more than one RHS variables are specified, the first will be used.}
 }
 \value{
-A data frame
+A data frame of class \dQuote{cj_amce}
 }
 \description{
 Estimate AMCEs for a conjoint analysis and return a tidy data frame of results
