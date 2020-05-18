@@ -22,7 +22,7 @@
 #' cj_table(immigration, ~ Gender + Education + LanguageSkills, include_ref = TRUE)
 #' 
 #' # display frequencies
-#' cj_freqs(immigration, ~ Gender + Education + LanguageSkills, id = ~ CaseID)
+#' (f <- cj_freqs(immigration, ~ Gender + Education + LanguageSkills, id = ~ CaseID))
 #' 
 #' # restrictions
 #' ## check display proportions
@@ -30,6 +30,17 @@
 #' ## check which combinations were not allowed
 #' subset(cj_props(immigration, ~ Job + Education, id = ~ CaseID), Proportion == 0)
 #' 
+#' \donttest{
+#' # plotting
+#' (p <- plot(f))
+#'
+#' ## change ggplot2 theme
+#' p + ggplot2::theme_bw()
+#'
+#' ## monochrome bars
+#' p + ggplot2::scale_fill_manual(values = rep("black", 9)) + 
+#'   ggplot2::theme(legend.position = "none")
+#' }
 #' @seealso \code{\link{plot.cj_mm}}
 #' @import stats
 #' @importFrom survey svydesign svyby svymean

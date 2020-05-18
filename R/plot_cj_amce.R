@@ -19,7 +19,7 @@
 #' @return A ggplot2 object
 #' @examples
 #' \donttest{
-#' require(ggplot2)
+#' require("ggplot2")
 #' # load data
 #' data("immigration")
 #' 
@@ -34,6 +34,9 @@
 #'
 #' ## gridlines to aid interpretation
 #' p + ggplot2::theme_grey()
+#'
+#' ## monochrome bars
+#' p + scale_color_manual(values = rep("black", 9))
 #'
 #' ## plot with estimates shown as text labels
 #' p + ggplot2::geom_text(

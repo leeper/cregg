@@ -109,7 +109,7 @@ ggplot2-based plotting of conjoint AMCEs estimates and MMs
 }
 \examples{
 \donttest{
-require(ggplot2)
+require("ggplot2")
 # load data
 data("immigration")
 
@@ -124,6 +124,9 @@ d1 <- mm(immigration, ChosenImmigrant ~ Gender + Education +
 
 ## gridlines to aid interpretation
 p + ggplot2::theme_grey()
+
+## monochrome bars
+p + scale_color_manual(values = rep("black", 9))
 
 ## plot with estimates shown as text labels
 p + ggplot2::geom_text(

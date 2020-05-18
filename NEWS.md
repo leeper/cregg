@@ -8,6 +8,7 @@
 * Documentation clarifies behavior of `mm_diffs()` to allow >= 2 levels for `by` factor. (#33, h/t Farsan Ghassim)
 * `cj()` now explicitly requires that all variables in `by` are factor and ensures factor level ordering is carried forward from input data to output data.
 * Added more informative error message when trying to plot by a missing grouping variable.
+* Added additional examples of plotting behavior, including ggplot2 fill/color scales and theming.
 
 ## cregg 0.3.1
 
