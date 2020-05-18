@@ -21,25 +21,45 @@ dat$y_star <- NULL
 test_that("mm() returns correct marginal means", {
     mm_x1 <- aggregate(y~x1, data = dat, mean)
     mm_x2 <- aggregate(y~x2, data = dat, mean)
-    est <- mm(dat, y ~ x1 + x2, id = ~ id)
+    
+    mm_x1_lm_clust <- survey::svyglm(y ~ 0 + x1, design = survey::svydesign(id = ~ id, weights = ~ 1, data = dat))
+    mm_x2_lm_clust <- survey::svyglm(y ~ 0 + x2, design = survey::svydesign(id = ~ id, weights = ~ 1, data = dat))
+    mm_x1_var_clust <- coef(summary(mm_x1_lm_clust))[, "Std. Error", drop = TRUE]
+    mm_x2_var_clust <- coef(summary(mm_x2_lm_clust))[, "Std. Error", drop = TRUE]
+    
+    mm_x1_lm_unclust <- survey::svyglm(y ~ 0 + x1, design = survey::svydesign(id = ~ 0, weights = ~ 1, data = dat))
+    mm_x2_lm_unclust <- survey::svyglm(y ~ 0 + x2, design = survey::svydesign(id = ~ 0, weights = ~ 1, data = dat))
+    mm_x1_var_unclust <- coef(summary(mm_x1_lm_unclust))[, "Std. Error", drop = TRUE]
+    mm_x2_var_unclust <- coef(summary(mm_x2_lm_unclust))[, "Std. Error", drop = TRUE]
+    
+    est_clust <- mm(dat, y ~ x1 + x2, id = ~ id)
+    est_unclust <- mm(dat, y ~ x1 + x2, id = ~ 0)
+
     ## structural checks
-    expect_true(all(c("outcome", "statistic", "feature", "level", "estimate", "std.error", "lower", "upper") %in% names(est)),
+    expect_true(all(c("outcome", "statistic", "feature", "level", "estimate", "std.error", "lower", "upper") %in% names(est_clust)),
                 label = "mm() returns correct column names")
-    expect_true(identical(nrow(est), 6L),
+    expect_true(identical(nrow(est_clust), 6L),
                 label = "mm() returns correct number of estimates")
-    expect_true(all(est$feature %in% c("First Factor", "Second Factor")),
+    expect_true(all(est_clust$feature %in% c("First Factor", "Second Factor")),
                 label = "mm() returns correct feature labels")
-    expect_true(all(est$level %in% c(levels(dat$x1), levels(dat$x2))),
+    expect_true(all(est_clust$level %in% c(levels(dat$x1), levels(dat$x2))),
                 label = "mm() returns correct levels of factors")
-    expect_true(all(est$outcome == "y"),
+    expect_true(all(est_clust$outcome == "y"),
                 label = "mm() returns correct outcome label")
     expect_true(inherits(mm(dat, y ~ x1 + x2, by = ~ group), "cj_mm"),
                 label = "mm() works w/o 'id' argument")
     
     ## accuracy tests
-    ## TODO: add variance test
-    expect_true(all.equal(est$estimate, c(mm_x1$y, mm_x2$y), tolerance = tol),
-                label = "mm() returns correct MMs")
+    expect_true(all.equal(est_clust$estimate, c(mm_x1$y, mm_x2$y), tolerance = tol),
+                label = "mm() with clustering returns correct MMs (based on aggregate())")
+    expect_true(all.equal(est_clust$estimate, unname(c(coef(mm_x1_lm_clust), coef(mm_x2_lm_clust))), tolerance = tol),
+                label = "mm() clustering returns correct MMs (based on lm(y ~ 0 + ...))")
+    ## variance accuracy tests
+    expect_true(all.equal(est_unclust$std.error, unname(c(mm_x1_var_unclust, mm_x2_var_unclust)), tolerance = 0.001), # TODO: ??
+                label = "mm() returns correct unclustered variances for MMs")
+    expect_true(all.equal(est_clust$std.error, unname(c(mm_x1_var_clust, mm_x2_var_clust)), tolerance = tol),
+                label = "mm() returns correct clustered variances for MMs")
+    
 })
 
 test_that("mm() responds to weighting/clustering", {
@@ -51,6 +71,8 @@ test_that("mm() responds to weighting/clustering", {
                 label = "mm() returns identical clustered and unclustered (unweighted)")
     expect_true(all.equal(est_unclust_weight$estimate, est_clust_weight$estimate, tolerance = tol),
                 label = "mm() returns identical clustered and unclustered (weighted)")
+    expect_false(isTRUE(all.equal(est_unclust_unweight$estimate, est_unclust_weight$estimate, tolerance = tol)),
+                label = "mm() weighted estimates differ from unweighted")
     ## TODO: add variance test
 })
 
@@ -223,4 +245,31 @@ test_that("amce_diffs() returns correct differences", {
                           tolerance = tol,
                           check.attributes = FALSE),
                 label = "amce_diffs() returns correct differences")
+})
+
+test_that("Functions respect 'alpha' argument", {
+    expect_false(
+      identical(
+        mm(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.05),
+        mm(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.01)
+      ), label = "mm() respects 'alpha' argument"
+    )
+    expect_false(
+      identical(
+        mm_diffs(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.05, by = ~ group),
+        mm_diffs(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.01, by = ~ group)
+      ), label = "mm_diffs() respects 'alpha' argument"
+    )
+    expect_false(
+      identical(
+        amce(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.05),
+        amce(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.01)
+      ), label = "amce() respects 'alpha' argument"
+    )
+    expect_false(
+      identical(
+        amce_diffs(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.05, by = ~ group),
+        amce_diffs(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.01, by = ~ group)
+      ), label = "amce_diffs() respects 'alpha' argument"
+    )
 })

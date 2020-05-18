@@ -80,7 +80,7 @@ plot(mm(immigration, f1, id = ~ CaseID), vline = 0.5)
 
 cregg functions use `attr(data$feature, "label")` to provide pretty printing of feature labels, so that variable names can be arbitrary. These can be overwritten using the `feature_labels` argument to override these settings within cregg functions. (To overwrite/create feature labels permanently, use for example `attr(immigration$LanguageSkills, "label") <- "English Proficiency"`.) Feature levels are always deduced from the `levels()` of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in `feature_order`.
 
-### Marginal Effects
+### Average Marginal Component Effects
 
 A more common analytic approach for conjoints is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses `glm()` and `svyglm()` to perform estimation and [margins](https://cran.r-project.org/package=margins) to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. Any terms that linked by a `*` in the formula are treated as design constraints and AMCEs are estimated cognizant of these constraints; only two-way interactions are supported, however. Just like for `mm()`, the output of `cj()` (or its alias, `amce()`) is a tidy data frame:
 
