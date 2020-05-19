@@ -8,21 +8,25 @@
 
 <title>Preference Heterogeneity Diagnostics — amce_diffs • cregg</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -30,10 +34,11 @@
 
 
 
-<meta property="og:title" content="Preference Heterogeneity Diagnostics — amce_diffs" />
 
+<meta property="og:title" content="Preference Heterogeneity Diagnostics — amce_diffs" />
 <meta property="og:description" content="Tests for preference heterogeneity in conjoint experiments" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -45,6 +50,7 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
 
 
   </head>
@@ -63,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.5</span>
       </span>
     </div>
 
@@ -71,7 +77,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,11 +100,10 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/leeper/cregg">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -109,6 +114,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -120,27 +126,44 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Tests for preference heterogeneity in conjoint experiments</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>amce_diffs</span>(<span class='no'>data</span>, <span class='no'>formula</span>, <span class='no'>by</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>feature_order</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>feature_labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>level_order</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"ascending"</span>, <span class='st'>"descending"</span>), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>amce_diffs</span>(
+  <span class='no'>data</span>,
+  <span class='no'>formula</span>,
+  <span class='no'>by</span>,
+  <span class='kw'>id</span> <span class='kw'>=</span> ~<span class='fl'>0</span>,
+  <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>feature_order</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>feature_labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>level_order</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ascending"</span>, <span class='st'>"descending"</span>),
+  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
+  <span class='no'>...</span>
+)
 
 <span class='fu'>cj_anova</span>(<span class='no'>data</span>, <span class='no'>formula</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
 
-<span class='fu'>mm_diffs</span>(<span class='no'>data</span>, <span class='no'>formula</span>, <span class='no'>by</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>feature_order</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>feature_labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>level_order</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"ascending"</span>, <span class='st'>"descending"</span>), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='no'>...</span>)</pre>
-    
+<span class='fu'>mm_diffs</span>(
+  <span class='no'>data</span>,
+  <span class='no'>formula</span>,
+  <span class='no'>by</span>,
+  <span class='kw'>id</span> <span class='kw'>=</span> ~<span class='fl'>0</span>,
+  <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>feature_order</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>feature_labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>level_order</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ascending"</span>, <span class='st'>"descending"</span>),
+  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
+  <span class='kw'>h0</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='no'>...</span>
+)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>A data frame containing variables specified in <code>formula</code>. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be NA. Optionally, this can instead be an object of class &#8220;survey.design&#8221; returned by <code><a href='https://www.rdocumentation.org/packages/survey/topics/svydesign'>svydesign</a></code>.</p></td>
+      <td><p>A data frame containing variables specified in <code>formula</code>. All RHS variables should be factors; the base level for each will be used in estimation and for AMCEs the base level's AMCE will be NA. Optionally, this can instead be an object of class &#8220;survey.design&#8221; returned by <code><a href='https://rdrr.io/pkg/survey/man/svydesign.html'>svydesign</a></code>.</p></td>
     </tr>
     <tr>
       <th>formula</th>
@@ -148,7 +171,7 @@
     </tr>
     <tr>
       <th>by</th>
-      <td><p>A formula containing only RHS variables, specifying grouping factors over which to perform estimation. For <code>amce_diffs</code>, this can be a factor or something coercable to factor. For <code>mm_diffs</code> the variable must only take two levels.</p></td>
+      <td><p>A formula containing only RHS variables, specifying grouping factors over which to perform estimation. For <code>amce_diffs</code>, this can be a factor or something coercable to factor. For <code>mm_diffs</code>, differences are calculated against the base level of this variable.</p></td>
     </tr>
     <tr>
       <th>id</th>
@@ -175,30 +198,31 @@
       <td><p>A numeric value indicating the significance level at which to calculate confidence intervals for the MMs (by default 0.95, meaning 95-percent CIs are returned).</p></td>
     </tr>
     <tr>
-      <th>&#8230;</th>
+      <th>...</th>
       <td><p>Additional arguments to <code><a href='amce.html'>amce</a></code>, <code><a href='cj_freqs.html'>cj_freqs</a></code>, or <code><a href='mm.html'>mm</a></code>.</p></td>
     </tr>
+    <tr>
+      <th>h0</th>
+      <td><p>A numeric value specifying a null hypothesis value to use when generating z-statistics and p-values (only used for <code>mm_diffs</code>).</p></td>
+    </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>amce_diffs</code> and <code>mm_diffs</code> return a data frame similar to the one returned by <code><a href='cregg.html'>cj</a></code>, including a <code>BY</code> column (with the value &#8220;Difference&#8221;) for easy merging with results returned by that function.</p>
-<p><code>cj_anova</code> returns an <code><a href='https://www.rdocumentation.org/packages/stats/topics/anova'>anova</a></code> object.</p>
-    
+<p><code>cj_anova</code> returns an <code><a href='https://rdrr.io/r/stats/anova.html'>anova</a></code> object.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>cj_anova</code> takes a model formula (&#8220;reduced&#8221; model) and generates a &#8220;full&#8221; model with two-way interactions between the variables specified in <code>by</code> and all RHS variables in <code>formula</code>, then computes an F-test comparing the two models, providing a test for whether preferences vary across levels of <code>by</code>. This is, in essence, a test of whether all such interaction coefficients are distinguishable from zero. (Because the test depends on overall model fit, not the coefficient variances, clustering is irrelevant.)</p>
 <p><code>mm_diffs</code> provides a data frame of differences in marginal means (literally differencing the results from <code><a href='mm.html'>mm</a></code> across levels of <code>by</code>. This provides the clearest direct measure of preference differences from a conjoint design.</p>
 <p><code>amce_diffs</code> provides a data frame of differences in AMCEs (the coefficient on an interaction between each RHS factor and the variable in <code>by</code>). This provides an estimate of the difference in causal effects of each factor level relative to the baseline level (i.e., the difference in conditional AMCEs). This quantity is easily misinterpreted as the difference in preferences, which it is not. Rather it is a difference in the effect of the factor on preferences relative to the baseline/reference category of that feature. If preferences in the reference category differ across levels of <code>by</code>, the the difference in conditional AMCEs will have an unpredictable sign and significance, making differences in marginal means a more sensible quantity of interest. See <code><a href='amce.html'>amce_by_reference</a></code> for a diagnostic.</p>
 <p>Note: <code>amce_diffs</code> does not work with constrained designs. To obtain such differences, subset the design by constraints and calculate differences within each subset.</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='amce.html'>amce</a></code> <code><a href='mm.html'>mm</a></code> <code><a href='cj_freqs.html'>cj_freqs</a></code> <code><a href='plot.html'>plot.cj_amce</a></code></p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='st'>"immigration"</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"immigration"</span>)
 <span class='co'># Test for heterogeneity by profile order</span>
 <span class='fu'>cj_anova</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span> + <span class='no'>LanguageSkills</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~ <span class='no'>contest_no</span>)</div><div class='output co'>#&gt; Analysis of Deviance Table
 #&gt; 
@@ -219,7 +243,8 @@
 #&gt; 2     13880     3374.5 72   33.286 1.9016 6.756e-06 ***
 #&gt; ---
 #&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</div><div class='input'>
-</div><div class='input'><span class='co'># Differences in MMs by Gender feature</span>
+<span class='co'># \donttest{</span>
+<span class='co'># Differences in MMs by Gender feature</span>
 <span class='fu'>mm_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span> + <span class='no'>Education</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)</div><div class='output co'>#&gt;               BY     statistic         outcome                feature
 #&gt; 1  Male - Female mm_difference ChosenImmigrant        Language Skills
 #&gt; 2  Male - Female mm_difference ChosenImmigrant        Language Skills
@@ -233,29 +258,29 @@
 #&gt; 10 Male - Female mm_difference ChosenImmigrant Educational Attainment
 #&gt; 11 Male - Female mm_difference ChosenImmigrant Educational Attainment
 #&gt;                       level     estimate  std.error          z           p
-#&gt; 1            Fluent English -0.015436300 0.01646342 -0.9376119 0.348443914
-#&gt; 2            Broken English -0.047683617 0.01700966 -2.8033252 0.005057864
-#&gt; 3  Tried English but Unable -0.009770039 0.01685623 -0.5796101 0.562177567
-#&gt; 4          Used Interpreter -0.030670893 0.01684202 -1.8210936 0.068592625
-#&gt; 5                 No Formal -0.008679690 0.02201690 -0.3942285 0.693412336
-#&gt; 6                 4th Grade -0.007051326 0.02199317 -0.3206144 0.748502651
-#&gt; 7                 8th Grade -0.029815233 0.02222458 -1.3415430 0.179744227
-#&gt; 8               High School -0.018077430 0.02244671 -0.8053488 0.420618401
-#&gt; 9          Two-Year College -0.049321323 0.02212607 -2.2291047 0.025806942
-#&gt; 10           College Degree -0.021520237 0.02221213 -0.9688508 0.332619642
-#&gt; 11          Graduate Degree -0.044846098 0.02195145 -2.0429676 0.041055645
-#&gt;          lower        upper Gender
-#&gt; 1  -0.04251622  0.011643620   Male
-#&gt; 2  -0.07566202 -0.019705211   Male
-#&gt; 3  -0.03749606  0.017955984   Male
-#&gt; 4  -0.05837355 -0.002968237   Male
-#&gt; 5  -0.04489427  0.027534890   Male
-#&gt; 6  -0.04322687  0.029124216   Male
-#&gt; 7  -0.06637142  0.006740953   Male
-#&gt; 8  -0.05499898  0.018844118   Male
-#&gt; 9  -0.08571547 -0.012927179   Male
-#&gt; 10 -0.05805593  0.015015461   Male
-#&gt; 11 -0.08095302 -0.008739178   Male</div><div class='input'>
+#&gt; 1            Fluent English -0.015436300 0.01564954 -0.9863741 0.323949592
+#&gt; 2            Broken English -0.047683617 0.01593767 -2.9918819 0.002772635
+#&gt; 3  Tried English but Unable -0.009770039 0.01591358 -0.6139436 0.539252607
+#&gt; 4          Used Interpreter -0.030670893 0.01594758 -1.9232320 0.054450926
+#&gt; 5                 No Formal -0.008679690 0.02149994 -0.4037077 0.686427677
+#&gt; 6                 4th Grade -0.007051326 0.02162325 -0.3260992 0.744349269
+#&gt; 7                 8th Grade -0.029815233 0.02129659 -1.4000003 0.161513221
+#&gt; 8               High School -0.018077430 0.02147494 -0.8417919 0.399904458
+#&gt; 9          Two-Year College -0.049321323 0.02130677 -2.3148192 0.020622828
+#&gt; 10           College Degree -0.021520237 0.02136533 -1.0072502 0.313814576
+#&gt; 11          Graduate Degree -0.044846098 0.02138557 -2.0970264 0.035991236
+#&gt;          lower         upper Gender
+#&gt; 1  -0.04610884  0.0152362347   Male
+#&gt; 2  -0.07892087 -0.0164463646   Male
+#&gt; 3  -0.04096008  0.0214199996   Male
+#&gt; 4  -0.06192757  0.0005857869   Male
+#&gt; 5  -0.05081879  0.0334594130   Male
+#&gt; 6  -0.04943212  0.0353294660   Male
+#&gt; 7  -0.07155578  0.0119253167   Male
+#&gt; 8  -0.06016754  0.0240126790   Male
+#&gt; 9  -0.09108183 -0.0075608190   Male
+#&gt; 10 -0.06339552  0.0203550500   Male
+#&gt; 11 -0.08676104 -0.0029311580   Male</div><div class='input'>
 <span class='co'># Differences in AMCEs by Gender feature (i.e., feature interactions)</span>
 <span class='fu'>amce_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span> + <span class='no'>Education</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)</div><div class='output co'>#&gt;              BY         outcome       statistic                feature
 #&gt; 1 Male - Female ChosenImmigrant amce_difference Educational Attainment
@@ -286,23 +311,24 @@
 #&gt; 6 -0.10818311 0.01381653
 #&gt; 7 -0.07555774 0.01574991
 #&gt; 8 -0.04036620 0.04945369
-#&gt; 9 -0.05976988 0.03318306</div><div class='input'>
+#&gt; 9 -0.05976988 0.03318306</div><div class='input'><span class='co'># }</span>
+
 <span class='co'># preferences differ for Male and Female immigrants with 'Broken English' ability</span>
 (<span class='no'>m1</span> <span class='kw'>&lt;-</span> <span class='fu'>mm_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>))</div><div class='output co'>#&gt;              BY     statistic         outcome         feature
 #&gt; 1 Male - Female mm_difference ChosenImmigrant Language Skills
 #&gt; 2 Male - Female mm_difference ChosenImmigrant Language Skills
 #&gt; 3 Male - Female mm_difference ChosenImmigrant Language Skills
 #&gt; 4 Male - Female mm_difference ChosenImmigrant Language Skills
-#&gt;                      level     estimate  std.error          z          p
-#&gt; 1           Fluent English -0.015436300 0.01646401 -0.9375783 0.34846119
-#&gt; 2           Broken English -0.047683617 0.01701027 -2.8032247 0.00505944
-#&gt; 3 Tried English but Unable -0.009770039 0.01685683 -0.5795893 0.56219159
-#&gt; 4         Used Interpreter -0.030670893 0.01684262 -1.8210283 0.06860255
-#&gt;         lower        upper Gender
-#&gt; 1 -0.04251719  0.011644591   Male
-#&gt; 2 -0.07566303 -0.019704208   Male
-#&gt; 3 -0.03749706  0.017956979   Male
-#&gt; 4 -0.05837454 -0.002967244   Male</div><div class='input'>
+#&gt;                      level     estimate  std.error          z           p
+#&gt; 1           Fluent English -0.015436300 0.01564954 -0.9863741 0.323949592
+#&gt; 2           Broken English -0.047683617 0.01593767 -2.9918819 0.002772635
+#&gt; 3 Tried English but Unable -0.009770039 0.01591358 -0.6139436 0.539252607
+#&gt; 4         Used Interpreter -0.030670893 0.01594758 -1.9232320 0.054450926
+#&gt;         lower         upper Gender
+#&gt; 1 -0.04610884  0.0152362347   Male
+#&gt; 2 -0.07892087 -0.0164463646   Male
+#&gt; 3 -0.04096008  0.0214199996   Male
+#&gt; 4 -0.06192757  0.0005857869   Male</div><div class='input'>
 <span class='co'># yet differences in conditional AMCEs  depend on the reference category</span>
 <span class='fu'>amce_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)</div><div class='output co'>#&gt;              BY         outcome       statistic         feature
 #&gt; 1 Male - Female ChosenImmigrant amce_difference Language Skills
@@ -315,7 +341,7 @@
 #&gt;         lower      upper
 #&gt; 1 -0.07862372 0.01412908
 #&gt; 2 -0.03968728 0.05101980
-#&gt; 3 -0.06204548 0.03157629</div><div class='input'><span class='no'>immigration</span>$<span class='no'>LanguageSkills2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/relevel'>relevel</a></span>(<span class='no'>immigration</span>$<span class='no'>LanguageSkills</span>, <span class='st'>"Used Interpreter"</span>)
+#&gt; 3 -0.06204548 0.03157629</div><div class='input'><span class='no'>immigration</span>$<span class='no'>LanguageSkills2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/relevel.html'>relevel</a></span>(<span class='no'>immigration</span>$<span class='no'>LanguageSkills</span>, <span class='st'>"Used Interpreter"</span>)
 <span class='fu'>amce_diffs</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>LanguageSkills2</span>, ~ <span class='no'>Gender</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)</div><div class='output co'>#&gt;              BY         outcome       statistic         feature
 #&gt; 1 Male - Female ChosenImmigrant amce_difference LanguageSkills2
 #&gt; 2 Male - Female ChosenImmigrant amce_difference LanguageSkills2
@@ -334,29 +360,25 @@
 #&gt; 2 Male - Female mm_difference ChosenImmigrant LanguageSkills2
 #&gt; 3 Male - Female mm_difference ChosenImmigrant LanguageSkills2
 #&gt; 4 Male - Female mm_difference ChosenImmigrant LanguageSkills2
-#&gt;                      level     estimate  std.error          z          p
-#&gt; 1         Used Interpreter -0.030670893 0.01684262 -1.8210283 0.06860255
-#&gt; 2           Fluent English -0.015436300 0.01646401 -0.9375783 0.34846119
-#&gt; 3           Broken English -0.047683617 0.01701027 -2.8032247 0.00505944
-#&gt; 4 Tried English but Unable -0.009770039 0.01685683 -0.5795893 0.56219159
-#&gt;         lower        upper Gender
-#&gt; 1 -0.05837454 -0.002967244   Male
-#&gt; 2 -0.04251719  0.011644591   Male
-#&gt; 3 -0.07566303 -0.019704208   Male
-#&gt; 4 -0.03749706  0.017956979   Male</div><div class='input'>
+#&gt;                      level     estimate  std.error          z           p
+#&gt; 1         Used Interpreter -0.030670893 0.01594758 -1.9232320 0.054450926
+#&gt; 2           Fluent English -0.015436300 0.01564954 -0.9863741 0.323949592
+#&gt; 3           Broken English -0.047683617 0.01593767 -2.9918819 0.002772635
+#&gt; 4 Tried English but Unable -0.009770039 0.01591358 -0.6139436 0.539252607
+#&gt;         lower         upper Gender
+#&gt; 1 -0.06192757  0.0005857869   Male
+#&gt; 2 -0.04610884  0.0152362347   Male
+#&gt; 3 -0.07892087 -0.0164463646   Male
+#&gt; 4 -0.04096008  0.0214199996   Male</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
@@ -365,19 +387,23 @@
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by Thomas J. Leeper.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

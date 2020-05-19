@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Introduction to cregg • cregg</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to cregg">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -30,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.5</span>
       </span>
     </div>
 
@@ -38,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -64,7 +65,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/leeper/cregg">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -77,12 +78,13 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Introduction to cregg</h1>
             
-            <h4 class="date">2019-04-07</h4>
+            <h4 class="date">2020-05-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/leeper/cregg/blob/master/vignettes/Introduction.Rmd"><code>vignettes/Introduction.Rmd</code></a></small>
       <div class="hidden name"><code>Introduction.Rmd</code></div>
@@ -105,7 +107,7 @@
 <p>In addition, the package provides a number of tools that are likely useful to conjoint analysts:</p>
 <ul>
 <li>
-<strong>ggplot2</strong>-based visualizations of AMCEs and MMs, via <code><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot()</a></code> methods for all of the above</li>
+<strong>ggplot2</strong>-based visualizations of AMCEs and MMs, via <code><a href="https://rdrr.io/r/graphics/plot.html">plot()</a></code> methods for all of the above</li>
 <li>Tidying of raw “wide”-format conjoint survey datasets into “long” or “tidy” datasets using <code><a href="../reference/cj_tidy.html">cj_tidy()</a></code>
 </li>
 <li>Diagnostics to choose feature reference categories, via <code><a href="../reference/amce.html">amce_by_reference()</a></code>
@@ -114,7 +116,7 @@
 <p>To demonstrate package functionality, the package includes three example datasets:</p>
 <ul>
 <li>
-<code>taxes</code>, a full randomized choice task conjoint experiment conducted by Ballard-Rosa et al. (2016)</li>
+<code>taxes</code>, a full randomized choice task conjoint experiment conducted by Ballard-Rosa et al. (2016)</li>
 <li>
 <code>immigration</code>, a partial factorial conjoint experiment with several restrictions between features conducted by Hainmueller, Hopkins, and Yamamoto (2014)</li>
 <li>
@@ -131,7 +133,7 @@
 <ul>
 <li>Using “label” attributes on variables to provide pretty printing, with options to relabel features or plots on the fly</li>
 <li>Using factor base levels rather than trying to set baseline levels atomically</li>
-<li>A convenient API (via the <code><a href="../reference/cregg.html">cj(..., by = ~ group)</a></code> idiom) for repeated, subgroup operations without the need for <code><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply()</a></code> or <code>for</code> loops</li>
+<li>A convenient API (via the <code><a href="../reference/cregg.html">cj(..., by = ~ group)</a></code> idiom) for repeated, subgroup operations without the need for <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> or <code>for</code> loops</li>
 <li>All functions have arguments in data-formula order, making it simple to pipe into them via the magrittr pipe (<code>%&gt;%</code>).</li>
 </ul>
 <p>The package, whose primary point of contact is <code><a href="../reference/cregg.html">cj()</a></code>, takes its name from the surname of a famous White House Press Secretary.</p>
@@ -140,26 +142,26 @@
 <h2 class="hasAnchor">
 <a href="#code-examples" class="anchor"></a>Code Examples</h2>
 <p>The package includes several example conjoint datasets, which are used here and in examples:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"cregg"</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"immigration"</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"cregg"</span>)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"immigration"</span>)</a></code></pre></div>
 <div id="marginal-means" class="section level3">
 <h3 class="hasAnchor">
 <a href="#marginal-means" class="anchor"></a>Marginal Means</h3>
 <p>The package provides straightforward calculation and visualization of descriptive marginal means (MMs). These represent the mean outcome across all appearances of a particular conjoint feature level, averaging across all other features. In forced choice conjoint designs with two profiles per choice task, MMs by definition average 0.5 with values above 0.5 indicating features that increase profile favorability and values below 0.5 indicating features that decrease profile favorability. (They will average 0.33 in designs with three profiles, 0.25 with four profiles, etc.) For continuous/ordinal outcomes, MMs can take any value in the full range of the outcome. Calculation of MMs entail no modelling assumptions are simply descriptive quantities of interest:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># descriptive plotting</span>
-f1 &lt;-<span class="st"> </span>ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>LanguageSkills <span class="op">+</span><span class="st"> </span>PriorEntry <span class="op">+</span><span class="st"> </span>Education <span class="op">*</span><span class="st"> </span>Job <span class="op">+</span><span class="st"> </span>CountryOfOrigin <span class="op">*</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span>JobExperience <span class="op">+</span><span class="st"> </span>JobPlans
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="../reference/mm.html">mm</a></span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID), <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># descriptive plotting</span></a>
+<a class="sourceLine" id="cb2-2" title="2">f1 &lt;-<span class="st"> </span>ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>LanguageSkills <span class="op">+</span><span class="st"> </span>PriorEntry <span class="op">+</span><span class="st"> </span>Education <span class="op">*</span><span class="st"> </span>Job <span class="op">+</span><span class="st"> </span>CountryOfOrigin <span class="op">*</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="st">    </span>JobExperience <span class="op">+</span><span class="st"> </span>JobPlans</a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="../reference/mm.html">mm</a></span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID), <span class="dt">vline =</span> <span class="fl">0.5</span>)</a></code></pre></div>
 <p><img src="Introduction_files/figure-html/mmplot-1.png" width="960"></p>
-<p>cregg functions use <code><a href="https://www.rdocumentation.org/packages/base/topics/attr">attr(data$feature, "label")</a></code> to provide pretty printing of feature labels, so that variable names can be arbitrary. These can be overwritten using the <code>feature_labels</code> argument to override these settings within cregg functions. (To overwrite/create feature labels permanently, use for example <code>attr(immigration$LanguageSkills, "label") &lt;- "English Proficiency"</code>.) Feature levels are always deduced from the <code><a href="https://www.rdocumentation.org/packages/base/topics/levels">levels()</a></code> of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in <code>feature_order</code>.</p>
+<p>cregg functions use <code><a href="https://rdrr.io/r/base/attr.html">attr(data$feature, "label")</a></code> to provide pretty printing of feature labels, so that variable names can be arbitrary. These can be overwritten using the <code>feature_labels</code> argument to override these settings within cregg functions. (To overwrite/create feature labels permanently, use for example <code>attr(immigration$LanguageSkills, "label") &lt;- "English Proficiency"</code>.) Feature levels are always deduced from the <code><a href="https://rdrr.io/r/base/levels.html">levels()</a></code> of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in <code>feature_order</code>.</p>
 </div>
-<div id="marginal-effects" class="section level3">
+<div id="average-marginal-component-effects" class="section level3">
 <h3 class="hasAnchor">
-<a href="#marginal-effects" class="anchor"></a>Marginal Effects</h3>
-<p>A more common analytic approach for conjoints is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses <code><a href="https://www.rdocumentation.org/packages/stats/topics/glm">glm()</a></code> and <code>svyglm()</code> to perform estimation and <a href="https://cran.r-project.org/package=margins">margins</a> to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. Any terms that linked by a <code>*</code> in the formula are treated as design constraints and AMCEs are estimated cognizant of these constraints; only two-way interactions are supported, however. Just like for <code><a href="../reference/mm.html">mm()</a></code>, the output of <code><a href="../reference/cregg.html">cj()</a></code> (or its alias, <code><a href="../reference/amce.html">amce()</a></code>) is a tidy data frame:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># estimation</span>
-amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(amces[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"feature"</span>, <span class="st">"level"</span>, <span class="st">"estimate"</span>, <span class="st">"std.error"</span>)], 20L)</code></pre></div>
+<a href="#average-marginal-component-effects" class="anchor"></a>Average Marginal Component Effects</h3>
+<p>A more common analytic approach for conjoints is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses <code><a href="https://rdrr.io/r/stats/glm.html">glm()</a></code> and <code>svyglm()</code> to perform estimation and <a href="https://cran.r-project.org/package=margins">margins</a> to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. Any terms that linked by a <code><a href="https://rdrr.io/r/base/Arithmetic.html">*</a></code> in the formula are treated as design constraints and AMCEs are estimated cognizant of these constraints; only two-way interactions are supported, however. Just like for <code><a href="../reference/mm.html">mm()</a></code>, the output of <code><a href="../reference/cregg.html">cj()</a></code> (or its alias, <code><a href="../reference/amce.html">amce()</a></code>) is a tidy data frame:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co"># estimation</span></a>
+<a class="sourceLine" id="cb3-2" title="2">amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID)</a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(amces[<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"feature"</span>, <span class="st">"level"</span>, <span class="st">"estimate"</span>, <span class="st">"std.error"</span>)], 20L)</a></code></pre></div>
 <pre><code>                  feature                    level     estimate   std.error
 1                  Gender                   Female  0.000000000          NA
 2                  Gender                     Male -0.026023159 0.008012413
@@ -173,35 +175,35 @@ amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg
 10            Prior Entry   Six Months with Family  0.075317887 0.012603718
 11            Prior Entry   Once w/o Authorization -0.110084275 0.013026767
 12 Educational Attainment                No Formal  0.000000000          NA
-13 Educational Attainment                4th Grade  0.033068508 0.014906199
-14 Educational Attainment                8th Grade  0.057744013 0.014945344
-15 Educational Attainment              High School  0.119483476 0.014963743
-16 Educational Attainment         Two-Year College  0.163405352 0.022955261
-17 Educational Attainment           College Degree  0.190036705 0.023015067
-18 Educational Attainment          Graduate Degree  0.176068029 0.016908355
+13 Educational Attainment                4th Grade  0.033068508 0.014957991
+14 Educational Attainment                8th Grade  0.057744013 0.014961024
+15 Educational Attainment              High School  0.119483476 0.015101284
+16 Educational Attainment         Two-Year College  0.163405352 0.023021124
+17 Educational Attainment           College Degree  0.190036705 0.023063509
+18 Educational Attainment          Graduate Degree  0.176068029 0.016690780
 19                    Job                  Janitor  0.000000000          NA
-20                    Job                   Waiter -0.006814709 0.016605007</code></pre>
+20                    Job                   Waiter -0.006814709 0.016856109</code></pre>
 <p>This makes it very easy to modify, combine, print, etc. the resulting output. It also makes it easy to visualize using ggplot2. A convenience visualization function is provided:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># plotting of AMCEs</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(amces)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="co"># plotting of AMCEs</span></a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(amces)</a></code></pre></div>
 <p><img src="Introduction_files/figure-html/plot_amce-1.png" width="960"></p>
 </div>
 <div id="reference-category-diagnostics-for-amces" class="section level3">
 <h3 class="hasAnchor">
 <a href="#reference-category-diagnostics-for-amces" class="anchor"></a>Reference Category Diagnostics for AMCEs</h3>
 <p>Reference categories for AMCEs are often arbitrary and can affect intuitions about results, so the package also provides a diagnostic tool for helping to decide on an appropriate reference category:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">amce_diagnostic &lt;-<span class="st"> </span><span class="kw"><a href="../reference/amce.html">amce_by_reference</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>LanguageSkills, <span class="op">~</span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(amce_diagnostic, <span class="dt">group =</span> <span class="st">"BY"</span>, <span class="dt">legend_title =</span> <span class="st">"Reference Category"</span>)</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">amce_diagnostic &lt;-<span class="st"> </span><span class="kw"><a href="../reference/amce.html">amce_by_reference</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>LanguageSkills, <span class="op">~</span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID)</a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(amce_diagnostic, <span class="dt">group =</span> <span class="st">"REFERENCE"</span>, <span class="dt">legend_title =</span> <span class="st">"Reference Category"</span>)</a></code></pre></div>
 <p><img src="Introduction_files/figure-html/amce_diagnostic-1.png" width="960"></p>
-<p>The reference category can be specified directly using <code><a href="https://www.rdocumentation.org/packages/stats/topics/relevel">relevel(data$feature, "New reference category")</a></code>. This may result in levels not being plotted in the desired order, however, in which case the entire feature can be reordered and plotted with a new reference category:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># calculate marginal means and order output by estimate</span>
-country_mms &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mm.html">mm</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>CountryOfOrigin, <span class="dt">id =</span> <span class="op">~</span>CaseID)
-country_mms &lt;-<span class="st"> </span>country_mms[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/order">order</a></span>(country_mms<span class="op">$</span>estimate), ]
-<span class="co"># reorder feature in preference ascending order</span>
-immigration<span class="op">$</span>CountryOfOrigin2 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">factor</a></span>(immigration<span class="op">$</span>CountryOfOrigin, <span class="dt">levels =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Iraq"</span>, <span class="st">"Somalia"</span>, <span class="st">"Sudan"</span>, <span class="st">"China"</span>, <span class="st">"India"</span>, 
-    <span class="st">"Mexico"</span>, <span class="st">"France"</span>, <span class="st">"Poland"</span>, <span class="st">"Philippines"</span>, <span class="st">"Germany"</span>))
-country2_amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/amce.html">amce</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>CountryOfOrigin2, <span class="dt">id =</span> <span class="op">~</span>CaseID)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(country2_amces)</code></pre></div>
+<p>The reference category can be specified directly using <code><a href="https://rdrr.io/r/stats/relevel.html">relevel(data$feature, "New reference category")</a></code>. This may result in levels not being plotted in the desired order, however, in which case the entire feature can be reordered and plotted with a new reference category:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co"># calculate marginal means and order output by estimate</span></a>
+<a class="sourceLine" id="cb7-2" title="2">country_mms &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mm.html">mm</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>CountryOfOrigin, <span class="dt">id =</span> <span class="op">~</span>CaseID)</a>
+<a class="sourceLine" id="cb7-3" title="3">country_mms &lt;-<span class="st"> </span>country_mms[<span class="kw"><a href="https://rdrr.io/r/base/order.html">order</a></span>(country_mms<span class="op">$</span>estimate), ]</a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="co"># reorder feature in preference ascending order</span></a>
+<a class="sourceLine" id="cb7-5" title="5">immigration<span class="op">$</span>CountryOfOrigin2 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(immigration<span class="op">$</span>CountryOfOrigin, <span class="dt">levels =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Iraq"</span>, <span class="st">"Somalia"</span>, <span class="st">"Sudan"</span>, <span class="st">"China"</span>, <span class="st">"India"</span>, </a>
+<a class="sourceLine" id="cb7-6" title="6">    <span class="st">"Mexico"</span>, <span class="st">"France"</span>, <span class="st">"Poland"</span>, <span class="st">"Philippines"</span>, <span class="st">"Germany"</span>))</a>
+<a class="sourceLine" id="cb7-7" title="7">country2_amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/amce.html">amce</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>CountryOfOrigin2, <span class="dt">id =</span> <span class="op">~</span>CaseID)</a>
+<a class="sourceLine" id="cb7-8" title="8"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(country2_amces)</a></code></pre></div>
 <p><img src="Introduction_files/figure-html/reorder-1.png" width="960"></p>
 <p>which is useful to generate easily interpretable plots in which otherwise unordered features are ordered according to preferences.</p>
 </div>
@@ -214,15 +216,16 @@ country2_amces &lt;-<span class="st"> </span><span class="kw"><a href="../refere
 <h3 class="hasAnchor">
 <a href="#subgroup-marginal-means" class="anchor"></a>Subgroup Marginal Means</h3>
 <p>For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mm_by &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>contest_no)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(mm_by, <span class="dt">group =</span> <span class="st">"BY"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">immigration<span class="op">$</span>contest &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(immigration<span class="op">$</span>contest_no)</a>
+<a class="sourceLine" id="cb8-2" title="2">mm_by &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>contest)</a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(mm_by, <span class="dt">group =</span> <span class="st">"contest"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</a></code></pre></div>
 <p><img src="Introduction_files/figure-html/mm_by-1.png" width="960"></p>
 </div>
 <div id="tests-of-preference-heterogeneity" class="section level3">
 <h3 class="hasAnchor">
 <a href="#tests-of-preference-heterogeneity" class="anchor"></a>Tests of Preference Heterogeneity</h3>
 <p>A more formal test of these differences is provided by a nested model comparison test:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/diffs.html">cj_anova</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">by =</span> <span class="op">~</span>contest_no)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw"><a href="../reference/diffs.html">cj_anova</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">by =</span> <span class="op">~</span>contest_no)</a></code></pre></div>
 <pre><code>Analysis of Deviance Table
 
 Model 1: ChosenImmigrant ~ Gender + Education + LanguageSkills
@@ -238,33 +241,33 @@ Model 2: ChosenImmigrant ~ Gender + Education + LanguageSkills + contest_no +
 <a href="#differences-in-conditional-amces" class="anchor"></a>Differences in Conditional AMCEs</h3>
 <p>And, finally, while it is increasingly common to present grouped dot-and-whisker charts as comparisons of subgroup AMCEs, that comparison can be misleading of preferences differ substantially in the reference category. When that occurs, similar AMCEs do not necessarily mean similar preferences; this is a subtle distinction that must be respected when engaging in <em>descriptive</em> as opposed to <em>causal</em> interpretation of conjoint results.</p>
 <p>For example, we might want to understand differences in preferences by ethnocentrism, which can most clearly be seen in a subgroup MM plot:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## the original plot is split at the value of 10, which is not a true median split
-immigration<span class="op">$</span>ethnosplit &lt;-<span class="st"> </span><span class="ot">NA_real_</span>
-immigration<span class="op">$</span>ethnosplit[immigration<span class="op">$</span>ethnocentrism <span class="op">&lt;=</span><span class="st"> </span><span class="dv">10</span>] &lt;-<span class="st"> </span>1L
-immigration<span class="op">$</span>ethnosplit[immigration<span class="op">$</span>ethnocentrism <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>] &lt;-<span class="st"> </span>2L
-immigration<span class="op">$</span>ethnosplit &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">factor</a></span>(immigration<span class="op">$</span>ethnosplit, <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Low Ethnocentrism"</span>, <span class="st">"High Ethnocentrism"</span>))
-x &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/na.fail">na.omit</a></span>(immigration), f1, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>ethnosplit)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(x, <span class="dt">group =</span> <span class="st">"ethnosplit"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="co">## the original plot is split at the value of 10, which is not a true median split</span></a>
+<a class="sourceLine" id="cb11-2" title="2">immigration<span class="op">$</span>ethnosplit &lt;-<span class="st"> </span><span class="ot">NA_real_</span></a>
+<a class="sourceLine" id="cb11-3" title="3">immigration<span class="op">$</span>ethnosplit[immigration<span class="op">$</span>ethnocentrism <span class="op">&lt;=</span><span class="st"> </span><span class="dv">10</span>] &lt;-<span class="st"> </span>1L</a>
+<a class="sourceLine" id="cb11-4" title="4">immigration<span class="op">$</span>ethnosplit[immigration<span class="op">$</span>ethnocentrism <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>] &lt;-<span class="st"> </span>2L</a>
+<a class="sourceLine" id="cb11-5" title="5">immigration<span class="op">$</span>ethnosplit &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(immigration<span class="op">$</span>ethnosplit, <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Low Ethnocentrism"</span>, <span class="st">"High Ethnocentrism"</span>))</a>
+<a class="sourceLine" id="cb11-6" title="6">x &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span>(immigration), f1, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>ethnosplit)</a>
+<a class="sourceLine" id="cb11-7" title="7"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(x, <span class="dt">group =</span> <span class="st">"ethnosplit"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</a></code></pre></div>
 <p><img src="Introduction_files/figure-html/conditional_mms-1.png" width="960"></p>
 <p>But if we want to interpret differences in the sizes of AMCEs (rather than descriptive differences in preferences), we might be inclined to design a similar visualization, replacing MMs with AMCEs. But in such cases, we cannot comment on the descriptive similarity in preferences across subgroups - only the heterogeneity in causal effects of feature variations. To make (dis)similarity explicit, such visualizations should include an explicit test of differences in effect sizes. Facetting works well:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># calculate conditional AMCEs</span>
-amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/na.fail">na.omit</a></span>(immigration), ChosenImmigrant <span class="op">~</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"amce"</span>, 
-    <span class="dt">by =</span> <span class="op">~</span>ethnosplit)
-diff_amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/na.fail">na.omit</a></span>(immigration), ChosenImmigrant <span class="op">~</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"amce_diff"</span>, 
-    <span class="dt">by =</span> <span class="op">~</span>ethnosplit)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cbind">rbind</a></span>(amces, diff_amces)) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="op">~</span>BY, <span class="dt">ncol =</span> 3L)</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="co"># calculate conditional AMCEs</span></a>
+<a class="sourceLine" id="cb12-2" title="2">amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span>(immigration), ChosenImmigrant <span class="op">~</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"amce"</span>, </a>
+<a class="sourceLine" id="cb12-3" title="3">    <span class="dt">by =</span> <span class="op">~</span>ethnosplit)</a>
+<a class="sourceLine" id="cb12-4" title="4">diff_amces &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span>(immigration), ChosenImmigrant <span class="op">~</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"amce_diff"</span>, </a>
+<a class="sourceLine" id="cb12-5" title="5">    <span class="dt">by =</span> <span class="op">~</span>ethnosplit)</a>
+<a class="sourceLine" id="cb12-6" title="6"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span>(amces, diff_amces)) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span>BY, <span class="dt">ncol =</span> 3L)</a></code></pre></div>
 <p><img src="Introduction_files/figure-html/conditional_amces-1.png" width="960"></p>
 <p>But again, this plot showcases differences in conjoint effect sizes (AMCEs) not descriptive differences in underlying preferences. A plot of the differences in MMs might be clearer:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># calculate conditional MMs</span>
-mms &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/na.fail">na.omit</a></span>(immigration), ChosenImmigrant <span class="op">~</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>ethnosplit)
-diff_mms &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/na.fail">na.omit</a></span>(immigration), ChosenImmigrant <span class="op">~</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm_diff"</span>, 
-    <span class="dt">by =</span> <span class="op">~</span>ethnosplit)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cbind">rbind</a></span>(mms, diff_mms)) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="op">~</span>BY, <span class="dt">ncol =</span> 3L)</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="co"># calculate conditional MMs</span></a>
+<a class="sourceLine" id="cb13-2" title="2">mms &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span>(immigration), ChosenImmigrant <span class="op">~</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>ethnosplit)</a>
+<a class="sourceLine" id="cb13-3" title="3">diff_mms &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span>(immigration), ChosenImmigrant <span class="op">~</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm_diff"</span>, </a>
+<a class="sourceLine" id="cb13-4" title="4">    <span class="dt">by =</span> <span class="op">~</span>ethnosplit)</a>
+<a class="sourceLine" id="cb13-5" title="5"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span>(mms, diff_mms)) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span>BY, <span class="dt">ncol =</span> 3L)</a></code></pre></div>
 <p><img src="Introduction_files/figure-html/conditional_differences-1.png" width="960"></p>
 <p>And while the inferential differences may be small, the risk of using differences in conditional AMCEs versus differences in MMs is that both the size and even the direction of subgroup differences can be misleading when presented as differences in AMCEs:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_amces<span class="op">$</span>Estimate &lt;-<span class="st"> "AMCE Difference"</span>
-diff_mms<span class="op">$</span>Estimate &lt;-<span class="st"> "MM Difference"</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cbind">rbind</a></span>(diff_amces, diff_mms), <span class="dt">feature_headers =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="op">~</span>Estimate, <span class="dt">ncol =</span> 2L)</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">diff_amces<span class="op">$</span>Estimate &lt;-<span class="st"> "AMCE Difference"</span></a>
+<a class="sourceLine" id="cb14-2" title="2">diff_mms<span class="op">$</span>Estimate &lt;-<span class="st"> "MM Difference"</span></a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span>(diff_amces, diff_mms), <span class="dt">feature_headers =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span>Estimate, <span class="dt">ncol =</span> 2L)</a></code></pre></div>
 <p><img src="Introduction_files/figure-html/amce_vs_mm-1.png" width="960"></p>
 </div>
 </div>
@@ -272,30 +275,30 @@ diff_mms<span class="op">$</span>Estimate &lt;-<span class="st"> "MM Difference"
 <h2 class="hasAnchor">
 <a href="#interactions" class="anchor"></a>Interactions</h2>
 <p>This general process is also possible with a profile feature, rather than a respondent characteristic, in the <code>by =</code> argument. This may be necessary when interaction effects are hypothesised. These tell us the causal effect of each level of the RHS features, depending on the value at which another attribute is held. For example, we could check for an interaction between the gender of immigrants and their language skills:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># calculate interaction AMCEs (ACIEs)</span>
-amces_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"amce"</span>, <span class="dt">by =</span> <span class="op">~</span>Gender)
-diff_amces_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"amce_diff"</span>, <span class="dt">by =</span> <span class="op">~</span>Gender)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cbind">rbind</a></span>(amces_<span class="dv">2</span>, diff_amces_<span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="op">~</span>BY, <span class="dt">ncol =</span> 3L)</code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co"># calculate interaction AMCEs (ACIEs)</span></a>
+<a class="sourceLine" id="cb15-2" title="2">amces_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"amce"</span>, <span class="dt">by =</span> <span class="op">~</span>Gender)</a>
+<a class="sourceLine" id="cb15-3" title="3">diff_amces_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"amce_diff"</span>, <span class="dt">by =</span> <span class="op">~</span>Gender)</a>
+<a class="sourceLine" id="cb15-4" title="4"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span>(amces_<span class="dv">2</span>, diff_amces_<span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span>BY, <span class="dt">ncol =</span> 3L)</a></code></pre></div>
 <p><img src="Introduction_files/figure-html/interaction_amces-1.png" width="960"></p>
 <p>The explicit test of differences in effect sizes tells us that the change in probability of choosing a profile for each level of language skill, <em>relative to the baseline level of fluent English</em>, does not vary significantly contingent on the gender of the profile. For interactions between variables with more levels, however, these plots become large and complex, so it may be better to exclude the explicit tests of differences, which become difficult to interpret:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># calculate interaction AMCEs (ACIEs)</span>
-amces_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"amce"</span>, <span class="dt">by =</span> <span class="op">~</span>Job)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(amces_<span class="dv">2</span>) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="op">~</span>BY, <span class="dt">ncol =</span> 3L)</code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="co"># calculate interaction AMCEs (ACIEs)</span></a>
+<a class="sourceLine" id="cb16-2" title="2">amces_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"amce"</span>, <span class="dt">by =</span> <span class="op">~</span>Job)</a>
+<a class="sourceLine" id="cb16-3" title="3"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(amces_<span class="dv">2</span>) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span>BY, <span class="dt">ncol =</span> 3L)</a></code></pre></div>
 <p><img src="Introduction_files/figure-html/interaction_amces_2-1.png" width="960"></p>
 <p>While this may be necessary when (causal) interaction <em>effects</em> specifically need to be tested, again inferential errors are very possible with this kind of visualisation of AMCEs. In many cases it may be preferable to report MMs. Here these tell us respondents’ language skill preferences contingent on the job of the profile:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># calculate interaction MMs</span>
-mms &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>Job)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(mms, <span class="dt">vline =</span> <span class="fl">0.5</span>) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="op">~</span>BY, <span class="dt">ncol =</span> 3L)</code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="co"># calculate interaction MMs</span></a>
+<a class="sourceLine" id="cb17-2" title="2">mms &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cregg.html">cj</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>Job)</a>
+<a class="sourceLine" id="cb17-3" title="3"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(mms, <span class="dt">vline =</span> <span class="fl">0.5</span>) <span class="op">+</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span>BY, <span class="dt">ncol =</span> 3L)</a></code></pre></div>
 <p><img src="Introduction_files/figure-html/interaction_mms-1.png" width="960"></p>
-<p>Alternatively, new interaction variables can be created using <code><a href="https://www.rdocumentation.org/packages/base/topics/interaction">interaction()</a></code> and then their AMCEs (with inferential caution) or MMs can be plotted like any other variable:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">immigration<span class="op">$</span>language_entry &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/interaction">interaction</a></span>(immigration<span class="op">$</span>LanguageSkills, immigration<span class="op">$</span>PriorEntry, <span class="dt">sep =</span> <span class="st">"_"</span>)
-<span class="co"># average component interaction effects</span>
-acies &lt;-<span class="st"> </span><span class="kw"><a href="../reference/amce.html">amce</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>language_entry, <span class="dt">id =</span> <span class="op">~</span>CaseID)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(acies)</code></pre></div>
+<p>Alternatively, new interaction variables can be created using <code><a href="https://rdrr.io/r/base/interaction.html">interaction()</a></code> and then their AMCEs (with inferential caution) or MMs can be plotted like any other variable:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">immigration<span class="op">$</span>language_entry &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/interaction.html">interaction</a></span>(immigration<span class="op">$</span>LanguageSkills, immigration<span class="op">$</span>PriorEntry, <span class="dt">sep =</span> <span class="st">"_"</span>)</a>
+<a class="sourceLine" id="cb18-2" title="2"><span class="co"># average component interaction effects</span></a>
+<a class="sourceLine" id="cb18-3" title="3">acies &lt;-<span class="st"> </span><span class="kw"><a href="../reference/amce.html">amce</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>language_entry, <span class="dt">id =</span> <span class="op">~</span>CaseID)</a>
+<a class="sourceLine" id="cb18-4" title="4"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(acies)</a></code></pre></div>
 <p><img src="Introduction_files/figure-html/interactions-1.png" width="960"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># higher order MMs</span>
-interaction_mms &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mm.html">mm</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>language_entry, <span class="dt">id =</span> <span class="op">~</span>CaseID)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(interaction_mms, <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="co"># higher order MMs</span></a>
+<a class="sourceLine" id="cb19-2" title="2">interaction_mms &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mm.html">mm</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>language_entry, <span class="dt">id =</span> <span class="op">~</span>CaseID)</a>
+<a class="sourceLine" id="cb19-3" title="3"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(interaction_mms, <span class="dt">vline =</span> <span class="fl">0.5</span>)</a></code></pre></div>
 <p><img src="Introduction_files/figure-html/interactions-2.png" width="960"></p>
 </div>
 <div id="diagnostics" class="section level2">
@@ -306,11 +309,11 @@ interaction_mms &lt;-<span class="st"> </span><span class="kw"><a href="../refer
 <h3 class="hasAnchor">
 <a href="#display-frequencies-and-proportions" class="anchor"></a>Display Frequencies and Proportions</h3>
 <p>For example, to check display frequencies of conjoint features (to ensure equal - or unequal - display frequency):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># plotting of display frequencies</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="../reference/cj_freqs.html">cj_freqs</a></span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID))</code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co"># plotting of display frequencies</span></a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="../reference/cj_freqs.html">cj_freqs</a></span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID))</a></code></pre></div>
 <p><img src="Introduction_files/figure-html/plot_freqs-1.png" width="960"></p>
 <p>As is clear in the above, constraints were imposed in the original study on the allowed combinations of <code>Job</code> and <code>Education</code> and also on combinations of <code>CountryOfOrigin</code> and <code>ReasonForApplication</code>. The <code><a href="../reference/cj_freqs.html">cj_props()</a></code> function provides tidy proportions tables to verify that the design was implemented as intended or to perform further subgroup analyses.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/subset">subset</a></span>(<span class="kw"><a href="../reference/cj_freqs.html">cj_props</a></span>(immigration, <span class="op">~</span>Job <span class="op">+</span><span class="st"> </span>Education, <span class="dt">id =</span> <span class="op">~</span>CaseID), Proportion <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)</code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw"><a href="../reference/cj_freqs.html">cj_props</a></span>(immigration, <span class="op">~</span>Job <span class="op">+</span><span class="st"> </span>Education, <span class="dt">id =</span> <span class="op">~</span>CaseID), Proportion <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)</a></code></pre></div>
 <pre><code>                   Job   Education Proportion
 5    Financial Analyst   No Formal          0
 8  Computer Programmer   No Formal          0
@@ -328,7 +331,7 @@ interaction_mms &lt;-<span class="st"> </span><span class="kw"><a href="../refer
 41 Computer Programmer High School          0
 43  Research Scientist High School          0
 44              Doctor High School          0</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/subset">subset</a></span>(<span class="kw"><a href="../reference/cj_freqs.html">cj_props</a></span>(immigration, <span class="op">~</span>CountryOfOrigin <span class="op">+</span><span class="st"> </span>ReasonForApplication, <span class="dt">id =</span> <span class="op">~</span>CaseID), Proportion <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)</code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw"><a href="../reference/cj_freqs.html">cj_props</a></span>(immigration, <span class="op">~</span>CountryOfOrigin <span class="op">+</span><span class="st"> </span>ReasonForApplication, <span class="dt">id =</span> <span class="op">~</span>CaseID), Proportion <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)</a></code></pre></div>
 <pre><code>   CountryOfOrigin ReasonForApplication Proportion
 21           India   Escape Persecution          0
 22         Germany   Escape Persecution          0
@@ -341,15 +344,16 @@ interaction_mms &lt;-<span class="st"> </span><span class="kw"><a href="../refer
 <h3 class="hasAnchor">
 <a href="#balance-testing" class="anchor"></a>Balance Testing</h3>
 <p>The main <code><a href="../reference/amce.html">amce()</a></code> and <code><a href="../reference/mm.html">mm()</a></code> functions can also be used for balance testing. Rather than comparing outcomes across feature levels, we will compare a covariate across feature levels. Both approaches will give a similar result:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="../reference/mm.html">mm</a></span>(immigration, ethnocentrism <span class="op">~</span><span class="st"> </span>Job <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>CountryOfOrigin <span class="op">+</span><span class="st"> </span>ReasonForApplication, <span class="dt">id =</span> <span class="op">~</span>CaseID), <span class="dt">xlim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">10</span>, 
-    <span class="dv">30</span>), <span class="dt">vline =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(immigration<span class="op">$</span>ethnocentrism, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="../reference/mm.html">mm</a></span>(immigration, ethnocentrism <span class="op">~</span><span class="st"> </span>Job <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>CountryOfOrigin <span class="op">+</span><span class="st"> </span>ReasonForApplication, <span class="dt">id =</span> <span class="op">~</span>CaseID), <span class="dt">xlim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">10</span>, </a>
+<a class="sourceLine" id="cb25-2" title="2">    <span class="dv">30</span>), <span class="dt">vline =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(immigration<span class="op">$</span>ethnocentrism, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
 <p><img src="Introduction_files/figure-html/balance_testing-1.png" width="960"> Given that confidence intervals for each feature hover closely around the grand mean, there is little reason to believe that imbalance is a problem. The same analysis could be performed using <code><a href="../reference/amce.html">amce()</a></code> or, of course, <code><a href="../reference/cregg.html">cj()</a></code> with either estimand specified in <code>estimate =</code>.</p>
 </div>
 <div id="carryover-and-leftright-diagnostics" class="section level3">
 <h3 class="hasAnchor">
 <a href="#carryover-and-leftright-diagnostics" class="anchor"></a>Carryover and Left/Right Diagnostics</h3>
 <p>Subgroup diagnostics can be used to evaluate whether there is, for example, any preference for the left-hand or right-hand profile (in a two-profile design):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="../reference/cregg.html">cj</a></span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">by =</span> <span class="op">~</span>profile, <span class="dt">estimate =</span> <span class="st">"mm"</span>), <span class="dt">group =</span> <span class="st">"profile"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">immigration<span class="op">$</span>profile_fac &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(immigration<span class="op">$</span>profile)</a>
+<a class="sourceLine" id="cb26-2" title="2"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="../reference/cregg.html">cj</a></span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">by =</span> <span class="op">~</span>profile_fac, <span class="dt">estimate =</span> <span class="st">"mm"</span>), <span class="dt">group =</span> <span class="st">"profile_fac"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</a></code></pre></div>
 <p><img src="Introduction_files/figure-html/leftright-1.png" width="960"></p>
 <p>Again, in this example there are no obvious concerns generated from the diagnostic. The same approach can be used to perform other diagnostics, such as detecting carryover problems.</p>
 </div>
@@ -357,6 +361,7 @@ interaction_mms &lt;-<span class="st"> </span><span class="kw"><a href="../refer
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -372,17 +377,20 @@ interaction_mms &lt;-<span class="st"> </span><span class="kw"><a href="../refer
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Thomas J. Leeper.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>
