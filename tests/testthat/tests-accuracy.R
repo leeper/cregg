@@ -246,30 +246,3 @@ test_that("amce_diffs() returns correct differences", {
                           check.attributes = FALSE),
                 label = "amce_diffs() returns correct differences")
 })
-
-test_that("Functions respect 'alpha' argument", {
-    expect_false(
-      identical(
-        mm(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.05),
-        mm(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.01)
-      ), label = "mm() respects 'alpha' argument"
-    )
-    expect_false(
-      identical(
-        mm_diffs(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.05, by = ~ group),
-        mm_diffs(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.01, by = ~ group)
-      ), label = "mm_diffs() respects 'alpha' argument"
-    )
-    expect_false(
-      identical(
-        amce(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.05),
-        amce(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.01)
-      ), label = "amce() respects 'alpha' argument"
-    )
-    expect_false(
-      identical(
-        amce_diffs(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.05, by = ~ group),
-        amce_diffs(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.01, by = ~ group)
-      ), label = "amce_diffs() respects 'alpha' argument"
-    )
-})

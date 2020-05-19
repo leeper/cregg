@@ -137,3 +137,53 @@ test_that("cj_anova() works", {
     expect_error(cj_anova(immigration,  ~ Education, id = ~ CaseID, by = ~Gender),
                  label = "cj_anova() fails w/o LHS variable in formula")
 })
+
+test_that("Functions respect 'alpha' argument", {
+    expect_false(
+      identical(
+        mm(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.05),
+        mm(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.01)
+      ), label = "mm() respects 'alpha' argument"
+    )
+    expect_false(
+      identical(
+        mm_diffs(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.05, by = ~ group),
+        mm_diffs(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.01, by = ~ group)
+      ), label = "mm_diffs() respects 'alpha' argument"
+    )
+    expect_false(
+      identical(
+        amce(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.05),
+        amce(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.01)
+      ), label = "amce() respects 'alpha' argument"
+    )
+    expect_false(
+      identical(
+        amce_diffs(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.05, by = ~ group),
+        amce_diffs(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.01, by = ~ group)
+      ), label = "amce_diffs() respects 'alpha' argument"
+    )
+})
+
+test_that("Functions respect 'h0' argument", {
+    expect_false(
+      identical(
+        mm(dat, y ~ x1 + x2, id = ~ 0, h0 = 0.0),
+        mm(dat, y ~ x1 + x2, id = ~ 0, h0 = 0.5)
+      ), label = "mm() respects 'h0' argument"
+    )
+    expect_false(
+      identical(
+        mm_diffs(dat, y ~ x1 + x2, id = ~ 0, h0 = 0.0, by = ~ group),
+        mm_diffs(dat, y ~ x1 + x2, id = ~ 0, h0 = 0.5, by = ~ group)
+      ), label = "mm_diffs() respects 'h0' argument"
+    )
+    expect_error(
+      amce(dat, y ~ x1 + x2, id = ~ 0, h0 = 0.5),
+      label = "amce() does not have an 'h0' argument"
+    )
+    expect_error(
+      amce_diffs(dat, y ~ x1 + x2, id = ~ 0, h0 = 0.5, by = ~ group),
+      label = "amce_diffs() does not have an 'h0' argument"
+    )    
+})

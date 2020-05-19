@@ -62,7 +62,7 @@ function(
         mm_split[[i]][["std.error"]] <- sqrt( variance )
         
         # z-statistic
-        mm_split[[i]][["z"]] <- mm_split[[i]][["estimate"]]/mm_split[[i]][["std.error"]]
+        mm_split[[i]][["z"]] <- (mm_split[[i]][["estimate"]] - h0)/mm_split[[i]][["std.error"]]
         
         # p-value
         mm_split[[i]][["p"]] <- 2L * stats::pnorm(-abs(mm_split[[i]][["z"]]))
