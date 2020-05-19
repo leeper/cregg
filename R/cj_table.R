@@ -11,6 +11,13 @@ function(
   ...
 ) {
         
+    # coerce to "cj_df" to preserve attributes
+    if (inherits(data, "survey.design")) {
+        data <- cj_df(data[["variables"]])
+    } else {
+        data <- cj_df(data)
+    }
+    
     # get RHS variables, variable labels, and factor levels
     RHS <- all.vars(stats::update(formula, 0 ~ . ))
     

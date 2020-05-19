@@ -17,6 +17,9 @@
 #' @param theme A ggplot2 theme object
 #' @param \dots Ignored.
 #' @return A ggplot2 object
+#' @details These are convenience functions for quickly plotting results from cregg. Because \code{plot} returns ggplot2 objects, these are easily manipulated using standard ggplot2 operations.
+#' 
+#' Note that ggplot2, by default, sorts factors (like feature names here) in what might be the opposite order of what you would expect and in the opposite order that cregg functions sort their output.
 #' @examples
 #' \donttest{
 #' require("ggplot2")

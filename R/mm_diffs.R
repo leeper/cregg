@@ -15,6 +15,14 @@ function(
   ...
 ) {
     
+    # coerce to "cj_df" to preserve attributes
+    if (inherits(data, "survey.design")) {
+        stop("mm_diffs() does not currently support passing a 'survey.design' object as 'data'")
+        # data2 <- cj_df(data[["variables"]])
+    } else {
+        data2 <- cj_df(data)
+    }
+    
     # get outcome variable
     outcome <- all.vars(stats::update(formula, . ~ 0))
     if (!length(outcome) || outcome == ".") {
@@ -28,11 +36,6 @@ function(
     stopifnot(length(by) == 2L)
     by_var <- as.character(by)[2L]
     
-    # coerce 'by_var' to factor
-    if (!is.factor(data[[by_var]])) {
-        data[[by_var]] <- factor(data[[by_var]])
-    }
-    
     # process feature_order argument
     feature_order <- check_feature_order(feature_order, RHS)
     
@@ -40,17 +43,17 @@ function(
     level_order <- match.arg(level_order)
     
     # function to produce "fancy" feature labels
-    feature_labels <- clean_feature_labels(data = data, RHS = RHS, feature_labels = feature_labels)
+    feature_labels <- clean_feature_labels(data = data2, RHS = RHS, feature_labels = feature_labels)
     
     # convert feature labels and levels to data frame
-    term_labels_df <- make_term_labels_df(data, feature_order, level_order = level_order)
+    term_labels_df <- make_term_labels_df(data2, feature_order, level_order = level_order)
     
     # estimate marginal means, by 'by_var'
     mm <- cj(data = data, formula = formula, estimate = "mm", id = id, weights = weights, by = by,
              feature_order = feature_order, feature_labels = feature_labels, level_order = level_order, alpha = alpha, h0 = h0, ...)
     
     # split the output of 'mm' and order by factor levels
-    mm_split <- split(mm, mm[["BY"]])[levels(data[[by_var]])]
+    mm_split <- split(mm, mm[["BY"]])[levels(data2[[by_var]])]
     
     # loop over all levels, differencing against the first one
     for (i in seq_len(length(mm_split))[-1L]) {

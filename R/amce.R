@@ -111,13 +111,16 @@ function(
     
     # estimate model
     if (inherits(data, "data.frame") && is.null(weights)) {
+        data <- cj_df(data)
         svydesign <- survey::svydesign(ids = id, weights = ~ 1, data = data)
         mod <- survey::svyglm(formula, design = svydesign, ...)
     } else if (inherits(data, "data.frame")) {
+        data <- cj_df(data)
         svydesign <- survey::svydesign(ids = id, weights = weights, data = data)
         mod <- survey::svyglm(formula, design = svydesign, ...)
     } else if (inherits(data, "survey.design")) {
         svydesign <- data
+        data <- cj_df(data[["variables"]])
         mod <- survey::svyglm(formula, design = svydesign, ...)
     } else {
         stop("'data' is not a 'data.frame' or 'survey.design' object")

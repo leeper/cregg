@@ -1,4 +1,5 @@
 #' @rdname cregg
+#' @importFrom utils hasName
 #' @export
 cj <-
 function(
@@ -15,9 +16,6 @@ function(
 ) {
     estimate <- match.arg(estimate)
     
-    # coerce to "cj_df" to preserve attributes
-    data <- cj_df(data)
-    
     if (!is.null(by)) {
         # get RHS variables, variable labels, and factor levels
         RHS <- all.vars(stats::update(formula, 0 ~ . ))
@@ -26,11 +24,11 @@ function(
         by_vars <- all.vars(stats::update(by, 0 ~ . ))
         ## check `by` variables
         for (b in by_vars) {
-            if (is.null(data[[b]])) {
+            if (!utils::hasName(data, b)) {
                 stop(sprintf("Variable '%s' in `by` not found in 'data'", b))
             }
             # check that all variables in `by` are factors
-            if (!is.null(data[[b]]) && !inherits(data[[b]], "factor")) {
+            if (utils::hasName(data, b) && !inherits(data[[b]], "factor")) {
                 stop(sprintf("Variable '%s' in `by` must be a factor", b))
             }
             # check for empty string values in by vars; error if present

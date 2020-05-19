@@ -53,6 +53,14 @@ function(
   ...
 ) {
     
+    # coerce to "cj_df" to preserve attributes
+    if (inherits(data, "survey.design")) {
+        stop("mm() does not currently support passing a 'survey.design' object as 'data'")
+        # data2 <- cj_df(data[["variables"]])
+    } else {
+        data2 <- cj_df(data)
+    }
+    
     # get outcome variable
     outcome <- all.vars(stats::update(formula, . ~ 0))
     if (!length(outcome) || outcome == ".") {
@@ -69,18 +77,18 @@ function(
     level_order <- match.arg(level_order)
     
     # function used in cj and ammplot to produce "fancy" feature labels
-    feature_labels <- clean_feature_labels(data = data, RHS = RHS, feature_labels = feature_labels)
+    feature_labels <- clean_feature_labels(data = data2, RHS = RHS, feature_labels = feature_labels)
     
     # convert feature labels and levels to data frame
-    term_labels_df <- make_term_labels_df(data, feature_order, level_order = level_order)
+    term_labels_df <- make_term_labels_df(data2, feature_order, level_order = level_order)
     
     # get `weights` as character string
     if (!is.null(weights)) {
         weightsvar <- all.vars(update(weights, 0 ~ . ))[1L]
-        data[["CREGG_WEIGHT"]] <- data[[weightsvar]]
+        data2[["CREGG_WEIGHT"]] <- data2[[weightsvar]]
     } else {
         weights <- ~ 0
-        data[["CREGG_WEIGHT"]] <- 1
+        data2[["CREGG_WEIGHT"]] <- 1
     }
     
     # get `id` as character string
@@ -92,11 +100,11 @@ function(
     }
     
     # reshape data
-    long <- stats::reshape(data[c(outcome, RHS, idvar, "CREGG_WEIGHT")], 
-                           varying = list(names(data[RHS])), 
+    long <- stats::reshape(data2[c(outcome, RHS, idvar, "CREGG_WEIGHT")], 
+                           varying = list(names(data2[RHS])), 
                            v.names = "LEVEL", 
                            timevar = "Feature",
-                           times = names(data[RHS]),
+                           times = names(data2[RHS]),
                            idvar = "observation",
                            direction = "long")
     names(long)[names(long) == outcome] <- "OUTCOME"
@@ -129,7 +137,7 @@ function(
     # }))
     
     # attach feature labels
-    out <- merge(out, make_term_labels_df(data, RHS), by = c("level"), all = TRUE)
+    out <- merge(out, make_term_labels_df(data2, RHS), by = c("level"), all = TRUE)
     out[["level"]] <- factor(out[["level"]], levels = term_labels_df[["level"]])
     out[["feature"]] <- factor(out[["feature"]],
                                levels = feature_order,

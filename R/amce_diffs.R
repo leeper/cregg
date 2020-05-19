@@ -70,7 +70,11 @@ function(
 ) {
     
     # coerce to "cj_df" to preserve attributes
-    data <- cj_df(data)
+    if (inherits(data, "survey.design")) {
+        data2 <- cj_df(data[["variables"]])
+    } else {
+        data2 <- cj_df(data)
+    }
     
     # get outcome variable
     outcome <- all.vars(stats::update(formula, . ~ 0))
@@ -82,8 +86,8 @@ function(
     stopifnot(length(by) == 2L)
     by_var <- as.character(by)[2L]
     # coerce 'by_var' to factor
-    if (!is.factor(data[[by_var]])) {
-        data[[by_var]] <- factor(data[[by_var]])
+    if (!is.factor(data2[[by_var]])) {
+        data2[[by_var]] <- factor(data2[[by_var]])
     }
     
     # process feature_order argument
@@ -93,20 +97,22 @@ function(
     level_order <- match.arg(level_order)
     
     # function to produce "fancy" feature labels
-    feature_labels <- clean_feature_labels(data = data, RHS = RHS, feature_labels = feature_labels)
+    feature_labels <- clean_feature_labels(data = data2, RHS = RHS, feature_labels = feature_labels)
     
     # convert feature labels and levels to data frame
-    term_labels_df <- make_term_labels_df(data, feature_order, level_order = level_order)
+    term_labels_df <- make_term_labels_df(data2, feature_order, level_order = level_order)
     
     # modify formula to include appropriate interaction
     formula <- update(formula, reformulate(paste0("(.) * ", by_var)))
     
     # estimate model
     if (inherits(data, "data.frame") && is.null(weights)) {
-        svydesign <- survey::svydesign(ids = id, weights = ~ 1, data = data)
+        # coerce to "cj_df" to preserve attributes
+        svydesign <- survey::svydesign(ids = id, weights = ~ 1, data = data2)
         mod <- survey::svyglm(formula, design = svydesign, ...)
     } else if (inherits(data, "data.frame")) {
-        svydesign <- survey::svydesign(ids = id, weights = weights, data = data)
+        # coerce to "cj_df" to preserve attributes
+        svydesign <- survey::svydesign(ids = id, weights = weights, data = data2)
         mod <- survey::svyglm(formula, design = svydesign, ...)
     } else if (inherits(data, "survey.design")) {
         svydesign <- data
@@ -124,7 +130,7 @@ function(
         terms_df <- terms_df[terms_df[[by_var]] & terms_df[["_order"]] != 1, , drop = FALSE]
         
         # get coefficients as data frame (correct, if needed, for clustering)
-        coef_summary <- get_coef_summary(mod = mod, data = data, id = NULL, alpha = alpha) # don't pass id
+        coef_summary <- get_coef_summary(mod = mod, data = data2, id = NULL, alpha = alpha) # don't pass id
         # merge coef_df and coef_summary
         coef_summary <- merge(coef_summary, terms_df, by = "_coef")
         
@@ -138,7 +144,7 @@ function(
         
         # add other metadata columns
         coef_summary[["outcome"]] <- outcome
-        coef_summary[["BY"]] <- paste0(coef_summary[[paste0("_level_", by_var)]], " - ", levels(data[[by_var]])[1L])
+        coef_summary[["BY"]] <- paste0(coef_summary[[paste0("_level_", by_var)]], " - ", levels(data2[[by_var]])[1L])
         coef_summary[["statistic"]] <- "amce_difference"
     } else {
         stop("amce_diffs() currently does not support constrained designs")

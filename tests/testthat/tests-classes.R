@@ -2,6 +2,7 @@ context("Correct data structures returned")
 
 data(immigration, package = "cregg")
 immigration$wts <- stats::rbeta(nrow(immigration), 2, 5)*5
+immigration$contest <- factor(rep(letters[1:5], each = nrow(immigration)/5L))
 immigration$nonfactor = rep(letters[1:2], each = nrow(immigration)/2L)
 
 test_that("cj() works", {
@@ -11,6 +12,10 @@ test_that("cj() works", {
     expect_true(inherits(x <- cj(immigration, ChosenImmigrant ~ LanguageSkills, estimate = "mm", id = ~ CaseID, by = ~ Gender), "cj_mm"),
                 label = "cj() works w/ 'by'")
     expect_true(inherits(plot(x, group = "BY"), "ggplot"), label = "plot.cj_amce() works w/ 'by' argument")
+    expect_true(inherits(cj(immigration, ChosenImmigrant ~ LanguageSkills, estimate = "amce_differences", id = ~ CaseID, by = ~ Gender), "cj_diffs"),
+                label = "cj() works for 'amce_differences'")
+    expect_true(inherits(cj(immigration, ChosenImmigrant ~ LanguageSkills, estimate = "mm_differences", id = ~ CaseID, by = ~ Gender), "cj_diffs"),
+                label = "cj() works for 'mm_differences'")
     expect_true(!identical(cj(immigration, ChosenImmigrant ~ LanguageSkills, estimate = "mm", id = ~ CaseID,
                               by = ~ Gender, level_order = "ascending")$level,
                            cj(immigration, ChosenImmigrant ~ LanguageSkills, estimate = "mm", id = ~ CaseID,
@@ -35,16 +40,29 @@ test_that("cj() works", {
                  label = "cj() fails for too many feature names in 'feature_order'")
     expect_error(cj(immigration, ChosenImmigrant ~ Education + Gender, id = ~CaseID, feature_order = c("Education", "foo"), estimate = "mm"),
                  label = "cj() fails for wrong feature names in 'feature_order'")
-    expect_error(inherits(x <- cj(immigration, ChosenImmigrant ~ LanguageSkills, estimate = "diff", id = ~ CaseID), "cj_mm"),
-                 label = "cj() fails on estimate = 'diff' w/o 'by'")
+    expect_error(cj(immigration, ChosenImmigrant ~ LanguageSkills, estimate = "fake", id = ~ CaseID),
+                 label = "cj() fails on unsupported estimate value")
+    expect_error(cj(immigration, ChosenImmigrant ~ LanguageSkills, estimate = "amce_differences", id = ~ CaseID),
+                 label = "cj() fails on estimate = 'amce_differences' w/o 'by'")
+    expect_error(cj(immigration, ChosenImmigrant ~ LanguageSkills, estimate = "mm_differences", id = ~ CaseID),
+                 label = "cj() fails on estimate = 'mm_differences' w/o 'by'")
+    
     immigration$tmp <- as.character(immigration$Gender)
     expect_error(cj(immigration, ChosenImmigrant ~ tmp, id = ~CaseID, estimate = "mm"),
                  label = "cj() fails when features aren't factors (character)")
+    
     immigration$tmp <- as.numeric(immigration$Gender)
     expect_error(cj(immigration, ChosenImmigrant ~ tmp, id = ~CaseID, estimate = "mm"),
                  label = "cj() fails when features aren't factors (numeric)")
     expect_error(cj(immigration, ChosenImmigrant ~ tmp, id = ~CaseID, estimate = "mm", by = ~ nonfactor),
-                 label = "cj() fails when by isn't a factor")
+                 label = "cj() fails when 'by' isn't a factor")
+    
+    immigration$tmp <- factor(rep(c("", "a"), each = nrow(immigration)/2L))
+    expect_error(cj(immigration, ChosenImmigrant ~ Education, by = ~ FAKEVAR, id = ~CaseID, estimate = "mm"),
+                 label = "cj() fails when 'by' doesn't exist")
+    expect_error(cj(immigration, ChosenImmigrant ~ Education, by = ~ tmp, id = ~CaseID, estimate = "mm"),
+                 label = "cj() fails when 'by' has empty character '' levels")
+    
     immigration$tmp <- NULL
 })
 
@@ -138,29 +156,89 @@ test_that("cj_anova() works", {
                  label = "cj_anova() fails w/o LHS variable in formula")
 })
 
+test_that("functions work with svydesign 'data' argument", {
+    svyimmigration <- svydesign(weights = ~ 1, data = immigration, id = ~ CaseID)
+    expect_true(
+      identical(
+        cj(immigration, ChosenImmigrant ~ Education, id = ~ CaseID),
+        cj(svyimmigration, ChosenImmigrant ~ Education)
+      ),
+      label = "cj() works with svydesign 'data' object"
+    )
+    expect_true(
+      identical(
+        amce(immigration, ChosenImmigrant ~ Education, id = ~ CaseID),
+        amce(svyimmigration, ChosenImmigrant ~ Education)
+      ),
+      label = "amce() works with svydesign 'data' object"
+    )
+    expect_true(
+      identical(
+        amce_diffs(immigration, ChosenImmigrant ~ Education, id = ~ CaseID, by = ~ contest),
+        amce_diffs(svyimmigration, ChosenImmigrant ~ Education, by = ~ contest)
+      ),
+      label = "amce_diffs() works with svydesign 'data' object"
+    )
+
+    # TODO: fix
+    expect_error(
+      mm(svyimmigration, ChosenImmigrant ~ Education),
+      label = "mm() errors with svydesign 'data' object"
+    )
+    # TODO: fix
+    expect_error(
+      mm_diffs(svyimmigration, ChosenImmigrant ~ Education, by = ~ contest),
+      label = "mm_diffs() errors with svydesign 'data' object"
+    )
+
+    expect_true(
+      identical(
+        cj_freqs(immigration, ChosenImmigrant ~ Education, id = ~ CaseID, by = ~ contest),
+        cj_freqs(svyimmigration, ChosenImmigrant ~ Education, by = ~ contest)
+      ),
+      label = "cj_freqs() works with svydesign 'data' object"
+    )
+    expect_true(
+      identical(
+        cj_table(immigration, ChosenImmigrant ~ Education, id = ~ CaseID, by = ~ contest),
+        cj_table(svyimmigration, ChosenImmigrant ~ Education, by = ~ contest)
+      ),
+      label = "cj_table() works with svydesign 'data' object"
+    )
+    expect_true(
+      identical(
+        cj_props(immigration, ChosenImmigrant ~ Education, id = ~ CaseID, by = ~ contest),
+        cj_props(svyimmigration, ChosenImmigrant ~ Education, by = ~ contest)
+      ),
+      label = "cj_props() works with svydesign 'data' object"
+    )
+    expect_error(cj_anova(svyimmigration, ChosenImmigrant ~ Gender + Education + LanguageSkills, by = ~ contest_no),
+                label = "cj_anova() fails with svydesign 'data' object")
+})
+
 test_that("Functions respect 'alpha' argument", {
     expect_false(
       identical(
-        mm(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.05),
-        mm(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.01)
+        mm(immigration, ChosenImmigrant ~ Education, id = ~CaseID, alpha = 0.05),
+        mm(immigration, ChosenImmigrant ~ Education, id = ~CaseID, alpha = 0.01)
       ), label = "mm() respects 'alpha' argument"
     )
     expect_false(
       identical(
-        mm_diffs(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.05, by = ~ group),
-        mm_diffs(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.01, by = ~ group)
+        mm_diffs(immigration, ChosenImmigrant ~ Education, id = ~CaseID, alpha = 0.05, by = ~ contest),
+        mm_diffs(immigration, ChosenImmigrant ~ Education, id = ~CaseID, alpha = 0.01, by = ~ contest)
       ), label = "mm_diffs() respects 'alpha' argument"
     )
     expect_false(
       identical(
-        amce(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.05),
-        amce(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.01)
+        amce(immigration, ChosenImmigrant ~ Education, id = ~CaseID, alpha = 0.05),
+        amce(immigration, ChosenImmigrant ~ Education, id = ~CaseID, alpha = 0.01)
       ), label = "amce() respects 'alpha' argument"
     )
     expect_false(
       identical(
-        amce_diffs(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.05, by = ~ group),
-        amce_diffs(dat, y ~ x1 + x2, id = ~ 0, alpha = 0.01, by = ~ group)
+        amce_diffs(immigration, ChosenImmigrant ~ Education, id = ~CaseID, alpha = 0.05, by = ~ contest),
+        amce_diffs(immigration, ChosenImmigrant ~ Education, id = ~CaseID, alpha = 0.01, by = ~ contest)
       ), label = "amce_diffs() respects 'alpha' argument"
     )
 })
@@ -168,22 +246,22 @@ test_that("Functions respect 'alpha' argument", {
 test_that("Functions respect 'h0' argument", {
     expect_false(
       identical(
-        mm(dat, y ~ x1 + x2, id = ~ 0, h0 = 0.0),
-        mm(dat, y ~ x1 + x2, id = ~ 0, h0 = 0.5)
+        mm(immigration, ChosenImmigrant ~ Education, id = ~CaseID, h0 = 0.0),
+        mm(immigration, ChosenImmigrant ~ Education, id = ~CaseID, h0 = 0.5)
       ), label = "mm() respects 'h0' argument"
     )
     expect_false(
       identical(
-        mm_diffs(dat, y ~ x1 + x2, id = ~ 0, h0 = 0.0, by = ~ group),
-        mm_diffs(dat, y ~ x1 + x2, id = ~ 0, h0 = 0.5, by = ~ group)
+        mm_diffs(immigration, ChosenImmigrant ~ Education, id = ~CaseID, h0 = 0.0, by = ~ contest),
+        mm_diffs(immigration, ChosenImmigrant ~ Education, id = ~CaseID, h0 = 0.5, by = ~ contest)
       ), label = "mm_diffs() respects 'h0' argument"
     )
     expect_error(
-      amce(dat, y ~ x1 + x2, id = ~ 0, h0 = 0.5),
+      amce(immigration, ChosenImmigrant ~ Education, id = ~CaseID, h0 = 0.5),
       label = "amce() does not have an 'h0' argument"
     )
     expect_error(
-      amce_diffs(dat, y ~ x1 + x2, id = ~ 0, h0 = 0.5, by = ~ group),
+      amce_diffs(immigration, ChosenImmigrant ~ Education, id = ~CaseID, h0 = 0.5, by = ~ contest),
       label = "amce_diffs() does not have an 'h0' argument"
     )    
 })

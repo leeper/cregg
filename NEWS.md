@@ -2,8 +2,8 @@
 
 ## cregg 0.4.0
 
-* Fixed a bug related to variances for clustered designs (e.g., multiple responses per respondent) that was erroneously handling clusters. The bug arose from an unintended difference in calculating variances when designs were weighted versus not. All designs now estimate AMCEs using `svyglm()` for consistency. Weighted designs with weights provided to the `weight` argument of `cj()`, `amce()`, etc. were unaffected. Analysts using the package for unweighted designs should update results to obtain appropriately conservative standard errors of AMCEs. Tests of this behavior have now been added.
-* Fixed a bug wherein `mm_diffs()` returned 90% rather than 95% confidence intervals. (# 37, h/t @hoellers)
+* Fixed a bug related to variances for clustered designs (e.g., multiple responses per respondent) that was erroneously handling clusters. The bug arose from an unintended difference in calculating variances when designs were weighted versus not. All designs now estimate AMCEs using `svyglm()` for consistency. Weighted designs with weights provided to the `weight` argument of `cj()`, `amce()`, etc. were unaffected. Analysts using the package for unweighted designs should update results to obtain appropriately conservative standard errors of AMCEs. Tests of this behavior have now been added (#15).
+* Fixed a bug wherein `mm_diffs()` returned 90% rather than 95% confidence intervals. (#37, h/t @hoellers)
 * Fixed a bug in `mm()` wherein `alpha` was ignored.
 * Fixed a bug in `mm_diffs()` wherein `h0` was ignored.
 * Added an error when attempting to use `by` variables in `cj()` that contain empty character string levels. (#32, h/t Farsan Ghassim)
@@ -13,6 +13,7 @@
 * Added more informative error message when trying to plot by a missing grouping variable.
 * Added additional examples of plotting behavior, including ggplot2 fill/color scales and theming.
 * `cj_df()` now ignores `drop` (for behavior consistent with "tibble" rather than base "data.frame" tables)
+* All functions now handle "survey.design" objects for `data` as documented, with the exception of `mm()` and `mm_diffs()`.
 
 ## cregg 0.3.1
 

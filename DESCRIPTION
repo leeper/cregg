@@ -1,8 +1,8 @@
 Package: cregg
 Type: Package
 Title: Simple Conjoint Tidying, Analysis, and Visualization
-Version: 0.3.4
-Date: 2020-05-18
+Version: 0.3.5
+Date: 2020-05-19
 Authors@R: c(
    person("Thomas J.", "Leeper", role = c("aut", "cre"),
            email = "thosjleeper@gmail.com",
@@ -21,7 +21,8 @@ Imports:
     lmtest,
     ggplot2 (>= 2.0),
     ggstance,
-    scales
+    scales,
+    utils
 Suggests:
     testthat,
     knitr,
