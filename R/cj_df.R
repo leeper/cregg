@@ -4,7 +4,7 @@
 #' @param x A data frame
 #' @param i See \code{\link{[.data.frame}}
 #' @param j See \code{\link{[.data.frame}}
-#' @param drop See \code{\link{[.data.frame}}
+#' @param drop Ignored.
 #' @return An data frame with additional \dQuote{cj_df} class, which has subsetting methods that preserve variables attributes.
 #' @examples
 #' x1 <- data.frame(a = 1:3, b = 4:6)
@@ -37,9 +37,6 @@ cj_df.data.frame <- function(x) {
     x <- structure(x, class = "data.frame")
     if (missing(i)) {
         x2 <- x[, j, drop = FALSE]
-        if (length(x2) == 1L && isTRUE(drop)) {
-            return(x2[[1L]])
-        }
     } else {
         if (missing(j)) {
             if (is.character(i)) {

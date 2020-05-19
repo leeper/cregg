@@ -19,7 +19,7 @@ cj_df(x)
 
 \item{j}{See \code{\link{[.data.frame}}}
 
-\item{drop}{See \code{\link{[.data.frame}}}
+\item{drop}{Ignored.}
 }
 \value{
 An data frame with additional \dQuote{cj_df} class, which has subsetting methods that preserve variables attributes.

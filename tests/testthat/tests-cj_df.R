@@ -27,6 +27,9 @@ test_that("Subsetting 'cj_df' behaves as expected", {
     
     expect_true(identical(dim(immigration[, 3:4]), c(13960L, 2L)), label = "[,j, drop = default] works with integer column on 'cj_df' object")
     expect_true(!is.null(attr(immigration[, 3:4][["Education"]], "label")), label = "[,j, drop = default] with integer column on 'cj_df' object returns label")
+
+    expect_true(identical(dim(immigration[, 3]), c(13960L, 1L)), label = "[,j, drop = default] works with integer column on 'cj_df' object")
+    expect_true(!is.null(attr(immigration[, 3][["Education"]], "label")), label = "[,j, drop = default] with integer column on 'cj_df' object returns label")
     
     # [[i]] methods
     expect_true(!inherits(immigration[["Education"]], "cj_df"), label = "[[i]] with integer works on 'cj_df' object")
