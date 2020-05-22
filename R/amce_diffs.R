@@ -27,6 +27,7 @@
 #' 
 #' @examples
 #' data("immigration")
+#' immigration$contest_no <- factor(immigration$contest_no)
 #' # Test for heterogeneity by profile order
 #' cj_anova(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills, by = ~ contest_no)
 #' 

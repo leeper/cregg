@@ -26,5 +26,6 @@
 #'         taxrate4 + taxrate5 + taxrate6 + taxrev
 #' cj(taxes, f1, id = ~ ID, weights = ~     weight)
 #' }
+#' @usage data(taxes)
 #' @seealso \code{\link{cj}} \code{\link{immigration}} \code{\link{cj_df}}
 "taxes"

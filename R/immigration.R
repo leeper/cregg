@@ -38,5 +38,6 @@
 #'          JobExperience + JobPlans + PriorEntry
 #' cj(immigration, f1, id = ~ CaseID)
 #' }
+#' @usage data(immigration)
 #' @seealso \code{\link{cj}} \code{\link{taxes}} \code{\link{cj_df}}
 "immigration"

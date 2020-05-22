@@ -77,6 +77,7 @@ Note: \code{amce_diffs} does not work with constrained designs. To obtain such d
 }
 \examples{
 data("immigration")
+immigration$contest_no <- factor(immigration$contest_no)
 # Test for heterogeneity by profile order
 cj_anova(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills, by = ~ contest_no)
 

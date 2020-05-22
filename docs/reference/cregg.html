@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.6</span>
       </span>
     </div>
 
@@ -205,6 +205,7 @@
 <span class='co'># load data</span>
 <span class='fu'><a href='https://rdrr.io/r/base/ns-load.html'>requireNamespace</a></span>(<span class='st'>"ggplot2"</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"immigration"</span>)
+<span class='no'>immigration</span>$<span class='no'>contest_no</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>immigration</span>$<span class='no'>contest_no</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"taxes"</span>)
 
 <span class='co'># calculate MMs</span>
@@ -222,21 +223,22 @@
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>d1</span>, <span class='kw'>vline</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='img'><img src='cregg-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># MMs split by profile number</span>
 <span class='no'>stacked</span> <span class='kw'>&lt;-</span> <span class='fu'>cj</span>(<span class='no'>immigration</span>, <span class='no'>f1</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>,
-              <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='st'>"mm"</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~ <span class='no'>contest_no</span>)</div><div class='output co'>#&gt; <span class='error'>Error in cj(immigration, f1, id = ~CaseID, estimate = "mm", by = ~contest_no): Variable 'contest_no' in `by` must be a factor</span></div><div class='input'>
+              <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='st'>"mm"</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~ <span class='no'>contest_no</span>)
+
 <span class='co'>## plot with grouping</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>stacked</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"contest_no"</span>, <span class='kw'>vline</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>feature_headers</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(stacked, group = "contest_no", vline = 0.5, feature_headers = FALSE): object 'stacked' not found</span></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>stacked</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"contest_no"</span>, <span class='kw'>vline</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>feature_headers</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='cregg-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## plot with facetting</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>stacked</span>) + <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span>(~<span class='no'>contest_no</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>1L</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(stacked): object 'stacked' not found</span></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>stacked</span>) + <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span>(~ <span class='no'>contest_no</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>1L</span>)</div><div class='img'><img src='cregg-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># estimate AMCEs</span>
 <span class='no'>d2</span> <span class='kw'>&lt;-</span> <span class='fu'>cj</span>(<span class='no'>immigration</span>, <span class='no'>f1</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>)
 
 <span class='co'># plot AMCEs</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>d2</span>)</div><div class='img'><img src='cregg-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>d2</span>)</div><div class='img'><img src='cregg-5.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## subgroup analysis</span>
 <span class='no'>immigration</span>$<span class='no'>ethnosplit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cut.html'>cut</a></span>(<span class='no'>immigration</span>$<span class='no'>ethnocentrism</span>, <span class='fl'>2</span>)
 <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>cj</span>(<span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span>(<span class='no'>immigration</span>), <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span> + <span class='no'>LanguageSkills</span>,
         <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>, <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='st'>"mm"</span>, <span class='kw'>h0</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~ <span class='no'>ethnosplit</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"ethnosplit"</span>, <span class='kw'>vline</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='img'><img src='cregg-4.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"ethnosplit"</span>, <span class='kw'>vline</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='img'><img src='cregg-6.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># combinations of/interactions between features</span>
 <span class='no'>immigration</span>$<span class='no'>language_entry</span> <span class='kw'>&lt;-</span>
   <span class='fu'><a href='https://rdrr.io/r/base/interaction.html'>interaction</a></span>(<span class='no'>immigration</span>$<span class='no'>LanguageSkills</span>, <span class='no'>immigration</span>$<span class='no'>PriorEntry</span>, <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"_"</span>)
@@ -285,92 +287,168 @@
 #&gt; 18           Broken English_Once w/o Authorization 0.3865906 0.01829631
 #&gt; 19 Tried English but Unable_Once w/o Authorization 0.3211144 0.01759690
 #&gt; 20         Used Interpreter_Once w/o Authorization 0.3151261 0.01724809
-#&gt;              z            p     lower     upper
-#&gt; 1    5.3706590 7.844941e-08 0.5612160 0.6315718
-#&gt; 2    0.0000000 1.000000e+00 0.4633766 0.5366234
-#&gt; 3   -4.3490635 1.367201e-05 0.3855787 0.4566710
-#&gt; 4   -4.1417201 3.447109e-05 0.3835714 0.4583691
-#&gt; 5    7.3823415 1.555297e-13 0.5977194 0.6683624
-#&gt; 6    3.9105202 9.209754e-05 0.5349158 0.6050842
-#&gt; 7    1.0698975 2.846654e-01 0.4836997 0.5554875
-#&gt; 8   -2.9578025 3.098405e-03 0.4099695 0.4817324
-#&gt; 9    7.0057792 2.456151e-12 0.5880289 0.6564156
-#&gt; 10   4.1543503 3.262131e-05 0.5401320 0.6118217
-#&gt; 11   0.4343984 6.639992e-01 0.4708666 0.5457247
-#&gt; 12  -2.1635773 3.049681e-02 0.4197668 0.4960382
-#&gt; 13   7.0610472 1.652524e-12 0.5903032 0.6596968
-#&gt; 14   5.4361678 5.443869e-08 0.5645151 0.6372653
-#&gt; 15   1.3653614 1.721395e-01 0.4893783 0.5594022
-#&gt; 16  -0.8512682 3.946204e-01 0.4482529 0.5204081
-#&gt; 17  -1.8808209 5.999628e-02 0.4287647 0.5014679
-#&gt; 18  -6.1984870 5.700850e-10 0.3507305 0.4224507
-#&gt; 19 -10.1657446 2.819594e-24 0.2866251 0.3556037
-#&gt; 20 -10.7185181 8.332769e-27 0.2813204 0.3489317</div><div class='input'>
-<span class='co'>## average component interaction effects (AMCEs for feature interactions)</span>
-<span class='fu'>cj</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>language_entry</span>,
-   <span class='kw'>id</span> <span class='kw'>=</span> ~<span class='no'>CaseID</span>, <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='st'>"amce"</span>)</div><div class='output co'>#&gt;            outcome statistic        feature
-#&gt; 1  ChosenImmigrant      amce language_entry
-#&gt; 2  ChosenImmigrant      amce language_entry
-#&gt; 3  ChosenImmigrant      amce language_entry
-#&gt; 4  ChosenImmigrant      amce language_entry
-#&gt; 5  ChosenImmigrant      amce language_entry
-#&gt; 6  ChosenImmigrant      amce language_entry
-#&gt; 7  ChosenImmigrant      amce language_entry
-#&gt; 8  ChosenImmigrant      amce language_entry
-#&gt; 9  ChosenImmigrant      amce language_entry
-#&gt; 10 ChosenImmigrant      amce language_entry
-#&gt; 11 ChosenImmigrant      amce language_entry
-#&gt; 12 ChosenImmigrant      amce language_entry
-#&gt; 13 ChosenImmigrant      amce language_entry
-#&gt; 14 ChosenImmigrant      amce language_entry
-#&gt; 15 ChosenImmigrant      amce language_entry
-#&gt; 16 ChosenImmigrant      amce language_entry
-#&gt; 17 ChosenImmigrant      amce language_entry
-#&gt; 18 ChosenImmigrant      amce language_entry
-#&gt; 19 ChosenImmigrant      amce language_entry
-#&gt; 20 ChosenImmigrant      amce language_entry
-#&gt;                                              level    estimate  std.error
-#&gt; 1                             Fluent English_Never  0.00000000         NA
-#&gt; 2                             Broken English_Never -0.09639390 0.02618064
-#&gt; 3                   Tried English but Unable_Never -0.17526907 0.02582059
-#&gt; 4                           Used Interpreter_Never -0.17542363 0.02683525
-#&gt; 5                   Fluent English_Once as Tourist  0.03664704 0.02615310
-#&gt; 6                   Broken English_Once as Tourist -0.02639390 0.02572048
-#&gt; 7         Tried English but Unable_Once as Tourist -0.07680028 0.02665136
-#&gt; 8                 Used Interpreter_Once as Tourist -0.15054298 0.02661602
-#&gt; 9             Fluent English_Many Times as Tourist  0.02582832 0.02547902
-#&gt; 10            Broken English_Many Times as Tourist -0.02041705 0.02647773
-#&gt; 11  Tried English but Unable_Many Times as Tourist -0.08809827 0.02648818
-#&gt; 12          Used Interpreter_Many Times as Tourist -0.13849139 0.02736039
-#&gt; 13           Fluent English_Six Months with Family  0.02860610 0.02572849
-#&gt; 14           Broken English_Six Months with Family  0.00449631 0.02642545
-#&gt; 15 Tried English but Unable_Six Months with Family -0.07200365 0.02593916
-#&gt; 16         Used Interpreter_Six Months with Family -0.11206341 0.02683160
-#&gt; 17           Fluent English_Once w/o Authorization -0.13127762 0.02624380
-#&gt; 18           Broken English_Once w/o Authorization -0.20980331 0.02644584
-#&gt; 19 Tried English but Unable_Once w/o Authorization -0.27527953 0.02577453
-#&gt; 20         Used Interpreter_Once w/o Authorization -0.28126785 0.02589821
-#&gt;              z            p       lower       upper
-#&gt; 1           NA           NA          NA          NA
-#&gt; 2   -3.6818774 2.315227e-04 -0.14770700 -0.04508079
-#&gt; 3   -6.7879576 1.137321e-11 -0.22587650 -0.12466164
-#&gt; 4   -6.5370602 6.273978e-11 -0.22801975 -0.12282751
-#&gt; 5    1.4012500 1.611393e-01 -0.01461210  0.08790618
-#&gt; 6   -1.0261820 3.048058e-01 -0.07680512  0.02401732
-#&gt; 7   -2.8816643 3.955810e-03 -0.12903600 -0.02456457
-#&gt; 8   -5.6561043 1.548474e-08 -0.20270942 -0.09837654
-#&gt; 9    1.0137094 3.107214e-01 -0.02410964  0.07576629
-#&gt; 10  -0.7711028 4.406460e-01 -0.07231245  0.03147835
-#&gt; 11  -3.3259466 8.811880e-04 -0.14001415 -0.03618239
-#&gt; 12  -5.0617482 4.154294e-07 -0.19211676 -0.08486601
-#&gt; 13   1.1118456 2.662046e-01 -0.02182080  0.07903301
-#&gt; 14   0.1701507 8.648916e-01 -0.04729663  0.05628925
-#&gt; 15  -2.7758665 5.505482e-03 -0.12284348 -0.02116383
-#&gt; 16  -4.1765458 2.959692e-05 -0.16465239 -0.05947444
-#&gt; 17  -5.0022344 5.666961e-07 -0.18271451 -0.07984072
-#&gt; 18  -7.9333195 2.133646e-15 -0.26163621 -0.15797042
-#&gt; 19 -10.6802923 1.258746e-26 -0.32579668 -0.22476238
-#&gt; 20 -10.8605119 1.777501e-27 -0.33202741 -0.23050828</div><div class='input'># }
+#&gt;                z            p     lower     upper
+#&gt; 1   5.370659e+00 7.844941e-08 0.5612160 0.6315718
+#&gt; 2   7.724017e-14 1.000000e+00 0.4633766 0.5366234
+#&gt; 3  -4.349064e+00 1.367201e-05 0.3855787 0.4566710
+#&gt; 4  -4.141720e+00 3.447109e-05 0.3835714 0.4583691
+#&gt; 5   7.382341e+00 1.555297e-13 0.5977194 0.6683624
+#&gt; 6   3.910520e+00 9.209754e-05 0.5349158 0.6050842
+#&gt; 7   1.069898e+00 2.846654e-01 0.4836997 0.5554875
+#&gt; 8  -2.957803e+00 3.098405e-03 0.4099695 0.4817324
+#&gt; 9   7.005779e+00 2.456151e-12 0.5880289 0.6564156
+#&gt; 10  4.154350e+00 3.262131e-05 0.5401320 0.6118217
+#&gt; 11  4.343984e-01 6.639992e-01 0.4708666 0.5457247
+#&gt; 12 -2.163577e+00 3.049681e-02 0.4197668 0.4960382
+#&gt; 13  7.061047e+00 1.652524e-12 0.5903032 0.6596968
+#&gt; 14  5.436168e+00 5.443869e-08 0.5645151 0.6372653
+#&gt; 15  1.365361e+00 1.721395e-01 0.4893783 0.5594022
+#&gt; 16 -8.512682e-01 3.946204e-01 0.4482529 0.5204081
+#&gt; 17 -1.880821e+00 5.999628e-02 0.4287647 0.5014679
+#&gt; 18 -6.198487e+00 5.700850e-10 0.3507305 0.4224507
+#&gt; 19 -1.016574e+01 2.819594e-24 0.2866251 0.3556037
+#&gt; 20 -1.071852e+01 8.332769e-27 0.2813204 0.3489317</div><div class='input'>
+<span class='co'>## constrained designs</span>
+<span class='co'>## in a constrained design, some cells are unobserved:</span>
+<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='fu'><a href='cj_freqs.html'>cj_props</a></span>(<span class='no'>immigration</span>, ~ <span class='no'>Job</span> + <span class='no'>Education</span>), <span class='no'>Proportion</span> <span class='kw'>==</span> <span class='fl'>0</span>)</div><div class='output co'>#&gt;                    Job   Education Proportion
+#&gt; 5    Financial Analyst   No Formal          0
+#&gt; 8  Computer Programmer   No Formal          0
+#&gt; 10  Research Scientist   No Formal          0
+#&gt; 11              Doctor   No Formal          0
+#&gt; 16   Financial Analyst   4th Grade          0
+#&gt; 19 Computer Programmer   4th Grade          0
+#&gt; 21  Research Scientist   4th Grade          0
+#&gt; 22              Doctor   4th Grade          0
+#&gt; 27   Financial Analyst   8th Grade          0
+#&gt; 30 Computer Programmer   8th Grade          0
+#&gt; 32  Research Scientist   8th Grade          0
+#&gt; 33              Doctor   8th Grade          0
+#&gt; 38   Financial Analyst High School          0
+#&gt; 41 Computer Programmer High School          0
+#&gt; 43  Research Scientist High School          0
+#&gt; 44              Doctor High School          0</div><div class='input'><span class='co'>## MMs and AMCEs only use data from observed cells</span>
+<span class='co'>## In `immigraation`, this means while the MM for `Job == "Janitor"` is an average </span>
+<span class='co'>## across all levels of Education:</span>
+<span class='fu'><a href='mm.html'>mm</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>immigration</span>, <span class='no'>Job</span> <span class='kw'>==</span> <span class='st'>"Janitor"</span>), <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Education</span>)</div><div class='output co'>#&gt;           outcome statistic                feature            level  estimate
+#&gt; 1 ChosenImmigrant        mm Educational Attainment        No Formal 0.3344828
+#&gt; 2 ChosenImmigrant        mm Educational Attainment        4th Grade 0.3962963
+#&gt; 3 ChosenImmigrant        mm Educational Attainment        8th Grade 0.4782609
+#&gt; 4 ChosenImmigrant        mm Educational Attainment      High School 0.4791667
+#&gt; 5 ChosenImmigrant        mm Educational Attainment Two-Year College 0.5439560
+#&gt; 6 ChosenImmigrant        mm Educational Attainment   College Degree 0.4578947
+#&gt; 7 ChosenImmigrant        mm Educational Attainment  Graduate Degree 0.5185185
+#&gt;    std.error        z            p     lower     upper
+#&gt; 1 0.02771408 12.06905 1.538950e-33 0.2801642 0.3888014
+#&gt; 2 0.02977646 13.30905 2.050813e-40 0.3379355 0.4546571
+#&gt; 3 0.02889725 16.55039 1.590622e-61 0.4216233 0.5348984
+#&gt; 4 0.03225671 14.85479 6.477049e-50 0.4159447 0.5423887
+#&gt; 5 0.03693028 14.72927 4.181974e-49 0.4715740 0.6163381
+#&gt; 6 0.03615604 12.66441 9.312345e-37 0.3870302 0.5287593
+#&gt; 7 0.03926878 13.20434 8.281792e-40 0.4415531 0.5954839</div><div class='input'><span class='co'>## the MM for `Job == "Doctor"` is an average across only 3 levels of education:</span>
+<span class='fu'><a href='mm.html'>mm</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>immigration</span>, <span class='no'>Job</span> <span class='kw'>==</span> <span class='st'>"Doctor"</span>), <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Education</span>)</div><div class='output co'>#&gt;           outcome statistic                feature            level  estimate
+#&gt; 1 ChosenImmigrant        mm Educational Attainment        No Formal        NA
+#&gt; 2 ChosenImmigrant        mm Educational Attainment        4th Grade        NA
+#&gt; 3 ChosenImmigrant        mm Educational Attainment        8th Grade        NA
+#&gt; 4 ChosenImmigrant        mm Educational Attainment      High School        NA
+#&gt; 5 ChosenImmigrant        mm Educational Attainment Two-Year College 0.6702703
+#&gt; 6 ChosenImmigrant        mm Educational Attainment   College Degree 0.7037037
+#&gt; 7 ChosenImmigrant        mm Educational Attainment  Graduate Degree 0.6453202
+#&gt;    std.error        z            p     lower     upper
+#&gt; 1         NA       NA           NA        NA        NA
+#&gt; 2         NA       NA           NA        NA        NA
+#&gt; 3         NA       NA           NA        NA        NA
+#&gt; 4         NA       NA           NA        NA        NA
+#&gt; 5 0.03459500 19.37477 1.260167e-83 0.6024653 0.7380752
+#&gt; 6 0.03590837 19.59721 1.633525e-85 0.6333246 0.7740828
+#&gt; 7 0.03360880 19.20093 3.635303e-82 0.5794482 0.7111922</div><div class='input'><span class='co'>## Use `cj_props()` to see constraints:</span>
+<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='fu'><a href='cj_freqs.html'>cj_props</a></span>(<span class='no'>immigration</span>, ~ <span class='no'>Job</span> + <span class='no'>Education</span>), <span class='no'>Job</span> <span class='kw'>==</span> <span class='st'>"Doctor"</span> <span class='kw'>&amp;</span> <span class='no'>Proportion</span> <span class='kw'>!=</span> <span class='fl'>0</span>)</div><div class='output co'>#&gt;       Job        Education Proportion
+#&gt; 55 Doctor Two-Year College 0.01325215
+#&gt; 66 Doctor   College Degree 0.01160458
+#&gt; 77 Doctor  Graduate Degree 0.01454155</div><div class='input'>
+<span class='co'>## Substantively, the MM of "Doctor" might be higher than other levels of `Job`</span>
+<span class='co'>## this could be due to the feature itself or due to the fact that it is constrained</span>
+<span class='co'>## with a different subset of other feature levels than alternative levels of `Job`</span>
+<span class='co'>## this may mean analysts want to report MMs (or AMCEs) only for the unconstrained levels:</span>
+<span class='no'>elev</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Two-Year College"</span>, <span class='st'>"College Degree"</span>, <span class='st'>"Graduate Degree"</span>)
+<span class='no'>jlev</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Financial Analyst"</span>, <span class='st'>"Computer Programmer"</span>, <span class='st'>"Research Scientist"</span>, <span class='st'>"Doctor"</span>)
+<span class='fu'><a href='mm.html'>mm</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>immigration</span>, <span class='no'>Education</span> <span class='kw'>%in%</span> <span class='no'>elev</span>), <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Job</span>)</div><div class='output co'>#&gt;            outcome statistic feature               level  estimate  std.error
+#&gt; 1  ChosenImmigrant        mm     Job             Janitor 0.5056180 0.02163756
+#&gt; 2  ChosenImmigrant        mm     Job              Waiter 0.5215146 0.02072601
+#&gt; 3  ChosenImmigrant        mm     Job Child Care Provider 0.5432781 0.02137831
+#&gt; 4  ChosenImmigrant        mm     Job            Gardener 0.5597826 0.02113051
+#&gt; 5  ChosenImmigrant        mm     Job   Financial Analyst 0.5708419 0.02243047
+#&gt; 6  ChosenImmigrant        mm     Job Construction Worker 0.5369369 0.02116759
+#&gt; 7  ChosenImmigrant        mm     Job             Teacher 0.6175943 0.02059314
+#&gt; 8  ChosenImmigrant        mm     Job Computer Programmer 0.5848708 0.02116695
+#&gt; 9  ChosenImmigrant        mm     Job               Nurse 0.6128440 0.02086681
+#&gt; 10 ChosenImmigrant        mm     Job  Research Scientist 0.6407407 0.02064831
+#&gt; 11 ChosenImmigrant        mm     Job              Doctor 0.6709091 0.02003755
+#&gt;           z             p     lower     upper
+#&gt; 1  23.36761 9.127274e-121 0.4632091 0.5480268
+#&gt; 2  25.16232 1.036043e-139 0.4808924 0.5621369
+#&gt; 3  25.41258 1.830936e-142 0.5013774 0.5851788
+#&gt; 4  26.49167 1.208924e-154 0.5183676 0.6011977
+#&gt; 5  25.44939 7.169262e-143 0.5268790 0.6148048
+#&gt; 6  25.36599 5.987418e-142 0.4954492 0.5784247
+#&gt; 7  29.99030 1.313363e-197 0.5772324 0.6579561
+#&gt; 8  27.63133 4.679276e-168 0.5433844 0.6263573
+#&gt; 9  29.36933 1.353960e-189 0.5719458 0.6537422
+#&gt; 10 31.03114 2.049693e-211 0.6002708 0.6812107
+#&gt; 11 33.48258 8.641056e-246 0.6316362 0.7101820</div><div class='input'><span class='fu'><a href='mm.html'>mm</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>immigration</span>, <span class='no'>Job</span> <span class='kw'>%in%</span> <span class='no'>jlev</span>), <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Education</span>)</div><div class='output co'>#&gt;           outcome statistic                feature            level  estimate
+#&gt; 1 ChosenImmigrant        mm Educational Attainment        No Formal        NA
+#&gt; 2 ChosenImmigrant        mm Educational Attainment        4th Grade        NA
+#&gt; 3 ChosenImmigrant        mm Educational Attainment        8th Grade        NA
+#&gt; 4 ChosenImmigrant        mm Educational Attainment      High School        NA
+#&gt; 5 ChosenImmigrant        mm Educational Attainment Two-Year College 0.6134094
+#&gt; 6 ChosenImmigrant        mm Educational Attainment   College Degree 0.6372981
+#&gt; 7 ChosenImmigrant        mm Educational Attainment  Graduate Degree 0.6051560
+#&gt;    std.error        z             p     lower     upper
+#&gt; 1         NA       NA            NA        NA        NA
+#&gt; 2         NA       NA            NA        NA        NA
+#&gt; 3         NA       NA            NA        NA        NA
+#&gt; 4         NA       NA            NA        NA        NA
+#&gt; 5 0.01839689 33.34311 9.168440e-244 0.5773522 0.6494667
+#&gt; 6 0.01842787 34.58338 4.491516e-262 0.6011801 0.6734161
+#&gt; 7 0.01801006 33.60100 1.622146e-247 0.5698570 0.6404551</div><div class='input'><span class='co'>## or, present estimates excluding constrained levels:</span>
+<span class='fu'><a href='mm.html'>mm</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>immigration</span>, !<span class='no'>Education</span> <span class='kw'>%in%</span> <span class='no'>elev</span>), <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Job</span>)</div><div class='output co'>#&gt;            outcome statistic feature               level  estimate  std.error
+#&gt; 1  ChosenImmigrant        mm     Job             Janitor 0.4203822 0.01489092
+#&gt; 2  ChosenImmigrant        mm     Job              Waiter 0.4066608 0.01454294
+#&gt; 3  ChosenImmigrant        mm     Job Child Care Provider 0.4204452 0.01417421
+#&gt; 4  ChosenImmigrant        mm     Job            Gardener 0.4127273 0.01484507
+#&gt; 5  ChosenImmigrant        mm     Job   Financial Analyst        NA         NA
+#&gt; 6  ChosenImmigrant        mm     Job Construction Worker 0.4587489 0.01500467
+#&gt; 7  ChosenImmigrant        mm     Job             Teacher 0.4690813 0.01483345
+#&gt; 8  ChosenImmigrant        mm     Job Computer Programmer        NA         NA
+#&gt; 9  ChosenImmigrant        mm     Job               Nurse 0.4974705 0.01451942
+#&gt; 10 ChosenImmigrant        mm     Job  Research Scientist        NA         NA
+#&gt; 11 ChosenImmigrant        mm     Job              Doctor        NA         NA
+#&gt;           z             p     lower     upper
+#&gt; 1  28.23078 2.450898e-175 0.3911965 0.4495678
+#&gt; 2  27.96277 4.610542e-172 0.3781572 0.4351645
+#&gt; 3  29.66269 2.326579e-193 0.3926642 0.4482261
+#&gt; 4  27.80230 4.068329e-170 0.3836315 0.4418231
+#&gt; 5        NA            NA        NA        NA
+#&gt; 6  30.57374 2.734786e-205 0.4293403 0.4881575
+#&gt; 7  31.62321 1.771151e-219 0.4400082 0.4981543
+#&gt; 8        NA            NA        NA        NA
+#&gt; 9  34.26242 2.849362e-257 0.4690129 0.5259280
+#&gt; 10       NA            NA        NA        NA
+#&gt; 11       NA            NA        NA        NA</div><div class='input'><span class='fu'><a href='mm.html'>mm</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>immigration</span>, !<span class='no'>Job</span> <span class='kw'>%in%</span> <span class='no'>jlev</span>), <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Education</span>)</div><div class='output co'>#&gt;           outcome statistic                feature            level  estimate
+#&gt; 1 ChosenImmigrant        mm Educational Attainment        No Formal 0.3895112
+#&gt; 2 ChosenImmigrant        mm Educational Attainment        4th Grade 0.4222002
+#&gt; 3 ChosenImmigrant        mm Educational Attainment        8th Grade 0.4444444
+#&gt; 4 ChosenImmigrant        mm Educational Attainment      High School 0.5075226
+#&gt; 5 ChosenImmigrant        mm Educational Attainment Two-Year College 0.5398773
+#&gt; 6 ChosenImmigrant        mm Educational Attainment   College Degree 0.5631825
+#&gt; 7 ChosenImmigrant        mm Educational Attainment  Graduate Degree 0.5675254
+#&gt;    std.error        z             p     lower     upper
+#&gt; 1 0.01100389 35.39758 1.860555e-274 0.3679440 0.4110784
+#&gt; 2 0.01099526 38.39837  0.000000e+00 0.4006499 0.4437505
+#&gt; 3 0.01111714 39.97831  0.000000e+00 0.4226552 0.4662336
+#&gt; 4 0.01119635 45.32927  0.000000e+00 0.4855781 0.5294670
+#&gt; 5 0.01380270 39.11390  0.000000e+00 0.5128245 0.5669301
+#&gt; 6 0.01385316 40.65372  0.000000e+00 0.5360308 0.5903342
+#&gt; 7 0.01384257 40.99855  0.000000e+00 0.5403944 0.5946563</div><div class='input'># }
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

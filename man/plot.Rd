@@ -117,6 +117,7 @@ Note that ggplot2, by default, sorts factors (like feature names here) in what m
 require("ggplot2")
 # load data
 data("immigration")
+immigration$contest_no <- factor(immigration$contest_no)
 
 # calculate MMs
 d1 <- mm(immigration, ChosenImmigrant ~ Gender + Education + 

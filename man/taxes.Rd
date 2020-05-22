@@ -24,7 +24,7 @@
 Ballard-Rosa, Cameron, Lucy Martin, and Kenneth Scheve. 2016. \dQuote{The Structure of American Income Tax Policy Preferences.} \emph{The Journal of Politics} 79(1): 1-16. \url{http://doi.org/10.1086/687324}
 }
 \usage{
-taxes
+data(taxes)
 }
 \description{
 A dataset containing the results of a fully randomized conjoint survey of a representative sample of 2000 American adults who were asked to choose between alternative tax rate policies. Variables \samp{taxrate1}-\samp{taxrate6} refer to tax rates for different income brackets and \samp{taxrev} refers to levels of total tax revenue.

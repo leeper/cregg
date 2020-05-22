@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.6</span>
       </span>
     </div>
 
@@ -273,6 +273,7 @@
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='st'>"ggplot2"</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: ggplot2</span></div><div class='input'><span class='co'># load data</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"immigration"</span>)
+<span class='no'>immigration</span>$<span class='no'>contest_no</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>immigration</span>$<span class='no'>contest_no</span>)
 
 <span class='co'># calculate MMs</span>
 <span class='no'>d1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mm.html'>mm</a></span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>Education</span> +
@@ -300,16 +301,17 @@
 <span class='no'>stacked</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cregg.html'>cj</a></span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> +
               <span class='no'>Education</span> + <span class='no'>LanguageSkills</span> + <span class='no'>CountryOfOrigin</span> + <span class='no'>Job</span> + <span class='no'>JobExperience</span> +
               <span class='no'>JobPlans</span> + <span class='no'>ReasonForApplication</span> + <span class='no'>PriorEntry</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~ <span class='no'>CaseID</span>,
-              <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='st'>"mm"</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~ <span class='no'>contest_no</span>)</div><div class='output co'>#&gt; <span class='error'>Error in cj(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills +     CountryOfOrigin + Job + JobExperience + JobPlans + ReasonForApplication +     PriorEntry, id = ~CaseID, estimate = "mm", by = ~contest_no): Variable 'contest_no' in `by` must be a factor</span></div><div class='input'>
+              <span class='kw'>estimate</span> <span class='kw'>=</span> <span class='st'>"mm"</span>, <span class='kw'>by</span> <span class='kw'>=</span> ~ <span class='no'>contest_no</span>)
+
 <span class='co'>## plot with grouping</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>stacked</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"contest_no"</span>, <span class='kw'>feature_headers</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(stacked, group = "contest_no", feature_headers = FALSE): object 'stacked' not found</span></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>stacked</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"contest_no"</span>, <span class='kw'>feature_headers</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='plot-6.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## plot with facetting</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>stacked</span>) + <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span>(~<span class='no'>contest_no</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>1L</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(stacked): object 'stacked' not found</span></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>stacked</span>) + <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span>(~<span class='no'>contest_no</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>1L</span>)</div><div class='img'><img src='plot-7.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## plot with shapes instead of colors for groups</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>stacked</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"contest_no"</span>, <span class='kw'>vline</span> <span class='kw'>=</span> <span class='fl'>0.5</span>) +
  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>shape</span> <span class='kw'>=</span> <span class='no'>contest_no</span>) + <span class='co'># map group to `shape` aesthetic</span>
  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_manual.html'>scale_shape_manual</a></span>(<span class='kw'>values</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>, <span class='fl'>5</span>)) +
- <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_manual.html'>scale_discrete_manual</a></span>(<span class='kw'>values</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='st'>"black"</span>, <span class='fl'>5</span>)) <span class='co'># optionally, override colour</span></div><div class='output co'>#&gt; <span class='error'>Error in plot(stacked, group = "contest_no", vline = 0.5): object 'stacked' not found</span></div><div class='input'>
+ <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_manual.html'>scale_discrete_manual</a></span>(<span class='kw'>values</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='st'>"black"</span>, <span class='fl'>5</span>)) <span class='co'># optionally, override colour</span></div><div class='output co'>#&gt; <span class='error'>Error in manual_scale(aesthetics, values, ...): argument "aesthetics" is missing, with no default</span></div><div class='input'>
 <span class='co'># estimate AMCEs over different subsets of data</span>
 <span class='no'>reasons12</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(
   <span class='no'>immigration</span>, <span class='no'>ReasonForApplication</span> <span class='kw'>%in%</span> <span class='fu'><a href='https://rdrr.io/r/base/levels.html'>levels</a></span>(<span class='no'>ReasonForApplication</span>)[<span class='fl'>1</span>:<span class='fl'>2</span>]
@@ -319,7 +321,7 @@
            <span class='kw'>feature_labels</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>CountryOfOrigin</span> <span class='kw'>=</span> <span class='st'>"Country Of Origin"</span>))
 <span class='no'>d2_1</span>$<span class='no'>reasons</span> <span class='kw'>&lt;-</span> <span class='st'>"1,2,3"</span>
 <span class='no'>d2_2</span>$<span class='no'>reasons</span> <span class='kw'>&lt;-</span> <span class='st'>"1,2"</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span>(<span class='no'>d2_1</span>, <span class='no'>d2_2</span>), <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"reasons"</span>)</div><div class='img'><img src='plot-6.png' alt='' width='700' height='433' /></div><div class='input'># }
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span>(<span class='no'>d2_1</span>, <span class='no'>d2_2</span>), <span class='kw'>group</span> <span class='kw'>=</span> <span class='st'>"reasons"</span>)</div><div class='img'><img src='plot-8.png' alt='' width='700' height='433' /></div><div class='input'># }
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

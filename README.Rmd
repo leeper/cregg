@@ -90,6 +90,7 @@ plot(amces)
 To provide simple subgroup analyses, the `cj()` function provides a `by` argument to iterate over subsets of `data` and calculate AMCEs or MMs on each subgroup. For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:
 
 ```{r mm_by}
+immigration$contest_no <- factor(immigration$contest_no)
 mm_by <- cj(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills,
             id = ~ CaseID, estimate = "mm", by = ~ contest_no)
 plot(mm_by, group = "contest_no", vline = 0.5)

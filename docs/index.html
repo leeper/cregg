@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">cregg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.6</span>
       </span>
     </div>
 
@@ -140,7 +140,7 @@
 <a class="sourceLine" id="cb2-2" title="2">f1 &lt;-<span class="st"> </span>ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills <span class="op">+</span><span class="st"> </span>CountryOfOrigin <span class="op">+</span><span class="st"> </span>Job <span class="op">+</span><span class="st"> </span>JobExperience <span class="op">+</span><span class="st"> </span>JobPlans <span class="op">+</span><span class="st"> </span>ReasonForApplication <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb2-3" title="3"><span class="st">    </span>PriorEntry</a>
 <a class="sourceLine" id="cb2-4" title="4"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="reference/mm.html">mm</a></span>(immigration, f1, <span class="dt">id =</span> <span class="op">~</span>CaseID), <span class="dt">vline =</span> <span class="fl">0.5</span>)</a></code></pre></div>
-<p><img src="https://i.imgur.com/G1VOtM3.png" alt="plot of chunk mmplot"></p>
+<p><img src="https://i.imgur.com/z0QCXZu.png" alt="plot of chunk mmplot"></p>
 <p>cregg functions uses <code><a href="https://rdrr.io/r/base/attr.html">attr(data$feature, "label")</a></code> to provide pretty printing of feature labels, so that variable names can be arbitrary. These can be overwritten using the <code>feature_labels</code> argument to override these settings. Feature levels are always deduced from the <code><a href="https://rdrr.io/r/base/levels.html">levels()</a></code> of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in <code>feature_order</code>.</p>
 <p>A more common analytic approach for conjoints is to estimate average marginal component effects (AMCEs) using some form of regression analysis. cregg uses <code><a href="https://rdrr.io/r/stats/glm.html">glm()</a></code> and <code>svyglm()</code> to perform estimation and <a href="https://cran.r-project.org/package=margins">margins</a> to generate average marginal effect estimates. Designs can be specified with any interactions between conjoint features but only AMCEs are returned. (No functionality is provided at the moment for explict estimation of feature interaction effects.) Just like for <code><a href="reference/mm.html">mm()</a></code>, the output of <code><a href="reference/cregg.html">cj()</a></code> (or its alias, <code><a href="reference/amce.html">amce()</a></code>) is a tidy data frame:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co"># estimation</span></a>
@@ -170,11 +170,12 @@
 <p>This makes it very easy to modify, combine, print, etc. the resulting output. It also makes it easy to visualize using ggplot2. A convenience visualization function is provided:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="co"># plotting of AMCEs</span></a>
 <a class="sourceLine" id="cb5-2" title="2"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(amces)</a></code></pre></div>
-<p><img src="https://i.imgur.com/q90UQWp.png" alt="plot of chunk plot_amce"></p>
+<p><img src="https://i.imgur.com/A4iVY9R.png" alt="plot of chunk plot_amce"></p>
 <p>To provide simple subgroup analyses, the <code><a href="reference/cregg.html">cj()</a></code> function provides a <code>by</code> argument to iterate over subsets of <code>data</code> and calculate AMCEs or MMs on each subgroup. For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">mm_by &lt;-<span class="st"> </span><span class="kw"><a href="reference/cregg.html">cj</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>contest_no)</a>
-<a class="sourceLine" id="cb6-2" title="2"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(mm_by, <span class="dt">group =</span> <span class="st">"contest_no"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</a></code></pre></div>
-<p><img src="https://i.imgur.com/IVNsJw0.png" alt="plot of chunk mm_by"></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">immigration<span class="op">$</span>contest_no &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(immigration<span class="op">$</span>contest_no)</a>
+<a class="sourceLine" id="cb6-2" title="2">mm_by &lt;-<span class="st"> </span><span class="kw"><a href="reference/cregg.html">cj</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">id =</span> <span class="op">~</span>CaseID, <span class="dt">estimate =</span> <span class="st">"mm"</span>, <span class="dt">by =</span> <span class="op">~</span>contest_no)</a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(mm_by, <span class="dt">group =</span> <span class="st">"contest_no"</span>, <span class="dt">vline =</span> <span class="fl">0.5</span>)</a></code></pre></div>
+<p><img src="https://i.imgur.com/qr1jmpG.png" alt="plot of chunk mm_by"></p>
 <p>A more formal test of these differences is provided by a nested model comparison test:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw"><a href="reference/diffs.html">cj_anova</a></span>(immigration, ChosenImmigrant <span class="op">~</span><span class="st"> </span>Gender <span class="op">+</span><span class="st"> </span>Education <span class="op">+</span><span class="st"> </span>LanguageSkills, <span class="dt">by =</span> <span class="op">~</span>contest_no)</a></code></pre></div>
 <pre><code>Analysis of Deviance Table
@@ -184,7 +185,7 @@ Model 2: ChosenImmigrant ~ Gender + Education + LanguageSkills + contest_no +
     Gender:contest_no + Education:contest_no + LanguageSkills:contest_no
   Resid. Df Resid. Dev Df Deviance      F Pr(&gt;F)
 1     13949     3353.0                          
-2     13938     3349.6 11   3.3873 1.2814 0.2279</code></pre>
+2     13905     3343.9 44    9.088 0.8589 0.7334</code></pre>
 <p>which provides a test of whether any of the interactions between the <code>by</code> variable and feature levels differ from zero.</p>
 <p>Again, a detailed website showcasing package functionality is available at: <a href="https://thomasleeper.com/cregg/" class="uri">https://thomasleeper.com/cregg/</a> and the content thereof is installed as a vignette. The package documentation provides further examples.</p>
 </div>

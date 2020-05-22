@@ -27,6 +27,7 @@
 #' # load data
 #' requireNamespace("ggplot2")
 #' data("immigration")
+#' immigration$contest_no <- factor(immigration$contest_no)
 #' data("taxes")
 #' 
 #' # calculate MMs
@@ -45,15 +46,14 @@
 #' plot(d1, vline = 0.5)
 #'
 #' # MMs split by profile number
-#' immigration$contest_no_fct <- factor(immigration$contest_no)
 #' stacked <- cj(immigration, f1, id = ~ CaseID,
-#'               estimate = "mm", by = ~ contest_no_fct)
+#'               estimate = "mm", by = ~ contest_no)
 #' 
 #' ## plot with grouping
-#' plot(stacked, group = "contest_no_fct", vline = 0.5, feature_headers = FALSE)
+#' plot(stacked, group = "contest_no", vline = 0.5, feature_headers = FALSE)
 #' 
 #' ## plot with facetting
-#' plot(stacked) + ggplot2::facet_wrap(~ contest_no_fct, nrow = 1L)
+#' plot(stacked) + ggplot2::facet_wrap(~ contest_no, nrow = 1L)
 #' 
 #' # estimate AMCEs
 #' d2 <- cj(immigration, f1, id = ~ CaseID)

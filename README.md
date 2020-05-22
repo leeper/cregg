@@ -66,7 +66,7 @@ f1 <- ChosenImmigrant ~ Gender + Education + LanguageSkills + CountryOfOrigin + 
 plot(mm(immigration, f1, id = ~CaseID), vline = 0.5)
 ```
 
-![plot of chunk mmplot](https://i.imgur.com/G1VOtM3.png)
+![plot of chunk mmplot](https://i.imgur.com/z0QCXZu.png)
 
 cregg functions uses `attr(data$feature, "label")` to provide pretty printing of feature labels, so that variable names can be arbitrary. These can be overwritten using the `feature_labels` argument to override these settings. Feature levels are always deduced from the `levels()` of righthand-side variables in the model specification. All variables should be factors with levels in desired display order. Similarly, the plotted order of features is given by the order of terms in the RHS formula unless overridden by the order of variable names given in `feature_order`.
 
@@ -111,17 +111,18 @@ This makes it very easy to modify, combine, print, etc. the resulting output. It
 plot(amces)
 ```
 
-![plot of chunk plot_amce](https://i.imgur.com/q90UQWp.png)
+![plot of chunk plot_amce](https://i.imgur.com/A4iVY9R.png)
 
 To provide simple subgroup analyses, the `cj()` function provides a `by` argument to iterate over subsets of `data` and calculate AMCEs or MMs on each subgroup. For example, we may want to ensure that there are no substantial variations in preferences within-respondents across multiple conjoint decision tasks:
 
 
 ```r
+immigration$contest_no <- factor(immigration$contest_no)
 mm_by <- cj(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills, id = ~CaseID, estimate = "mm", by = ~contest_no)
 plot(mm_by, group = "contest_no", vline = 0.5)
 ```
 
-![plot of chunk mm_by](https://i.imgur.com/IVNsJw0.png)
+![plot of chunk mm_by](https://i.imgur.com/qr1jmpG.png)
 
 A more formal test of these differences is provided by a nested model comparison test:
 
@@ -138,7 +139,7 @@ Model 2: ChosenImmigrant ~ Gender + Education + LanguageSkills + contest_no +
     Gender:contest_no + Education:contest_no + LanguageSkills:contest_no
   Resid. Df Resid. Dev Df Deviance      F Pr(>F)
 1     13949     3353.0                          
-2     13938     3349.6 11   3.3873 1.2814 0.2279
+2     13905     3343.9 44    9.088 0.8589 0.7334
 ```
 
 which provides a test of whether any of the interactions between the `by` variable and feature levels differ from zero.

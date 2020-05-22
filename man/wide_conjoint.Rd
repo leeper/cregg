@@ -51,7 +51,7 @@
    \item{\samp{covariate2}}{random draws from the set of 1 and 2}
  }}
 \usage{
-wide_conjoint
+data(wide_conjoint)
 }
 \description{
 A simulated dataset containing 100 respondents' responses to four decision tasks (a,b,c,d) involving a forced choice between two alternative profiles, described by three features (1,2,3), as well as a secondary rating-scale outcome and a response time measure, along with two respondent-varying covariates. This is used in testing and examples within the package.

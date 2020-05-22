@@ -75,5 +75,6 @@
 #'               timing = paste0("timing_", letters[1:4]))
 #' str(cj_tidy(wide_conjoint, profile_variables = list1, task_variables = list2, id = ~ respondent))
 #' }
+#' @usage data(wide_conjoint)
 #' @seealso \code{\link{cj_tidy}} \code{\link{cj}}
 "wide_conjoint"

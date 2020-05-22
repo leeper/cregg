@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cregg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.6</span>
       </span>
     </div>
 
@@ -232,58 +232,6 @@
 #&gt; 11 0.5261628 0.007490787   3.492662 4.782307e-04 0.5114811 0.5408445
 #&gt; 12 0.4592973 0.007417263  -5.487558 4.075292e-08 0.4447598 0.4738349
 #&gt; 13 0.4243392 0.007564513 -10.002066 1.492498e-23 0.4095131 0.4391654</div><div class='input'>
-<span class='co'># marginal means with design constraints</span>
-<span class='fu'>mm</span>(<span class='no'>immigration</span>, <span class='no'>ChosenImmigrant</span> ~ <span class='no'>Gender</span> + <span class='no'>LanguageSkills</span> + <span class='no'>PriorEntry</span> +
-     <span class='no'>CountryOfOrigin</span> * <span class='no'>ReasonForApplication</span>, <span class='kw'>id</span> <span class='kw'>=</span> ~<span class='no'>CaseID</span>)</div><div class='output co'>#&gt;            outcome statistic                feature                    level
-#&gt; 1  ChosenImmigrant        mm                 Gender                   Female
-#&gt; 2  ChosenImmigrant        mm                 Gender                     Male
-#&gt; 3  ChosenImmigrant        mm        Language Skills           Fluent English
-#&gt; 4  ChosenImmigrant        mm        Language Skills           Broken English
-#&gt; 5  ChosenImmigrant        mm        Language Skills Tried English but Unable
-#&gt; 6  ChosenImmigrant        mm        Language Skills         Used Interpreter
-#&gt; 7  ChosenImmigrant        mm            Prior Entry                    Never
-#&gt; 8  ChosenImmigrant        mm            Prior Entry          Once as Tourist
-#&gt; 9  ChosenImmigrant        mm            Prior Entry    Many Times as Tourist
-#&gt; 10 ChosenImmigrant        mm            Prior Entry   Six Months with Family
-#&gt; 11 ChosenImmigrant        mm            Prior Entry   Once w/o Authorization
-#&gt; 12 ChosenImmigrant        mm      Country of Origin                    India
-#&gt; 13 ChosenImmigrant        mm      Country of Origin                  Germany
-#&gt; 14 ChosenImmigrant        mm      Country of Origin                   France
-#&gt; 15 ChosenImmigrant        mm      Country of Origin                   Mexico
-#&gt; 16 ChosenImmigrant        mm      Country of Origin              Philippines
-#&gt; 17 ChosenImmigrant        mm      Country of Origin                   Poland
-#&gt; 18 ChosenImmigrant        mm      Country of Origin                    China
-#&gt; 19 ChosenImmigrant        mm      Country of Origin                    Sudan
-#&gt; 20 ChosenImmigrant        mm      Country of Origin                  Somalia
-#&gt; 21 ChosenImmigrant        mm      Country of Origin                     Iraq
-#&gt; 22 ChosenImmigrant        mm Reason for Application      Reunite with Family
-#&gt; 23 ChosenImmigrant        mm Reason for Application          Seek Better Job
-#&gt; 24 ChosenImmigrant        mm Reason for Application       Escape Persecution
-#&gt;     estimate   std.error         z             p     lower     upper
-#&gt; 1  0.5117812 0.004176882 122.52709  0.000000e+00 0.5035947 0.5199677
-#&gt; 2  0.4877013 0.004353571 112.02328  0.000000e+00 0.4791685 0.4962342
-#&gt; 3  0.5875280 0.007305481  80.42290  0.000000e+00 0.5732095 0.6018464
-#&gt; 4  0.5261628 0.007490787  70.24132  0.000000e+00 0.5114811 0.5408445
-#&gt; 5  0.4592973 0.007417263  61.92275  0.000000e+00 0.4447598 0.4738349
-#&gt; 6  0.4243392 0.007564513  56.09604  0.000000e+00 0.4095131 0.4391654
-#&gt; 7  0.4860659 0.008586327  56.60929  0.000000e+00 0.4692370 0.5028948
-#&gt; 8  0.5413075 0.008294780  65.25881  0.000000e+00 0.5250500 0.5575649
-#&gt; 9  0.5427117 0.008569937  63.32739  0.000000e+00 0.5259150 0.5595085
-#&gt; 10 0.5582216 0.008472614  65.88540  0.000000e+00 0.5416156 0.5748276
-#&gt; 11 0.3730552 0.008826785  42.26399  0.000000e+00 0.3557550 0.3903553
-#&gt; 12 0.5017844 0.012413455  40.42262  0.000000e+00 0.4774545 0.5261144
-#&gt; 13 0.5425158 0.012404862  43.73413  0.000000e+00 0.5182027 0.5668289
-#&gt; 14 0.5166436 0.012780781  40.42347  0.000000e+00 0.4915937 0.5416934
-#&gt; 15 0.5124633 0.012641914  40.53685  0.000000e+00 0.4876856 0.5372410
-#&gt; 16 0.5316092 0.012362256  43.00260  0.000000e+00 0.5073796 0.5558388
-#&gt; 17 0.5267666 0.012661000  41.60545  0.000000e+00 0.5019515 0.5515817
-#&gt; 18 0.4996471 0.012334858  40.50692  0.000000e+00 0.4754713 0.5238230
-#&gt; 19 0.4809763 0.012908950  37.25913 7.537742e-304 0.4556752 0.5062774
-#&gt; 20 0.4732716 0.013035896  36.30526 1.336554e-288 0.4477217 0.4988214
-#&gt; 21 0.4086103 0.013200274  30.95468 2.197614e-210 0.3827382 0.4344823
-#&gt; 22 0.5193915 0.005041102 103.03134  0.000000e+00 0.5095111 0.5292719
-#&gt; 23 0.4759006 0.004956079  96.02361  0.000000e+00 0.4661869 0.4856144
-#&gt; 24 0.5160611 0.011558542  44.64759  0.000000e+00 0.4934068 0.5387154</div><div class='input'>
 <span class='co'># higher-order marginal means with feature interactions</span>
 <span class='no'>immigration</span>$<span class='no'>language_entry</span> <span class='kw'>&lt;-</span>
   <span class='fu'><a href='https://rdrr.io/r/base/interaction.html'>interaction</a></span>(<span class='no'>immigration</span>$<span class='no'>LanguageSkills</span>, <span class='no'>immigration</span>$<span class='no'>PriorEntry</span>, <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"_"</span>)
