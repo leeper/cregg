@@ -136,9 +136,6 @@ test_that("amce() returns correct marginal effects for unconstrained designs", {
                 label = "amce() returns correct effects for unconstrained design")
     expect_true(inherits(amce(dat, y ~ x1 + x2, id = ~ id), "cj_amce"),
                 label = "amce() works w/o 'id' argument")
-    
-    ## accuracy tests
-    ## TODO: add test of variances
     expect_true(all.equal(est$estimate, 
                          c(0, 
                            est[est$feature == "First Factor" & est$level == "B", "estimate"],
@@ -148,33 +145,26 @@ test_that("amce() returns correct marginal effects for unconstrained designs", {
                            est[est$feature == "Second Factor" & est$level == "F", "estimate"]
                          ), tolerance = tol),
                 label = "amce() returns effects in correct order")
-})
 
-test_that("amce() responds to weighting/clustering", {
-    est_unclust_unweight <- amce(dat, y ~ x1 + x2, id = ~ 0, weights = NULL)
-    est_unclust_weight <- amce(dat, y ~ x1 + x2, id = ~ 0, weights = ~ weight)
-    est_clust_unweight <- amce(dat, y ~ x1 + x2, id = ~ id, weights = NULL)
-    est_clust_weight <- amce(dat, y ~ x1 + x2, id = ~ id, weights = ~ weight)
-    expect_true(all.equal(est_unclust_unweight$estimate, est_clust_unweight$estimate, tolerance = tol),
-                label = "amce() returns identical clustered and unclustered (unweighted)")
-    expect_true(all.equal(est_unclust_weight$estimate, est_clust_weight$estimate, tolerance = tol),
-                label = "amce() returns identical clustered and unclustered (weighted)")
-    expect_false(isTRUE(all.equal(est_unclust_unweight$estimate, est_unclust_weight$estimate, tolerance = tol)),
-                label = "amce() weighted estimates differ from unweighted")
-    ## TODO: add variance test
 })
-
 
 test_that("amce() responds to weighting/clustering for unconstrained design", {
     est_unclust_unweight <- amce(dat, y ~ x1 + x2, id = ~ 0, weights = NULL)
     est_unclust_weight <- amce(dat, y ~ x1 + x2, id = ~ 0, weights = ~ weight)
     est_clust_unweight <-amce(dat, y ~ x1 + x2, id = ~ id, weights = NULL)
     est_clust_weight <- amce(dat, y ~ x1 + x2, id = ~ id, weights = ~ weight)
+
+    reg <- glm(y ~ x1 + x2, data = dat)
+
+    ## accuracy tests
     expect_true(all.equal(est_unclust_unweight$estimate, est_clust_unweight$estimate, tolerance = tol),
                 label = "amce() returns identical clustered and unclustered (unweighted)")
     expect_true(all.equal(est_unclust_weight$estimate, est_clust_weight$estimate, tolerance = tol),
                 label = "amce() returns identical clustered and unclustered (weighted)")
-    ## TODO: add variance test
+    expect_false(isTRUE(all.equal(est_unclust_unweight$estimate, est_unclust_weight$estimate, tolerance = tol)),
+                label = "amce() weighted estimates differ from unweighted")
+    
+    ## variance accuracy tests
 })
 
 test_that("amce() returns correct marginal effects for constrained designs", {

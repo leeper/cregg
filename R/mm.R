@@ -99,7 +99,7 @@ function(
         idvar <- NULL
     }
     
-    # reshape data
+    # reshape data so we can just do svyglm(OUTCOME ~ 0 + LEVEL) in a loop
     long <- stats::reshape(data2[c(outcome, RHS, idvar, "CREGG_WEIGHT")], 
                            varying = list(names(data2[RHS])), 
                            v.names = "LEVEL", 
@@ -109,32 +109,22 @@ function(
                            direction = "long")
     names(long)[names(long) == outcome] <- "OUTCOME"
     
-    # convert to survey object
-    svylong <- survey::svydesign(ids = id, weights = ~ CREGG_WEIGHT, data = long)
-
     # calculate MMs, SEs, etc.
-    out <- survey::svyby(
-        ~ OUTCOME, 
-        ~ LEVEL, 
-        FUN = survey::svymean, 
-        design = svylong, 
-        na.rm = TRUE, 
-        vartype = "se"
-    )
-    out <- cbind(out, confint(out, level = 1 - alpha))
-    out[["z"]] <- (out[["OUTCOME"]] - h0)/out[["se"]]
-    out[["p"]] <- 2L * stats::pnorm(-abs(out[["z"]]))
-    names(out) <- c("level", "estimate", "std.error", "lower", "upper", "z", "p")
-    
-    # an alternative way of getting those estimates is with `svyglm`
-    ## but there's no way to pass h0 through lmtest::coeftest() so it isn't that useful for the common use case
-    # out <- do.call("rbind", lapply(unique(long[["Feature"]]), function(this_feature) {
-    #     mod <- survey::svyglm(OUTCOME ~ 0 + LEVEL, design = svylong, subset = Feature == this_feature, ...)
-    #     cs <- get_coef_summary(mod = mod, data = data, id = NULL, alpha = alpha)
-    #    names(cs) <- c("estimate", "std.error", "z", "p", "lower", "upper", "level")
-    #     cs[["level"]] <- factor(sub("^LEVEL", "", cs[["level"]]))
-    #     cs
-    # }))
+    out_list <- lapply(unique(long[["Feature"]]), function(this_feature) {
+        dtmp <- long[long[["Feature"]] == this_feature, , drop = FALSE]
+        svyd <- survey::svydesign(ids = id, weights = ~ CREGG_WEIGHT, data = dtmp)
+        mod <- survey::svyglm(OUTCOME ~ 0 + LEVEL, design = svyd)
+        cs <- get_coef_summary(mod = mod, data = data, id = NULL, alpha = alpha)
+        names(cs) <- c("estimate", "std.error", "z", "p", "lower", "upper", "level")
+
+        ## correct z test to respect h0
+        cs[["z"]] <- (cs[["estimate"]] - h0)/cs[["std.error"]]
+        cs[["p"]] <- 2L * stats::pnorm(-abs(cs[["z"]])) 
+        
+        cs[["level"]] <- factor(sub("^LEVEL", "", cs[["level"]]))
+        cs
+    })
+    out <- do.call("rbind", out_list)
     
     # attach feature labels
     out <- merge(out, make_term_labels_df(data2, RHS), by = c("level"), all = TRUE)
