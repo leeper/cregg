@@ -54,6 +54,7 @@ test_that("mm() returns correct marginal means", {
                 label = "mm() with clustering returns correct MMs (based on aggregate())")
     expect_true(all.equal(est_clust$estimate, unname(c(coef(mm_x1_lm_clust), coef(mm_x2_lm_clust))), tolerance = tol),
                 label = "mm() clustering returns correct MMs (based on lm(y ~ 0 + ...))")
+    
     ## variance accuracy tests
     expect_true(all.equal(est_unclust$std.error, unname(c(mm_x1_var_unclust, mm_x2_var_unclust)), tolerance = 0.001), # TODO: ??
                 label = "mm() returns correct unclustered variances for MMs")
@@ -73,7 +74,9 @@ test_that("mm() responds to weighting/clustering", {
                 label = "mm() returns identical clustered and unclustered (weighted)")
     expect_false(isTRUE(all.equal(est_unclust_unweight$estimate, est_unclust_weight$estimate, tolerance = tol)),
                 label = "mm() weighted estimates differ from unweighted")
-    ## TODO: add variance test
+    
+    ## variance accuracy tests
+    # TODO
 })
 
 test_that("mm_diffs() returns correct differences", {
@@ -97,9 +100,11 @@ test_that("mm_diffs() returns correct differences", {
                 label = "mm_diffs() works w/o 'id' argument")
 
     ## accuracy tests
-    ## TODO: add variance test
     expect_true(all.equal(est$estimate, c(mm_x1$y[4:6] - mm_x1$y[1:3], mm_x2$y[4:6] - mm_x2$y[1:3]), tolerance = tol),
                 label = "mm_diffs() returns correct differences")
+    
+    ## variance accuracy tests
+    # TODO
 })
 
 test_that("mm_diffs() responds to weighting/clustering", {
@@ -107,13 +112,17 @@ test_that("mm_diffs() responds to weighting/clustering", {
     est_unclust_weight <- mm(dat, y ~ x1 + x2, id = ~ 0, weights = ~ weight, by = ~ group)
     est_clust_unweight <- mm(dat, y ~ x1 + x2, id = ~ id, weights = NULL, by = ~ group)
     est_clust_weight <- mm(dat, y ~ x1 + x2, id = ~ id, weights = ~ weight, by = ~ group)
+    
+    ## accuracy tests
     expect_true(all.equal(est_unclust_unweight$estimate, est_clust_unweight$estimate, tolerance = tol),
                 label = "mm_diffs() returns identical clustered and unclustered (unweighted)")
     expect_true(all.equal(est_unclust_weight$estimate, est_clust_weight$estimate, tolerance = tol),
                 label = "mm_diffs() returns identical clustered and unclustered (weighted)")
     expect_false(isTRUE(all.equal(est_unclust_unweight$estimate, est_unclust_weight$estimate, tolerance = tol)),
                 label = "mm_diffs() weighted estimates differ from unweighted")
-    ## TODO: add variance test
+    
+    ## variance accuracy tests
+    # TODO
 })
 
 test_that("amce() returns correct marginal effects for unconstrained designs", {
@@ -165,6 +174,7 @@ test_that("amce() responds to weighting/clustering for unconstrained design", {
                 label = "amce() weighted estimates differ from unweighted")
     
     ## variance accuracy tests
+    # TODO
 })
 
 test_that("amce() returns correct marginal effects for constrained designs", {
@@ -185,7 +195,6 @@ test_that("amce() returns correct marginal effects for constrained designs", {
                 label = "amce() returns correct outcome label")
 
     ## accuracy tests
-    ## TODO: add variance test
     expect_true(all.equal(est$estimate,
                           c(0,
                             mean(c(reg_coef["x1B"], reg_coef["x1B"] + reg_coef["x1B:x2E"], reg_coef["x1B"] + reg_coef["x1B:x2F"])),
@@ -204,6 +213,9 @@ test_that("amce() returns correct marginal effects for constrained designs", {
                            est[est$feature == "x2" & est$level == "F", "estimate"]
                          ), tolerance = tol),
                 label = "amce() returns effects in correct order")
+    
+    ## variance accuracy tests
+    # TODO
 })
 
 test_that("cj() by group returns correct marginal effects", {
@@ -229,7 +241,6 @@ test_that("cj() by group returns correct marginal effects", {
                 label = "group cj() works w/o 'id' argument")
     
     ## accuracy tests
-    ## TODO: add variance test
     expect_true(all.equal(c(coef(reg_low)[2:5], coef(reg_high)[2:5]),
                           est$estimate[c(2:3, 5:6, 8:9, 11:12)],
                           tolerance = tol,
@@ -241,6 +252,7 @@ test_that("amce_diffs() returns correct differences", {
     reg_low <- glm(y~x1+x2, data = dat, subset = group == "Low")
     reg_high <- glm(y~x1+x2, data = dat, subset = group == "High")
     est <- amce_diffs(dat, y ~ x1 + x2, id = ~ id, by = ~ group)
+    
     ## structural tests
     expect_true(all(c("outcome", "statistic", "feature", "level", "estimate", "std.error", "lower", "upper") %in% names(est)),
                 label = "amce_diffs() returns correct column names")
@@ -258,12 +270,14 @@ test_that("amce_diffs() returns correct differences", {
                 label = "amce_diffs() works w/o 'id' argument")
     
     ## accuracy tests
-    ## TODO: add variance test
     expect_true(all.equal(est$estimate,
                           (coef(reg_high) - coef(reg_low))[2:5],
                           tolerance = tol,
                           check.attributes = FALSE),
                 label = "amce_diffs() returns correct differences")
+
+    ## variance accuracy tests
+    # TODO
 })
 
 test_that("amce_diffs() responds to weighting/clustering", {
@@ -271,11 +285,15 @@ test_that("amce_diffs() responds to weighting/clustering", {
     est_unclust_weight <- amce_diffs(dat, y ~ x1 + x2, id = ~ 0, weights = ~ weight, by = ~ group)
     est_clust_unweight <- amce_diffs(dat, y ~ x1 + x2, id = ~ id, weights = NULL, by = ~ group)
     est_clust_weight <- amce_diffs(dat, y ~ x1 + x2, id = ~ id, weights = ~ weight, by = ~ group)
+    
+    ## accuracy tests
     expect_true(all.equal(est_unclust_unweight$estimate, est_clust_unweight$estimate, tolerance = tol),
                 label = "amce_diffs() returns identical clustered and unclustered (unweighted)")
     expect_true(all.equal(est_unclust_weight$estimate, est_clust_weight$estimate, tolerance = tol),
                 label = "amce_diffs() returns identical clustered and unclustered (weighted)")
     expect_false(isTRUE(all.equal(est_unclust_unweight$estimate, est_unclust_weight$estimate, tolerance = tol)),
                 label = "amce_diffs() weighted estimates differ from unweighted")
-    ## TODO: add variance test
+    
+    ## variance accuracy tests
+    # TODO
 })

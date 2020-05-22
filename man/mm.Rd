@@ -58,10 +58,6 @@ data(immigration)
 mm(immigration, ChosenImmigrant ~ Gender + Education + LanguageSkills,
    id = ~ CaseID, h0 = 0.5)
 
-# marginal means with design constraints
-mm(immigration, ChosenImmigrant ~ Gender + LanguageSkills + PriorEntry + 
-     CountryOfOrigin * ReasonForApplication, id = ~CaseID)
-
 # higher-order marginal means with feature interactions
 immigration$language_entry <- 
   interaction(immigration$LanguageSkills, immigration$PriorEntry, sep = "_")

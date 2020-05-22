@@ -45,7 +45,7 @@
 #' plot(d1, vline = 0.5)
 #'
 #' # MMs split by profile number
-#' immigration$contest_no_fct <- factor(immigration$contest_no_fct)
+#' immigration$contest_no_fct <- factor(immigration$contest_no)
 #' stacked <- cj(immigration, f1, id = ~ CaseID,
 #'               estimate = "mm", by = ~ contest_no_fct)
 #' 
@@ -75,9 +75,29 @@
 #' cj(immigration, ChosenImmigrant ~ language_entry,
 #'    id = ~CaseID, estimate = "mm", h0 = 0.5)
 #'
-#' ## average component interaction effects (AMCEs for feature interactions)
-#' cj(immigration, ChosenImmigrant ~ language_entry,
-#'    id = ~CaseID, estimate = "amce")
+#' ## constrained designs
+#' ## in a constrained design, some cells are unobserved:
+#' subset(cj_props(immigration, ~ Job + Education), Proportion == 0)
+#' ## MMs and AMCEs only use data from observed cells
+#' ## In `immigraation`, this means while the MM for `Job == "Janitor"` is an average 
+#' ## across all levels of Education:
+#' mm(subset(immigration, Job == "Janitor"), ChosenImmigrant ~ Education)
+#' ## the MM for `Job == "Doctor"` is an average across only 3 levels of education:
+#' mm(subset(immigration, Job == "Doctor"), ChosenImmigrant ~ Education)
+#' ## Use `cj_props()` to see constraints:
+#' subset(cj_props(immigration, ~ Job + Education), Job == "Doctor" & Proportion != 0)
+#' 
+#' ## Substantively, the MM of "Doctor" might be higher than other levels of `Job`
+#' ## this could be due to the feature itself or due to the fact that it is constrained
+#' ## with a different subset of other feature levels than alternative levels of `Job`
+#' ## this may mean analysts want to report MMs (or AMCEs) only for the unconstrained levels:
+#' elev <- c("Two-Year College", "College Degree", "Graduate Degree")
+#' jlev <- c("Financial Analyst", "Computer Programmer", "Research Scientist", "Doctor")
+#' mm(subset(immigration, Education %in% elev), ChosenImmigrant ~ Job)
+#' mm(subset(immigration, Job %in% jlev), ChosenImmigrant ~ Education)
+#' ## or, present estimates excluding constrained levels:
+#' mm(subset(immigration, !Education %in% elev), ChosenImmigrant ~ Job)
+#' mm(subset(immigration, !Job %in% jlev), ChosenImmigrant ~ Education)
 #' }
 #' @seealso
 #'  Functions: \code{\link{amce}}, \code{\link{mm}}, \code{\link{cj_freqs}}, \code{\link{mm_diffs}}, \code{\link{plot.cj_amce}}, \code{\link{cj_tidy}}
