@@ -161,7 +161,7 @@ plot(stacked) + ggplot2::facet_wrap(~contest_no, nrow = 1L)
 plot(stacked, group = "contest_no", vline = 0.5) + 
  aes(shape = contest_no) + # map group to `shape` aesthetic
  scale_shape_manual(values=c(1, 2, 3, 4, 5)) +
- scale_discrete_manual(values=rep("black", 5)) # optionally, override colour
+ scale_colour_manual(values=rep("black", 5)) 
 
 # estimate AMCEs over different subsets of data
 reasons12 <- subset(
