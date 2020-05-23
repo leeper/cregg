@@ -29,14 +29,14 @@ function(
         estimates_reduced <- stats::glm(formula_reduced, data = data, ...)
     } else if (inherits(data, "data.frame")) {
         stop("cj_anova() currently does not support 'weights'")
-        svy_design <- survey::svydesign(ids = ~ 0, weights = weights, data = data)
-        estimates_full <- survey::svyglm(formula_full, design = svy_design, ...)
-        estimates_reduced <- survey::svyglm(formula_reduced, design = svy_design, ...)
+        # svy_design <- survey::svydesign(ids = ~ 0, weights = weights, data = data)
+        # estimates_full <- survey::svyglm(formula_full, design = svy_design, ...)
+        # estimates_reduced <- survey::svyglm(formula_reduced, design = svy_design, ...)
     } else if (inherits(data, "survey.design")) {
         stop("cj_anova() currently does not support 'weights'")
-        svy_design <- data
-        estimates_full <- survey::svyglm(formula_full, design = svy_design, ...)
-        estimates_reduced <- survey::svyglm(formula_reduced, design = svy_design, ...)
+        # svy_design <- data
+        # estimates_full <- survey::svyglm(formula_full, design = svy_design, ...)
+        # estimates_reduced <- survey::svyglm(formula_reduced, design = svy_design, ...)
     } else {
         stop("'data' is not a 'data.frame' or 'survey.design' object")
     }

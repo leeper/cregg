@@ -73,6 +73,10 @@ test_that("amce() works", {
                 label = "amce() works w/ 'weights'")
     expect_error(amce(immigration,  ~ LanguageSkills, id = ~ CaseID),
                  label = "amce() fails w/o LHS variable in formula")
+    expect_error(amce(1:5, ChosenImmigrant ~ Education, id = ~ CaseID),
+                 label = "amce() fails w non-data frame 'data' argument")
+    expect_error(amce(immigration, ChosenImmigrant ~ Education * Job * Language, id = ~ CaseID),
+                 label = "amce() fails w three-way interaction")
 })
 
 test_that("amce() respects model specification for constraints", {
@@ -90,6 +94,8 @@ test_that("amce_diffs() works", {
                  label = "amce_diffs() fails w/o LHS variable in formula")
     expect_error(amce_diffs(immigration,  ~ LanguageSkills, by = ~ profile, id = ~ CaseID),
                  label = "amce_diffs() fails w/o factor 'by'")
+    expect_error(amce_diffs(1:5, ChosenImmigrant ~ Education, id = ~ CaseID, by = ~ Gender),
+                 label = "amce_diffs() fails w non-data frame 'data' argument")
 })
 
 test_that("amce_by_reference() works", {
@@ -111,6 +117,8 @@ test_that("mm() works", {
     expect_true(inherits(mm(immigration, ChosenImmigrant ~ LanguageSkills, id = ~ CaseID, weights = ~ wts), "cj_mm"),
                 label = "mm() works w/ 'weights'")
     expect_error(mm(immigration,  ~ LanguageSkills, id = ~ CaseID), label = "mm() fails w/o LHS variable in formula")
+    expect_error(mm(1:5, ChosenImmigrant ~ Education, id = ~ CaseID),
+                 label = "mm() fails w non-data frame 'data' argument")
 })
 
 test_that("mm_diffs() works", {
@@ -124,6 +132,8 @@ test_that("mm_diffs() works", {
                  label = "mm_diffs() fails w/o LHS variable in formula")
     expect_error(mm_diffs(immigration,  ~ LanguageSkills, by = ~ profile, id = ~ CaseID),
                  label = "mm_diffs() fails w/o factor 'by'")
+    expect_error(mm_diffs(1:5, ChosenImmigrant ~ Education, id = ~ CaseID),
+                 label = "mm_diffs() fails w non-data frame 'data' argument")
 })
 
 test_that("cj_table() works", {
@@ -154,6 +164,8 @@ test_that("cj_anova() works", {
                  label = "cj_anova() fails w/ 'weights', as expected at the moment")
     expect_error(cj_anova(immigration,  ~ Education, id = ~ CaseID, by = ~Gender),
                  label = "cj_anova() fails w/o LHS variable in formula")
+    expect_error(cj_anova(1:5,  ~ Education, id = ~ CaseID, by = ~Gender),
+                 label = "cj_anova() fails w non-data frame 'data' argument")
 })
 
 test_that("functions work with svydesign 'data' argument", {
